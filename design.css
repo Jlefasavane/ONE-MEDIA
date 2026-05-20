@@ -659,6 +659,199 @@ body.light .theme-btn { color: var(--ink-soft); }
 }
 
 /* ═══════════════════════════════════════════════════════════
+   BOOKMARK & SAVED ARTICLES
+   ═══════════════════════════════════════════════════════════ */
+
+/* Bouton bookmark dans le header */
+.bookmark-header-btn {
+  position: relative;
+  background: none;
+  border: none;
+  color: var(--ink, #fff);
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  opacity: 0.7;
+  transition: opacity 0.2s, color 0.2s;
+}
+.bookmark-header-btn:hover { opacity: 1; color: var(--signal, #00f5ff); }
+
+.bookmark-badge {
+  position: absolute;
+  top: 2px; right: 2px;
+  background: var(--hot, #ff2d55);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  line-height: 1;
+}
+
+/* Panneau slide-in */
+.saved-panel {
+  position: fixed;
+  top: 0; right: -420px;
+  width: min(420px, 100vw);
+  height: 100%;
+  background: var(--surface, #12121e);
+  z-index: 8000;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  border-left: 1px solid var(--line, rgba(255,255,255,.07));
+}
+.saved-panel.open { right: 0; }
+
+.saved-panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 7999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.saved-panel-overlay.open { opacity: 1; pointer-events: all; }
+
+.saved-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 20px;
+  border-bottom: 1px solid var(--line, rgba(255,255,255,.07));
+}
+.saved-panel-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 0.05em;
+  color: var(--signal, #00f5ff);
+}
+.saved-panel-close {
+  background: none; border: none;
+  color: var(--ink-mute, #888);
+  cursor: pointer; font-size: 16px;
+  padding: 4px;
+  transition: color 0.2s;
+}
+.saved-panel-close:hover { color: var(--ink, #fff); }
+
+.saved-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0;
+}
+
+.saved-empty {
+  padding: 40px 20px;
+  color: var(--ink-mute, #888);
+  font-size: 15px;
+  line-height: 1.6;
+  text-align: center;
+}
+.saved-empty span { font-size: 13px; opacity: 0.7; display: block; margin-top: 8px; }
+
+.saved-item {
+  display: grid;
+  grid-template-columns: 72px 1fr 28px;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: var(--ink, #fff);
+  transition: background 0.2s;
+  border-bottom: 1px solid var(--line-soft, rgba(255,255,255,.04));
+}
+.saved-item:hover { background: var(--surface2, rgba(255,255,255,.04)); }
+.saved-item-img { width: 72px; height: 52px; border-radius: 4px; overflow: hidden; flex-shrink: 0; }
+.saved-item-img img { width: 100%; height: 100%; object-fit: cover; }
+.saved-item-cat {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.saved-item-title { font-size: 13px; font-weight: 600; line-height: 1.35; }
+.saved-item-meta { font-size: 11px; color: var(--ink-mute, #888); margin-top: 4px; }
+.saved-item-remove {
+  background: none; border: none;
+  color: var(--ink-mute, #888);
+  cursor: pointer; font-size: 12px;
+  padding: 4px; align-self: start;
+  transition: color 0.2s;
+}
+.saved-item-remove:hover { color: var(--hot, #ff2d55); }
+
+/* Bouton bookmark dans le hero de l'article */
+.article-bookmark-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 8px 16px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 4px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.article-bookmark-btn:hover { background: rgba(0,245,255,.1); border-color: var(--signal, #00f5ff); color: var(--signal, #00f5ff); }
+.article-bookmark-btn.saved { background: rgba(0,245,255,.12); border-color: var(--signal, #00f5ff); color: var(--signal, #00f5ff); }
+.bk-icon { font-size: 15px; }
+
+/* Sticky share bar (article) */
+.sticky-share {
+  position: fixed;
+  bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface, #12121e);
+  border: 1px solid var(--line, rgba(255,255,255,.1));
+  border-radius: 50px;
+  padding: 10px 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  z-index: 500;
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease;
+}
+.sticky-share.visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+.sticky-share-label {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--ink-mute, #888);
+  margin-right: 4px;
+}
+.sticky-share-btn {
+  background: none; border: none;
+  color: var(--ink-soft, #ccc);
+  cursor: pointer;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.sticky-share-btn:hover { background: rgba(255,255,255,.08); color: var(--signal, #00f5ff); }
+.sticky-save-btn.saved { color: var(--signal, #00f5ff); }
+
+/* ═══════════════════════════════════════════════════════════
    CATEGORY INTRO ANIMATIONS
    Chaque univers a sa propre animation d'ouverture.
    ═══════════════════════════════════════════════════════════ */

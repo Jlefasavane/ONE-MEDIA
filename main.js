@@ -153,6 +153,109 @@
   });
 })();
 
+/* ── SAVED ARTICLES PANEL ────────────────────────────────── */
+(function initSavedPanel() {
+  function getSaved() {
+    try { return JSON.parse(localStorage.getItem('om_saved') || '[]'); }
+    catch { return []; }
+  }
+
+  // Inject bouton bookmark dans header-actions
+  const actions = document.querySelector('.header-actions');
+  if (!actions) return;
+
+  const bkBtn = document.createElement('button');
+  bkBtn.className = 'bookmark-header-btn';
+  bkBtn.id = 'bookmark-header-btn';
+  bkBtn.setAttribute('aria-label', 'Articles sauvegardés');
+  bkBtn.innerHTML = `
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    <span class="bookmark-badge" id="bookmark-badge" style="display:none">0</span>`;
+  // Insérer avant search-trigger
+  const searchTrigger = document.getElementById('search-trigger');
+  actions.insertBefore(bkBtn, searchTrigger);
+
+  // Panneau slide-in
+  const panel = document.createElement('div');
+  panel.className = 'saved-panel';
+  panel.id = 'saved-panel';
+  panel.innerHTML = `
+    <div class="saved-panel-head">
+      <span class="saved-panel-title">★ Sauvegardés</span>
+      <button class="saved-panel-close" id="saved-panel-close">✕</button>
+    </div>
+    <div class="saved-panel-body" id="saved-panel-body"></div>`;
+  document.body.appendChild(panel);
+
+  const overlay = document.createElement('div');
+  overlay.className = 'saved-panel-overlay';
+  overlay.id = 'saved-panel-overlay';
+  document.body.appendChild(overlay);
+
+  function updateBadge() {
+    const count = getSaved().length;
+    const badge = document.getElementById('bookmark-badge');
+    if (!badge) return;
+    badge.style.display = count ? '' : 'none';
+    badge.textContent = count;
+  }
+
+  function renderPanel() {
+    const saved = getSaved();
+    const body  = document.getElementById('saved-panel-body');
+    if (!body) return;
+    if (!saved.length) {
+      body.innerHTML = `<div class="saved-empty">Aucun article sauvegardé.<br><span>Clique sur ☆ sur un article pour le retrouver ici.</span></div>`;
+      return;
+    }
+    const articles = saved.map(id => typeof getArticleById === 'function' ? getArticleById(id) : null).filter(Boolean);
+    body.innerHTML = articles.map(a => {
+      const cat = typeof getCategoryMeta === 'function' ? getCategoryMeta(a.category) : { label: a.category };
+      return `
+        <a href="article.html?id=${a.id}" class="saved-item">
+          <div class="saved-item-img"><img src="${a.image}" alt="${a.title}" loading="lazy"></div>
+          <div class="saved-item-content">
+            <div class="saved-item-cat cat-${a.category}">${cat.label}</div>
+            <div class="saved-item-title">${a.title}</div>
+            <div class="saved-item-meta">${a.readTime} min · ${a.author}</div>
+          </div>
+          <button class="saved-item-remove" data-id="${a.id}" title="Retirer">✕</button>
+        </a>`;
+    }).join('');
+
+    body.querySelectorAll('.saved-item-remove').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        const id   = btn.dataset.id;
+        const list = getSaved().filter(x => x !== id);
+        localStorage.setItem('om_saved', JSON.stringify(list));
+        window.dispatchEvent(new CustomEvent('om-saved-changed'));
+        renderPanel();
+      });
+    });
+  }
+
+  function openPanel() {
+    renderPanel();
+    panel.classList.add('open');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePanel() {
+    panel.classList.remove('open');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  bkBtn.addEventListener('click', openPanel);
+  document.getElementById('saved-panel-close')?.addEventListener('click', closePanel);
+  overlay.addEventListener('click', closePanel);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+  window.addEventListener('om-saved-changed', updateBadge);
+
+  updateBadge();
+})();
+
 /* ── REVEAL ON SCROLL ────────────────────────────────────── */
 (function initReveals() {
   const items = document.querySelectorAll('.reveal');
