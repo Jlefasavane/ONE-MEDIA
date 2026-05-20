@@ -1028,3 +1028,140 @@ body.light .theme-btn { color: var(--ink-soft); }
   transform: scale(1);
   opacity: 1;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   RÉACTIONS ÉMOJIS
+   ═══════════════════════════════════════════════════════════ */
+.article-reactions {
+  margin: 40px 0 0;
+  padding: 28px 0 0;
+  border-top: 1px solid var(--line, rgba(255,255,255,.08));
+}
+.reactions-label {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--ink-mute, #888);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.reactions-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.reaction-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 16px;
+  background: var(--surface, rgba(255,255,255,.05));
+  border: 1px solid var(--line, rgba(255,255,255,.08));
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-soft, #ccc);
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  user-select: none;
+}
+.reaction-btn:hover { background: rgba(255,255,255,.1); transform: scale(1.05); }
+.reaction-btn.reacted {
+  background: rgba(0,245,255,.08);
+  border-color: rgba(0,245,255,.3);
+  color: var(--signal, #00f5ff);
+}
+.reaction-emoji { font-size: 20px; line-height: 1; }
+.reaction-count {
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 16px;
+}
+@keyframes reaction-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.35); }
+  70%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+.reaction-btn.pop { animation: reaction-pop 0.4s cubic-bezier(0.16,1,0.3,1); }
+
+/* ═══════════════════════════════════════════════════════════
+   SÉLECTION → PARTAGER LA CITATION
+   ═══════════════════════════════════════════════════════════ */
+.quote-share-popup {
+  position: fixed;
+  z-index: 7000;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ink, #fff);
+  color: var(--bg, #090910);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 4px 24px rgba(0,0,0,.4);
+  pointer-events: all;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+.quote-share-popup.visible { opacity: 1; transform: translateY(0); }
+.quote-share-popup::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--ink, #fff);
+}
+.quote-share-btn {
+  background: none; border: none;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 4px;
+  color: inherit;
+  font: inherit;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.quote-share-btn:hover { background: rgba(0,0,0,.08); }
+.quote-sep { opacity: 0.25; }
+
+/* ═══════════════════════════════════════════════════════════
+   MODE LECTURE
+   ═══════════════════════════════════════════════════════════ */
+.read-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  margin-left: 10px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 4px;
+  color: var(--ink-soft, #ccc);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.read-mode-btn:hover { background: rgba(255,255,255,.12); color: #fff; }
+.read-mode-btn.active { background: rgba(0,245,255,.1); border-color: var(--signal,#00f5ff); color: var(--signal,#00f5ff); }
+
+body.read-mode .article-layout { grid-template-columns: 1fr; max-width: 720px; margin: 0 auto; }
+body.read-mode .article-sidebar { display: none; }
+body.read-mode .article-main { max-width: 100%; }
+body.read-mode .article-body { font-size: 19px; line-height: 1.85; }
+body.read-mode .article-body p { margin-bottom: 1.6em; }
+body.read-mode .article-hero { max-height: 55vh; }
+body.read-mode .sticky-share { bottom: 60px; }
+body.read-mode .ticker-bar,
+body.read-mode .related-section,
+body.read-mode .footer { opacity: 0.4; pointer-events: none; transition: opacity 0.3s; }
+body.read-mode .ticker-bar:hover,
+body.read-mode .footer:hover { opacity: 1; pointer-events: all; }
+body.light.read-mode .article-main { background: #faf8f4; padding: 32px; border-radius: 8px; }

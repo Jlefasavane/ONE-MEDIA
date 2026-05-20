@@ -299,3 +299,151 @@
   banner.querySelector('#cookie-accept').addEventListener('click', () => { localStorage.setItem('om_cookies','accepted'); banner.classList.remove('visible'); });
   banner.querySelector('#cookie-refuse').addEventListener('click', () => { localStorage.setItem('om_cookies','refused');  banner.classList.remove('visible'); });
 })();
+
+/* ── RÉACTIONS ÉMOJIS (article) ──────────────────────────── */
+(function initReactions() {
+  const main = document.getElementById('article-main');
+  if (!main) return;
+
+  const REACTIONS = [
+    { id: 'fire',   emoji: '🔥', label: 'Feu'          },
+    { id: 'gold',   emoji: '💯', label: 'Incontournable' },
+    { id: 'mind',   emoji: '🤯', label: 'Mind blown'    },
+    { id: 'heart',  emoji: '❤️', label: 'Coup de cœur'  },
+    { id: 'target', emoji: '🎯', label: 'Précis'        },
+  ];
+
+  // Clé basée sur l'URL de l'article
+  const key = 'om_reactions_' + (new URLSearchParams(location.search).get('id') || 'default');
+
+  function getState() {
+    try { return JSON.parse(localStorage.getItem(key) || '{}'); }
+    catch { return {}; }
+  }
+
+  // Compteurs de base fictifs pour donner vie
+  const BASE = { fire: 47, gold: 31, mind: 22, heart: 38, target: 19 };
+
+  function render() {
+    const state = getState();
+    const wrap  = document.getElementById('reactions-row');
+    if (!wrap) return;
+    REACTIONS.forEach(r => {
+      const btn = wrap.querySelector(`[data-rid="${r.id}"]`);
+      if (!btn) return;
+      const count = BASE[r.id] + (state[r.id] || 0);
+      btn.querySelector('.reaction-count').textContent = count;
+      btn.classList.toggle('reacted', !!state[r.id]);
+    });
+  }
+
+  // Injecte le bloc après les tags
+  const tagsEl = main.querySelector('.article-tags');
+  const block  = document.createElement('div');
+  block.className = 'article-reactions';
+  block.innerHTML = `
+    <div class="reactions-label">Ta réaction</div>
+    <div class="reactions-row" id="reactions-row">
+      ${REACTIONS.map(r => `
+        <button class="reaction-btn" data-rid="${r.id}" title="${r.label}">
+          <span class="reaction-emoji">${r.emoji}</span>
+          <span class="reaction-count">0</span>
+        </button>`).join('')}
+    </div>`;
+
+  if (tagsEl) tagsEl.after(block);
+  else main.appendChild(block);
+
+  render();
+
+  block.querySelectorAll('.reaction-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const rid   = btn.dataset.rid;
+      const state = getState();
+      // Toggle : +1 si pas encore réagi, -1 si déjà réagi
+      if (state[rid]) delete state[rid];
+      else state[rid] = 1;
+      localStorage.setItem(key, JSON.stringify(state));
+
+      btn.classList.add('pop');
+      btn.addEventListener('animationend', () => btn.classList.remove('pop'), { once: true });
+      render();
+    });
+  });
+})();
+
+/* ── SÉLECTION → PARTAGER LA CITATION ───────────────────── */
+(function initQuoteShare() {
+  const body = document.querySelector('.article-body');
+  if (!body) return;
+
+  const popup = document.createElement('div');
+  popup.className = 'quote-share-popup';
+  popup.innerHTML = `
+    <button class="quote-share-btn" id="qs-tweet">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      Tweeter
+    </button>
+    <span class="quote-sep">|</span>
+    <button class="quote-share-btn" id="qs-copy">📋 Copier</button>`;
+  document.body.appendChild(popup);
+
+  let hideTimer;
+
+  document.addEventListener('mouseup', e => {
+    clearTimeout(hideTimer);
+    const sel  = window.getSelection();
+    const text = sel?.toString().trim();
+
+    if (!text || text.length < 20 || text.length > 280 || !body.contains(sel.anchorNode)) {
+      hideTimer = setTimeout(() => popup.classList.remove('visible'), 200);
+      return;
+    }
+
+    const range = sel.getRangeAt(0).getBoundingClientRect();
+    popup.style.left = Math.min(window.innerWidth - 240, Math.max(10, range.left + range.width / 2 - 110)) + 'px';
+    popup.style.top  = (range.top + window.scrollY - popup.offsetHeight - 14) + 'px';
+    popup.classList.add('visible');
+
+    popup.querySelector('#qs-tweet').onclick = () => {
+      const tweet = `"${text}" — ONE MEDIA`;
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent(location.href)}`, '_blank');
+      popup.classList.remove('visible');
+    };
+    popup.querySelector('#qs-copy').onclick = () => {
+      navigator.clipboard?.writeText(`"${text}" — ${document.title}`);
+      popup.querySelector('#qs-copy').textContent = '✓ Copié !';
+      setTimeout(() => { popup.querySelector('#qs-copy').textContent = '📋 Copier'; popup.classList.remove('visible'); }, 1400);
+    };
+  });
+
+  document.addEventListener('mousedown', e => {
+    if (!popup.contains(e.target)) {
+      hideTimer = setTimeout(() => popup.classList.remove('visible'), 150);
+    }
+  });
+})();
+
+/* ── MODE LECTURE ────────────────────────────────────────── */
+(function initReadMode() {
+  const main = document.getElementById('article-main');
+  if (!main) return;
+
+  const bookmarkBtn = document.querySelector('.article-bookmark-btn');
+  const btn = document.createElement('button');
+  btn.className = 'read-mode-btn';
+  btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Lecture`;
+
+  const saved = localStorage.getItem('om_read_mode') === '1';
+  if (saved) { document.body.classList.add('read-mode'); btn.classList.add('active'); btn.innerHTML = btn.innerHTML.replace('Lecture', 'Normal'); }
+
+  btn.addEventListener('click', () => {
+    const active = document.body.classList.toggle('read-mode');
+    btn.classList.toggle('active', active);
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> ${active ? 'Normal' : 'Lecture'}`;
+    localStorage.setItem('om_read_mode', active ? '1' : '0');
+  });
+
+  if (bookmarkBtn) bookmarkBtn.after(btn);
+  else document.querySelector('.article-hero-content')?.appendChild(btn);
+})();
