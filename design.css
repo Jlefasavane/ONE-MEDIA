@@ -657,3 +657,181 @@ body.light .theme-btn { color: var(--ink-soft); }
   .sticky-share { width: calc(100% - 40px); justify-content: center; }
   .back-top { bottom: 80px; right: 16px; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   CATEGORY INTRO ANIMATIONS
+   Chaque univers a sa propre animation d'ouverture.
+   ═══════════════════════════════════════════════════════════ */
+
+.cat-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Label central commun */
+.ci-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(64px, 12vw, 140px);
+  letter-spacing: 0.12em;
+  pointer-events: none;
+  z-index: 3;
+  transition: opacity 0.3s ease;
+}
+.cat-intro.exiting .ci-label { opacity: 0; }
+
+/* ── MUSIQUE : barres EQ qui montent ─────────────────────── */
+.cat-intro--musique {
+  background: var(--bg, #090910);
+  transition: transform 0.55s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.cat-intro--musique.exiting {
+  transform: translateY(-100%);
+}
+.cat-intro--musique .ci-label {
+  color: rgba(255,255,255,0.08);
+  font-size: clamp(80px, 16vw, 180px);
+  letter-spacing: 0.04em;
+}
+.cat-intro--musique .ci-bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  padding: 0 2px;
+}
+.cat-intro--musique .ci-bar {
+  flex: 1;
+  background: var(--signal, #00f5ff);
+  box-shadow: 0 0 12px var(--signal, #00f5ff);
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--i, 0) * 0.038s);
+}
+.cat-intro--musique.playing .ci-bar {
+  transform: scaleY(1);
+}
+
+/* ── CINÉMA : rideau qui s'ouvre ──────────────────────────── */
+.cat-intro--cinema { background: transparent; }
+.cat-intro--cinema .ci-label { color: #f5f0e8; }
+.cat-intro--cinema .ci-left,
+.cat-intro--cinema .ci-right {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 51%;
+  background: #06020a;
+  transition: transform 0.75s cubic-bezier(0.76, 0, 0.24, 1);
+}
+/* Liseré doré sur le bord interne */
+.cat-intro--cinema .ci-left  { left: 0;  border-right: 2px solid #c8a96e; }
+.cat-intro--cinema .ci-right { right: 0; border-left:  2px solid #c8a96e; }
+/* Grain cinéma */
+.cat-intro--cinema .ci-left::after,
+.cat-intro--cinema .ci-right::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+  opacity: 0.15;
+  mix-blend-mode: overlay;
+}
+.cat-intro--cinema.exiting .ci-left  { transform: translateX(-101%); }
+.cat-intro--cinema.exiting .ci-right { transform: translateX(101%);  }
+
+/* ── MODE : tranches diagonales ───────────────────────────── */
+.cat-intro--mode { background: transparent; }
+.cat-intro--mode .ci-label {
+  color: #090910;
+  mix-blend-mode: multiply;
+}
+.cat-intro--mode .ci-slices {
+  position: absolute;
+  inset: -10%;
+  display: flex;
+}
+.cat-intro--mode .ci-slice {
+  flex: 1;
+  background: #ffe500;
+  transform: skewX(-8deg) scaleX(1);
+  transform-origin: right center;
+  transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
+  transition-delay: calc(var(--i, 0) * 0.055s);
+}
+.cat-intro--mode.exiting .ci-slice {
+  transform: skewX(-8deg) scaleX(0);
+}
+
+/* ── ART : cercle d'encre ─────────────────────────────────── */
+.cat-intro--art {
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cat-intro--art .ci-label { color: #fff; }
+.cat-intro--art .ci-ink {
+  position: absolute;
+  width: 210vmax;
+  height: 210vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle, #d670ff 0%, #7f27cc 40%, #3b0070 100%);
+  transform: scale(1);
+  transition: transform 0.75s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.cat-intro--art.exiting .ci-ink {
+  transform: scale(0);
+}
+/* Petits éclats satellites */
+.cat-intro--art .ci-splat {
+  position: absolute;
+  border-radius: 50%;
+  background: #bf5af2;
+  opacity: 0.7;
+  transform: scale(1);
+  transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1),
+              opacity 0.4s ease;
+  transition-delay: calc(var(--i, 0) * 0.08s);
+}
+.cat-intro--art.exiting .ci-splat {
+  transform: scale(0);
+  opacity: 0;
+}
+
+/* ── LIFESTYLE : anneaux qui irradient ────────────────────── */
+.cat-intro--lifestyle {
+  background: var(--bg, #090910);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.55s ease;
+}
+.cat-intro--lifestyle.exiting { opacity: 0; }
+.cat-intro--lifestyle .ci-label { color: #30d158; }
+.cat-intro--lifestyle .ci-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid #30d158;
+  aspect-ratio: 1;
+  width: calc(12vmax + var(--i, 0) * 16vmax);
+  transform: scale(0);
+  opacity: 0;
+  transition:
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity   0.4s ease;
+  transition-delay: calc(var(--i, 0) * 0.1s);
+  box-shadow: 0 0 8px rgba(48, 209, 88, 0.3);
+}
+.cat-intro--lifestyle.playing .ci-ring {
+  transform: scale(1);
+  opacity: 1;
+}

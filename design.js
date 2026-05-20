@@ -218,6 +218,67 @@
   btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 })();
 
+/* ── CATEGORY INTRO ANIMATION ────────────────────────────── */
+(function initCatIntro() {
+  // Seulement sur la page catégorie
+  if (!window.location.href.includes('category')) return;
+  const cat = new URLSearchParams(window.location.search).get('cat');
+  if (!cat) return;
+
+  const barHeights = [62, 92, 48, 100, 78, 54, 88, 42, 96, 70, 58, 82];
+
+  const splatPositions = [
+    { w: 60, h: 60, top: '20%', left: '15%' },
+    { w: 40, h: 40, top: '70%', left: '75%' },
+    { w: 80, h: 80, top: '15%', left: '70%' },
+    { w: 35, h: 35, top: '75%', left: '20%' },
+    { w: 55, h: 55, top: '45%', left: '88%' },
+  ];
+
+  const labels = { musique:'MUSIQUE', cinema:'CINÉMA', mode:'MODE', art:'ART', lifestyle:'LIFESTYLE' };
+
+  const buildHtml = {
+    musique: () =>
+      `<div class="ci-bars">${barHeights.map((h,i)=>`<div class="ci-bar" style="height:${h}%;--i:${i}"></div>`).join('')}</div>
+       <div class="ci-label">${labels.musique}</div>`,
+
+    cinema: () =>
+      `<div class="ci-left"></div><div class="ci-right"></div>
+       <div class="ci-label">${labels.cinema}</div>`,
+
+    mode: () =>
+      `<div class="ci-slices">${Array.from({length:6},(_,i)=>`<div class="ci-slice" style="--i:${i}"></div>`).join('')}</div>
+       <div class="ci-label">${labels.mode}</div>`,
+
+    art: () =>
+      `<div class="ci-ink"></div>
+       ${splatPositions.map((s,i)=>`<div class="ci-splat" style="width:${s.w}px;height:${s.h}px;top:${s.top};left:${s.left};--i:${i}"></div>`).join('')}
+       <div class="ci-label">${labels.art}</div>`,
+
+    lifestyle: () =>
+      `${Array.from({length:5},(_,i)=>`<div class="ci-ring" style="--i:${i}"></div>`).join('')}
+       <div class="ci-label">${labels.lifestyle}</div>`,
+  };
+
+  if (!buildHtml[cat]) return;
+
+  const intro = document.createElement('div');
+  intro.className = `cat-intro cat-intro--${cat}`;
+  intro.innerHTML = buildHtml[cat]();
+  document.body.appendChild(intro);
+
+  // Double RAF pour déclencher les transitions CSS
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    intro.classList.add('playing');
+  }));
+
+  // Phase exit : révèle la page
+  setTimeout(() => {
+    intro.classList.add('exiting');
+    setTimeout(() => intro.remove(), 700);
+  }, 1050);
+})();
+
 /* ── COOKIE INJECT ───────────────────────────────────────── */
 (function injectCookies() {
   if (document.getElementById('cookie-banner')) return;
