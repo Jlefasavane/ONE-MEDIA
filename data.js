@@ -1,6 +1,27 @@
 /* ===========================================================
    ONE MEDIA — Données articles
+   Charge les articles IA depuis /api/articles si disponibles,
+   sinon utilise les articles statiques de secours.
    =========================================================== */
+
+// Chargement dynamique des articles IA
+(function loadAIArticles() {
+  fetch('/api/articles')
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (!data || !data.articles?.length) return;
+      // Fusionne : articles IA en premier, statiques en complément
+      const aiIds = new Set(data.articles.map(a => a.id));
+      const staticFallback = ARTICLES.filter(a => !aiIds.has(a.id));
+      ARTICLES.length = 0;
+      ARTICLES.push(...data.articles, ...staticFallback);
+      // Re-render si la page est déjà chargée
+      if (document.readyState === 'complete') {
+        window.dispatchEvent(new CustomEvent('articles-updated'));
+      }
+    })
+    .catch(() => { /* Pas de serveur = articles statiques */ });
+})();
 
 const CATEGORIES = [
   { id: 'musique',   label: 'Musique',   color: '#00F5FF' },
