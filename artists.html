@@ -1114,13 +1114,42 @@ const ARTISTS = [
 ];
 
 /* ══════════════════════════════════════════════════
-   RENDER
+   RENDER (dynamique : local + API)
 ══════════════════════════════════════════════════ */
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:3002'
+  : 'https://one-media-production.up.railway.app';
+
+// Fusion : on démarre avec les artistes locaux (hardcodés),
+// puis on y ajoute les artistes custom ajoutés via l'admin.
+// Si l'ID existe déjà en local, l'artiste API prend le dessus.
+let ALL_ARTISTS = [...ARTISTS];
+
+async function loadCustomArtists() {
+  try {
+    const res  = await fetch(`${API_BASE}/api/artists`);
+    const data = await res.json();
+    const custom = data.artists || [];
+    if (!custom.length) return;
+    // Fusionner : les artistes custom remplacent les locaux si même id
+    const localIds = new Set(ALL_ARTISTS.map(a => a.id));
+    custom.forEach(a => {
+      if (localIds.has(a.id)) {
+        const idx = ALL_ARTISTS.findIndex(x => x.id === a.id);
+        ALL_ARTISTS[idx] = a; // override
+      } else {
+        ALL_ARTISTS.push(a); // nouvel artiste
+      }
+    });
+    renderArtists(currentFilter);
+  } catch { /* silently fail — on garde les artistes locaux */ }
+}
+
 const grid = document.getElementById('artists-grid');
 let currentFilter = 'all';
 
 function renderArtists(filter = 'all') {
-  const filtered = ARTISTS.filter(a => {
+  const filtered = ALL_ARTISTS.filter(a => {
     if (filter === 'all') return true;
     if (filter === 'guinee')    return a.country === 'guinee';
     if (filter === 'cote_ivoire') return a.country === 'cote_ivoire';
@@ -1130,7 +1159,7 @@ function renderArtists(filter = 'all') {
     return a.genres.includes(filter);
   });
 
-  document.getElementById('artist-count').textContent = ARTISTS.length;
+  document.getElementById('artist-count').textContent = ALL_ARTISTS.length;
 
   grid.innerHTML = filtered.map((a, i) => {
     const img = a.image || a.imageFallback || '';
@@ -1249,7 +1278,9 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
+// Rendu initial avec artistes locaux, puis enrichissement via API
 renderArtists();
+loadCustomArtists();
 </script>
 
 <!-- SIGNAL BANNER (newsletter) -->

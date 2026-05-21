@@ -531,6 +531,103 @@
     <div id="submissions-list" style="margin-top:14px"></div>
   </div>
 
+  <!-- Gestion des artistes -->
+  <p class="section-title">🎤 Gestion des artistes</p>
+  <div class="action-card">
+    <!-- Auto-fill -->
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Entre le handle YouTube de l'artiste pour auto-remplir les champs.</p>
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+      <input type="text" id="af-handle" placeholder="@NomArtiste" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;flex:1;min-width:180px">
+      <button class="btn" onclick="autoFillArtist()" style="white-space:nowrap">⚡ Auto-remplir</button>
+      <span id="af-status" style="font-size:12px;color:var(--muted)"></span>
+    </div>
+    <!-- Recent videos preview -->
+    <div id="af-videos" style="display:none;margin-bottom:16px;padding:12px;background:#0f0f0f;border-radius:6px;border:1px solid var(--border)">
+      <p style="font-size:11px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Derniers clips détectés</p>
+      <div id="af-videos-list" style="display:flex;gap:10px;flex-wrap:wrap"></div>
+    </div>
+    <!-- Form artiste -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="artist-form-grid">
+      <div>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">NOM DE SCÈNE *</label>
+        <input type="text" id="af-name" placeholder="Azaya" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">NOM COMPLET</label>
+        <input type="text" id="af-realname" placeholder="Prénom Nom" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">PAYS</label>
+        <select id="af-country" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
+          <option value="guinee">🇬🇳 Guinée</option>
+          <option value="senegal">🇸🇳 Sénégal</option>
+          <option value="nigeria">🇳🇬 Nigeria</option>
+          <option value="cote_ivoire">🇨🇮 Côte d'Ivoire</option>
+          <option value="cameroun">🇨🇲 Cameroun</option>
+          <option value="mali">🇲🇱 Mali</option>
+          <option value="congo">🇨🇩 Congo DRC</option>
+          <option value="afrique">🌍 Autre Afrique</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">DRAPEAU EMOJI</label>
+        <input type="text" id="af-flag" placeholder="🇬🇳" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">GENRE MUSICAL</label>
+        <input type="text" id="af-genre" placeholder="Afropop · Rap · Soul" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">ÉCOUTES/MOIS</label>
+        <input type="text" id="af-streams" placeholder="500K écoutes/mois" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
+      </div>
+      <div style="grid-column:1/-1">
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">BIO (50-300 mots)</label>
+        <textarea id="af-bio" rows="4" placeholder="Présentation de l'artiste..." style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box;resize:vertical;font-family:inherit"></textarea>
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">PRIX / RÉCOMPENSE</label>
+        <input type="text" id="af-award" placeholder="🏆 PRIMUD 2025" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">COULEUR ACCENT</label>
+        <input type="text" id="af-color" placeholder="#FF6B35" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">PHOTO (URL)</label>
+        <input type="url" id="af-image" placeholder="https://..." style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">SPOTIFY</label>
+        <input type="url" id="af-spotify" placeholder="https://open.spotify.com/artist/..." style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">DEEZER</label>
+        <input type="url" id="af-deezer" placeholder="https://www.deezer.com/artist/..." style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">YOUTUBE (URL chaîne)</label>
+        <input type="text" id="af-youtube" placeholder="https://youtube.com/@Artiste" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">INSTAGRAM</label>
+        <input type="url" id="af-instagram" placeholder="https://instagram.com/..." style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
+      </div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button class="btn" onclick="saveArtist()" style="background:var(--green);color:#000">✓ Enregistrer l'artiste</button>
+      <button class="btn btn-ghost" onclick="clearArtistForm()">Effacer</button>
+      <span id="artist-save-status" style="font-size:13px"></span>
+    </div>
+    <input type="hidden" id="af-editing-id">
+  </div>
+
+  <!-- Liste des artistes custom -->
+  <div class="action-card" style="margin-top:0">
+    <button class="btn" onclick="loadArtistsList()">🔄 Voir les artistes ajoutés</button>
+    <div id="artists-admin-list" style="margin-top:14px"></div>
+  </div>
+
   <!-- Articles list -->
   <p class="section-title">📰 Articles IA (édition & gestion)</p>
   <div class="action-card">
@@ -1077,6 +1174,184 @@
   /* ── AUTO-LOGIN si token existant ── */
   if (token) {
     showDashboard();
+  }
+
+  /* ── ARTISTES ─────────────────────────────────────────── */
+  async function autoFillArtist() {
+    const handle = document.getElementById('af-handle').value.trim();
+    const status = document.getElementById('af-status');
+    const videosBox = document.getElementById('af-videos');
+    if (!handle) { status.textContent = '⚠ Entre un handle YouTube (ex: @Azaya)'; return; }
+    status.textContent = '⏳ Résolution en cours…';
+    status.style.color = 'var(--muted)';
+    videosBox.style.display = 'none';
+    try {
+      const res = await fetch(`${API}/api/artists/autofill`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+        body: JSON.stringify({ handle })
+      });
+      const d = await res.json();
+      if (!d.success) {
+        status.textContent = '❌ ' + (d.error || 'Introuvable');
+        status.style.color = '#ff6b6b';
+        return;
+      }
+      const p = d.prefilled;
+      // Remplir les champs
+      document.getElementById('af-name').value    = p.name || '';
+      document.getElementById('af-youtube').value = p.youtube || '';
+      document.getElementById('af-image').value   = p.image || '';
+      status.textContent = `✓ "${p.channelName || p.name}" trouvé — ${p.videoCount || 0} vidéo(s) sur la chaîne`;
+      status.style.color = 'var(--green)';
+      // Afficher les vidéos récentes
+      if (p.recentVideos && p.recentVideos.length) {
+        videosBox.style.display = 'block';
+        document.getElementById('af-videos-list').innerHTML = p.recentVideos.map(v => `
+          <a href="${v.url}" target="_blank" style="text-decoration:none;display:block;width:120px">
+            <img src="${v.thumb}" style="width:120px;height:68px;object-fit:cover;border-radius:4px;border:1px solid var(--border)">
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${v.title}</div>
+          </a>`).join('');
+      }
+    } catch (e) {
+      status.textContent = '❌ ' + e.message;
+      status.style.color = '#ff6b6b';
+    }
+  }
+
+  function clearArtistForm() {
+    ['af-handle','af-name','af-realname','af-genre','af-streams','af-bio','af-award','af-color','af-image','af-spotify','af-deezer','af-youtube','af-instagram','af-editing-id'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    document.getElementById('af-country').value = 'guinee';
+    document.getElementById('af-flag').value = '';
+    document.getElementById('af-videos').style.display = 'none';
+    document.getElementById('af-status').textContent = '';
+    document.getElementById('artist-save-status').textContent = '';
+  }
+
+  async function saveArtist() {
+    const editingId = document.getElementById('af-editing-id').value;
+    const statusEl  = document.getElementById('artist-save-status');
+    const name = document.getElementById('af-name').value.trim();
+    if (!name) { statusEl.textContent = '⚠ Le nom est requis'; statusEl.style.color='#ff6b6b'; return; }
+
+    const payload = {
+      name,
+      realName:      document.getElementById('af-realname').value.trim(),
+      country:       document.getElementById('af-country').value,
+      flag:          document.getElementById('af-flag').value.trim() || '🌍',
+      genre:         document.getElementById('af-genre').value.trim(),
+      streams:       document.getElementById('af-streams').value.trim(),
+      bio:           document.getElementById('af-bio').value.trim(),
+      award:         document.getElementById('af-award').value.trim(),
+      color:         document.getElementById('af-color').value.trim() || '#FF6B35',
+      image:         document.getElementById('af-image').value.trim(),
+      spotify:       document.getElementById('af-spotify').value.trim(),
+      deezer:        document.getElementById('af-deezer').value.trim(),
+      youtube:       document.getElementById('af-youtube').value.trim(),
+      instagram:     document.getElementById('af-instagram').value.trim(),
+      youtubeHandle: document.getElementById('af-handle').value.trim(),
+      genres:        ['afrobeats'],
+      verified:      true,
+    };
+
+    try {
+      const url    = editingId ? `${API}/api/artists/${editingId}` : `${API}/api/artists`;
+      const method = editingId ? 'PUT' : 'POST';
+      const res    = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+        body: JSON.stringify(payload)
+      });
+      const d = await res.json();
+      if (d.success) {
+        statusEl.textContent = `✓ ${name} ${editingId ? 'mis à jour' : 'ajouté'} !`;
+        statusEl.style.color = 'var(--green)';
+        clearArtistForm();
+        loadArtistsList();
+      } else {
+        statusEl.textContent = '❌ ' + (d.error || 'Erreur');
+        statusEl.style.color = '#ff6b6b';
+      }
+    } catch (e) {
+      statusEl.textContent = '❌ ' + e.message;
+      statusEl.style.color = '#ff6b6b';
+    }
+  }
+
+  async function loadArtistsList() {
+    const el = document.getElementById('artists-admin-list');
+    el.innerHTML = '<p style="font-size:13px;color:var(--muted)">Chargement…</p>';
+    try {
+      const res  = await fetch(`${API}/api/artists`);
+      const data = await res.json();
+      const list = data.artists || [];
+      if (!list.length) { el.innerHTML = '<p style="font-size:13px;color:var(--muted)">Aucun artiste ajouté via l\'admin. Utilise le formulaire ci-dessus.</p>'; return; }
+      el.innerHTML = `<p style="font-size:13px;color:var(--muted);margin-bottom:12px">${list.length} artiste(s) custom</p>` +
+        list.map(a => `
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#1a1a1a;border:1px solid var(--border);border-radius:8px;margin-bottom:8px">
+            ${a.image ? `<img src="${a.image}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0" onerror="this.style.display='none'">` : '<div style="width:48px;height:48px;border-radius:50%;background:var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px">' + (a.flag||'🎤') + '</div>'}
+            <div style="flex:1;min-width:0">
+              <div style="font-size:14px;font-weight:700">${a.flag||''} ${a.name}</div>
+              <div style="font-size:12px;color:var(--muted)">${a.genre||''} · ${a.country}</div>
+            </div>
+            <div style="display:flex;gap:6px;flex-shrink:0">
+              <button onclick="editArtist('${a.id}')" style="background:rgba(0,245,255,0.1);border:1px solid var(--accent);color:var(--accent);border-radius:4px;padding:5px 10px;font-size:12px;cursor:pointer">✏️</button>
+              <button onclick="deleteArtist('${a.id}','${a.name.replace(/'/g,'\\\'')}')" style="background:rgba(255,45,85,0.1);border:1px solid var(--red);color:var(--red);border-radius:4px;padding:5px 10px;font-size:12px;cursor:pointer">🗑</button>
+            </div>
+          </div>`).join('');
+    } catch (e) {
+      el.innerHTML = `<p style="color:#ff6b6b;font-size:13px">Erreur: ${e.message}</p>`;
+    }
+  }
+
+  // Cache des artistes custom pour pré-remplir l'édition
+  let artistsCache = [];
+  async function refreshArtistsCache() {
+    try {
+      const d = await fetch(`${API}/api/artists`).then(r => r.json());
+      artistsCache = d.artists || [];
+    } catch {}
+  }
+
+  async function editArtist(id) {
+    await refreshArtistsCache();
+    const a = artistsCache.find(x => x.id === id);
+    if (!a) { alert('Artiste introuvable'); return; }
+    document.getElementById('af-editing-id').value  = id;
+    document.getElementById('af-handle').value      = a.youtubeHandle || '';
+    document.getElementById('af-name').value        = a.name || '';
+    document.getElementById('af-realname').value    = a.realName || '';
+    document.getElementById('af-country').value     = a.country || 'guinee';
+    document.getElementById('af-flag').value        = a.flag || '';
+    document.getElementById('af-genre').value       = a.genre || '';
+    document.getElementById('af-streams').value     = a.streams || '';
+    document.getElementById('af-bio').value         = a.bio || '';
+    document.getElementById('af-award').value       = a.award || '';
+    document.getElementById('af-color').value       = a.color || '#FF6B35';
+    document.getElementById('af-image').value       = a.image || '';
+    document.getElementById('af-spotify').value     = a.spotify || '';
+    document.getElementById('af-deezer').value      = a.deezer || '';
+    document.getElementById('af-youtube').value     = a.youtube || '';
+    document.getElementById('af-instagram').value   = a.instagram || '';
+    document.getElementById('artist-save-status').textContent = `Mode édition : ${a.name}`;
+    document.getElementById('artist-save-status').style.color = 'var(--yellow)';
+    document.getElementById('artist-form-grid').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  async function deleteArtist(id, name) {
+    if (!confirm(`Supprimer l'artiste "${name}" ?`)) return;
+    try {
+      const res = await fetch(`${API}/api/artists/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-token': token }
+      });
+      const d = await res.json();
+      if (d.success) { showToast(`✓ ${name} supprimé`, 'var(--green)'); loadArtistsList(); }
+      else showToast('❌ ' + d.error, 'var(--red)');
+    } catch (e) { showToast('❌ ' + e.message, 'var(--red)'); }
   }
 
   /* ── NEWSLETTER SEND ──────────────────────────────────── */

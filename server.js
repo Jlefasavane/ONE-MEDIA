@@ -470,6 +470,149 @@ app.delete('/api/events/:id', adminAuth, (req, res) => {
   res.json({ success: true });
 });
 
+/* ── Artists CRUD ────────────────────────────────────────── */
+const ARTISTS_FILE = path.join(__dirname, 'artists.json');
+
+// GET public — retourne les artistes custom ajoutés via admin
+app.get('/api/artists', (req, res) => {
+  res.json(readJSON(ARTISTS_FILE, { artists: [] }));
+});
+
+// POST admin — auto-fill depuis un handle YouTube
+app.post('/api/artists/autofill', adminAuth, async (req, res) => {
+  const { handle } = req.body;
+  if (!handle) return res.status(400).json({ error: 'Handle requis (ex: @NomArtiste)' });
+  const cleanHandle = handle.trim().startsWith('@') ? handle.trim() : `@${handle.trim()}`;
+
+  try {
+    // 1. Résoudre channel ID (cache d'abord)
+    let channelId = null;
+    const cache = readJSON(CHANNEL_CACHE_FILE, {});
+    if (cache[cleanHandle]) {
+      channelId = cache[cleanHandle];
+      console.log(`  ✓ Cache: ${cleanHandle} → ${channelId}`);
+    } else {
+      console.log(`  🔍 Résolution ${cleanHandle}…`);
+      channelId = await resolveChannelId(cleanHandle);
+      if (channelId) {
+        cache[cleanHandle] = channelId;
+        writeJSON(CHANNEL_CACHE_FILE, cache);
+        console.log(`  ✓ Résolu: ${cleanHandle} → ${channelId}`);
+      }
+    }
+
+    if (!channelId) {
+      return res.json({ success: false, error: `Chaîne YouTube introuvable pour "${cleanHandle}". Vérifie le handle exact.` });
+    }
+
+    // 2. Lire flux RSS pour avoir le nom de chaîne et les vidéos récentes
+    const videos = await fetchChannelVideos(channelId);
+    const latestVideos = videos.slice(0, 3).map(v => ({
+      title: v.title,
+      url:   `https://www.youtube.com/watch?v=${v.videoId}`,
+      thumb: `https://img.youtube.com/vi/${v.videoId}/mqdefault.jpg`,
+      date:  v.published
+    }));
+
+    // 3. Construire l'image de profil depuis la miniature du dernier clip
+    const profileImage = latestVideos[0]
+      ? `https://img.youtube.com/vi/${videos[0].videoId}/maxresdefault.jpg`
+      : '';
+
+    // 4. Nom de chaîne = texte entre les <name> du flux Atom
+    let channelName = cleanHandle.replace('@', '');
+    try {
+      const xmlRes = await axios.get(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`, {
+        timeout: 6000, headers: { 'User-Agent': 'Mozilla/5.0' }
+      });
+      const authorMatch = String(xmlRes.data).match(/<author>\s*<name>([^<]+)<\/name>/);
+      if (authorMatch) channelName = authorMatch[1].trim();
+    } catch { /* keep handle name */ }
+
+    const suggestedId = channelName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+    res.json({
+      success:     true,
+      channelId,
+      channelName,
+      prefilled: {
+        id:            suggestedId,
+        name:          channelName,
+        youtubeHandle: cleanHandle,
+        youtube:       `https://www.youtube.com/${cleanHandle}`,
+        image:         profileImage,
+        recentVideos:  latestVideos,
+        videoCount:    videos.length,
+      }
+    });
+  } catch (err) {
+    console.error('autofill error:', err.message);
+    res.json({ success: false, error: err.message });
+  }
+});
+
+// POST admin — ajouter un artiste
+app.post('/api/artists', adminAuth, (req, res) => {
+  const a = req.body;
+  if (!a.name) return res.status(400).json({ error: 'Champ "name" requis' });
+  const data = readJSON(ARTISTS_FILE, { artists: [] });
+  const id = (a.id || a.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')) + '-custom';
+  if (data.artists.find(x => x.id === id)) return res.status(409).json({ error: `ID "${id}" déjà utilisé` });
+  const artist = {
+    id,
+    name:          a.name          || '',
+    realName:      a.realName      || '',
+    country:       a.country       || 'afrique',
+    flag:          a.flag          || '🌍',
+    genre:         a.genre         || '',
+    genres:        a.genres        || ['afrobeats'],
+    verified:      a.verified      !== false,
+    image:         a.image         || '',
+    imageFallback: a.imageFallback || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80',
+    bio:           a.bio           || '',
+    streams:       a.streams       || '',
+    streamNote:    a.streamNote    || 'Spotify',
+    award:         a.award         || '',
+    articles:      [],
+    spotify:       a.spotify       || '',
+    deezer:        a.deezer        || '',
+    youtube:       a.youtube       || '',
+    instagram:     a.instagram     || '',
+    tiktok:        a.tiktok        || '',
+    color:         a.color         || '#FF6B35',
+    stats:         a.stats         || [],
+    youtubeHandle: a.youtubeHandle || '',
+    channelId:     a.channelId     || '',
+    addedAt:       new Date().toISOString(),
+    source:        'admin'
+  };
+  data.artists.push(artist);
+  writeJSON(ARTISTS_FILE, data);
+  console.log(`🎤 Artiste ajouté: ${artist.name} (${artist.country})`);
+  res.json({ success: true, artist });
+});
+
+// PUT admin — modifier un artiste
+app.put('/api/artists/:id', adminAuth, (req, res) => {
+  const data = readJSON(ARTISTS_FILE, { artists: [] });
+  const idx  = data.artists.findIndex(a => a.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'Artiste introuvable' });
+  data.artists[idx] = { ...data.artists[idx], ...req.body, id: req.params.id, updatedAt: new Date().toISOString() };
+  writeJSON(ARTISTS_FILE, data);
+  res.json({ success: true, artist: data.artists[idx] });
+});
+
+// DELETE admin — supprimer un artiste
+app.delete('/api/artists/:id', adminAuth, (req, res) => {
+  const data = readJSON(ARTISTS_FILE, { artists: [] });
+  const found = data.artists.find(a => a.id === req.params.id);
+  if (!found) return res.status(404).json({ error: 'Artiste introuvable' });
+  data.artists = data.artists.filter(a => a.id !== req.params.id);
+  writeJSON(ARTISTS_FILE, data);
+  console.log(`🗑 Artiste supprimé: ${found.name}`);
+  res.json({ success: true });
+});
+
 /* ── Contact form ───────────────────────────────────────── */
 const CONTACTS_FILE     = path.join(__dirname, 'contacts.json');
 const SUBMISSIONS_FILE  = path.join(__dirname, 'submissions.json');
