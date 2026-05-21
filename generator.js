@@ -216,16 +216,44 @@ async function generateArticle(rawArticle, category, index) {
   };
 }
 
-/* ── Images de fallback par catégorie ────────────────────── */
+/* ── Images de fallback africaines par catégorie ─────────── */
 function getFallbackImage(catId) {
+  // Plusieurs options par catégorie — on tourne pour varier
   const fallbacks = {
-    musique:   'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1400&q=85',
-    cinema:    'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1400&q=85',
-    mode:      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=85',
-    art:       'https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?w=1400&q=85',
-    lifestyle: 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=1400&q=85',
+    musique: [
+      'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1400&q=85', // concert afro
+      'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1400&q=85', // musique générique
+      'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1400&q=85', // studio
+    ],
+    cinema: [
+      'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1400&q=85', // cinéma
+      'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1400&q=85', // film
+      'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1400&q=85', // écran
+    ],
+    mode: [
+      'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=1400&q=85', // mode africaine femme
+      'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1400&q=85', // fashion africa
+      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1400&q=85', // fashion portrait
+      'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1400&q=85', // style
+    ],
+    art: [
+      'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=1400&q=85', // art africain
+      'https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?w=1400&q=85', // art contemporain
+      'https://images.unsplash.com/photo-1578301978018-3005759f48f7?w=1400&q=85', // peinture
+    ],
+    lifestyle: [
+      'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1400&q=85', // jeunesse africaine
+      'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=1400&q=85', // lifestyle afrique
+      'https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=1400&q=85', // ville africaine
+      'https://images.unsplash.com/photo-1612531386530-97286d97c2d2?w=1400&q=85', // culture
+    ],
+    interview: [
+      'https://images.unsplash.com/photo-1520872024865-3ff2369d5831?w=1400&q=85', // interview micro
+      'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=1400&q=85', // portrait artiste
+    ],
   };
-  return fallbacks[catId] || fallbacks.musique;
+  const list = fallbacks[catId] || fallbacks.musique;
+  return list[Math.floor(Math.random() * list.length)];
 }
 
 /* ── Fonction principale ─────────────────────────────────── */
