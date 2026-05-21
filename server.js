@@ -19,6 +19,7 @@ const ARTICLES_FILE    = path.join(__dirname, 'articles.json');
 const CLIPS_FILE       = path.join(__dirname, 'clips.json');
 const SUBSCRIBERS_FILE = path.join(__dirname, 'subscribers.json');
 const EVENTS_FILE      = path.join(__dirname, 'events.json');
+const CHANNEL_CACHE_FILE = path.join(__dirname, 'channel_ids.json');
 const ADMIN_PASSWORD   = process.env.ADMIN_PASSWORD || 'onemedia2026!';
 
 /* ── Helpers fichiers ─────────────────────────────────────── */
@@ -166,7 +167,7 @@ app.get('/api/debug', adminAuth, async (req, res) => {
       ...result,
       env: {
         GROQ_API_KEY:    process.env.GROQ_API_KEY    ? `✅ Présente (${process.env.GROQ_API_KEY.length} chars)` : '❌ Manquante',
-        YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY ? '✅ Présente' : '⚠ Non configurée (clips auto désactivés)',
+        CHANNEL_CACHE:   fs.existsSync(CHANNEL_CACHE_FILE) ? `✅ ${Object.keys(readJSON(CHANNEL_CACHE_FILE,{})).length} chaînes résolues` : '⚠ Pas encore résolu (lance le scan clips)',
         ADMIN_PASSWORD:  process.env.ADMIN_PASSWORD  ? '✅ Défini' : '⚠ Valeur par défaut',
         GMAIL_USER:      process.env.GMAIL_USER || '❌ Non configuré',
       },
@@ -227,102 +228,176 @@ app.post('/api/clips/submit', (req, res) => {
   res.json({ success: true, message: 'Soumission reçue !' });
 });
 
-// POST /api/clips/auto-refresh — cherche les clips YouTube des 48h (admin)
-let isRefreshingClips = false;
-app.post('/api/clips/auto-refresh', adminAuth, async (req, res) => {
-  const YOUTUBE_KEY = process.env.YOUTUBE_API_KEY;
-  if (!YOUTUBE_KEY) {
-    return res.status(400).json({
-      error: 'YOUTUBE_API_KEY non configurée.',
-      help: 'Ajoute YOUTUBE_API_KEY dans les variables Railway (console.cloud.google.com → Credentials)',
-    });
-  }
-  if (isRefreshingClips) return res.json({ message: 'Refresh clips déjà en cours…' });
+/* ══════════════════════════════════════════════════════════
+   CLIPS AUTO — RSS GRATUIT (zéro API, zéro carte bancaire)
+   YouTube expose des flux Atom publics par chaîne :
+   youtube.com/feeds/videos.xml?channel_id=UCxxxxx
+   On résout les @handles → channel_id une seule fois (cache).
+   ══════════════════════════════════════════════════════════ */
 
-  res.json({ message: 'Recherche de nouveaux clips YouTube démarrée…' });
-  isRefreshingClips = true;
+// Chaînes des artistes africains/guinéens suivis par ONE MEDIA
+// Format : { handle, artist, country }
+// Les channel_id sont résolus automatiquement et mis en cache.
+const ARTIST_CHANNELS = [
+  { handle: '@BurnaBoyTV',          artist: 'Burna Boy',      country: 'nigeria' },
+  { handle: '@wizkidayo',           artist: 'Wizkid',         country: 'nigeria' },
+  { handle: '@DavidoOfficial',      artist: 'Davido',         country: 'nigeria' },
+  { handle: '@RemaOfficial',        artist: 'Rema',           country: 'nigeria' },
+  { handle: '@OmahLayOfficial',     artist: 'Omah Lay',       country: 'nigeria' },
+  { handle: '@FireboyDML',          artist: 'Fireboy DML',    country: 'nigeria' },
+  { handle: '@TiwaSavageVEVO',      artist: 'Tiwa Savage',    country: 'nigeria' },
+  { handle: '@AyaNakamuraOfficiel', artist: 'Aya Nakamura',   country: 'france' },
+  { handle: '@MHDofficiel',         artist: 'MHD',            country: 'france' },
+  { handle: '@YoussouNDourOfficiel',artist: 'Youssou N\'Dour', country: 'senegal' },
+  { handle: '@FallyIpupaOfficiel',  artist: 'Fally Ipupa',    country: 'afrique' },
+  { handle: '@DidiB',               artist: 'Didi B',         country: 'cote_ivoire' },
+  { handle: '@HimraOfficiel',       artist: 'Himra',          country: 'cote_ivoire' },
+  { handle: '@Tyla',                artist: 'Tyla',           country: 'afrique' },
+  // Artistes guinéens — handles à confirmer quand leurs chaînes sont connues
+  // { handle: '@AzayaOfficiel', artist: 'Azaya', country: 'guinee' },
+];
 
+const CHANNEL_CACHE_FILE = path.join(__dirname, 'channel_ids.json');
+
+/* ── Résoudre @handle → channel_id (sans API key) ────────── */
+async function resolveChannelId(handle) {
+  const url = `https://www.youtube.com/${handle}`;
   try {
-    await refreshYouTubeClips(YOUTUBE_KEY);
-    console.log('✅ Clips YouTube rafraîchis');
+    const res = await axios.get(url, {
+      timeout: 8000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36',
+        'Accept-Language': 'fr-FR,fr;q=0.9',
+      },
+    });
+    // Le channel_id est dans le HTML de la page : /channel/UCxxxxxx
+    const match = String(res.data).match(/"channelId":"(UC[A-Za-z0-9_-]{22})"/);
+    if (match) return match[1];
+    // Fallback : canonical link
+    const link = String(res.data).match(/channel\/(UC[A-Za-z0-9_-]{22})/);
+    return link ? link[1] : null;
   } catch (err) {
-    console.error('❌ Erreur clips YouTube:', err.message);
-  } finally {
-    isRefreshingClips = false;
+    console.warn(`  ⚠ Résolution ${handle}: ${err.message}`);
+    return null;
   }
-});
+}
 
-/* ── Chercher de nouveaux clips YouTube 48h ──────────────── */
-async function refreshYouTubeClips(apiKey) {
-  const since48h = new Date(Date.now() - 48 * 3600 * 1000).toISOString();
+/* ── Lire le flux Atom RSS d'une chaîne YouTube ───────────── */
+async function fetchChannelVideos(channelId) {
+  const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+  try {
+    const res = await axios.get(url, {
+      timeout: 8000,
+      headers: { 'User-Agent': 'Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0', 'Accept': 'application/atom+xml,*/*' },
+    });
+    const xml     = String(res.data);
+    const entries = [];
+    const entryRx = /<entry>([\s\S]*?)<\/entry>/gi;
+    let m;
+    while ((m = entryRx.exec(xml)) !== null) {
+      const raw     = m[1];
+      const videoId = (raw.match(/<yt:videoId>([^<]+)<\/yt:videoId>/) || [])[1];
+      const title   = (raw.match(/<title>([^<]+)<\/title>/) || [])[1];
+      const published = (raw.match(/<published>([^<]+)<\/published>/) || [])[1];
+      if (videoId && title) entries.push({ videoId, title, published: published || '' });
+    }
+    return entries;
+  } catch (err) {
+    console.warn(`  ⚠ RSS chaîne ${channelId}: ${err.message}`);
+    return [];
+  }
+}
 
-  const QUERIES = [
-    { q: 'afrobeats clip officiel 2026',   country: 'afrique' },
-    { q: 'guinee musique clip officiel',   country: 'guinee' },
-    { q: 'cote ivoire afropop clip',       country: 'cote_ivoire' },
-    { q: 'senegal musique clip officiel',  country: 'senegal' },
-    { q: 'nigeria afrobeats clip 2026',    country: 'nigeria' },
-    { q: 'mali musique clip officiel',     country: 'mali' },
-  ];
+/* ── Refresh clips depuis les chaînes YouTube (GRATUIT) ──── */
+let isRefreshingClips = false;
 
+async function refreshClipsFromChannels() {
+  console.log('\n🎬 ONE MEDIA — Scan clips YouTube (RSS gratuit)');
+
+  // 1. Charger le cache des channel_id
+  let cache = readJSON(CHANNEL_CACHE_FILE, {});
+
+  // 2. Résoudre les handles manquants dans le cache
+  for (const ch of ARTIST_CHANNELS) {
+    if (!cache[ch.handle]) {
+      console.log(`  🔍 Résolution ${ch.handle}…`);
+      const id = await resolveChannelId(ch.handle);
+      if (id) {
+        cache[ch.handle] = id;
+        console.log(`  ✓ ${ch.handle} → ${id}`);
+      }
+      await new Promise(r => setTimeout(r, 800));
+    }
+  }
+  writeJSON(CHANNEL_CACHE_FILE, cache);
+
+  // 3. Lire les vidéos récentes de chaque chaîne
+  const since48h    = Date.now() - 48 * 3600 * 1000;
   const data        = readJSON(CLIPS_FILE, { clips: [], pending: [] });
   const existingIds = new Set(data.clips.map(c => c.videoId));
   let   added       = 0;
 
-  for (const { q, country } of QUERIES) {
-    try {
-      const res = await axios.get('https://www.googleapis.com/youtube/v3/search', {
-        params: {
-          part:          'snippet',
-          q,
-          type:          'video',
-          videoCategoryId: '10', // Music
-          publishedAfter: since48h,
-          order:         'date',
-          maxResults:    5,
-          key:           apiKey,
-          relevanceLanguage: 'fr',
-        },
-        timeout: 10000,
-      });
+  for (const ch of ARTIST_CHANNELS) {
+    const channelId = cache[ch.handle];
+    if (!channelId) continue;
 
-      const items = res.data.items || [];
-      console.log(`  🎬 YouTube "${q}" → ${items.length} clips`);
+    const videos = await fetchChannelVideos(channelId);
+    for (const v of videos) {
+      if (existingIds.has(v.videoId)) continue;
 
-      for (const item of items) {
-        const videoId = item.id?.videoId;
-        if (!videoId || existingIds.has(videoId)) continue;
+      const publishedTs = v.published ? new Date(v.published).getTime() : 0;
+      const isNew48h    = publishedTs && publishedTs >= since48h;
 
-        const clip = {
-          id:         `clip_yt_${Date.now()}_${videoId}`,
-          videoId,
-          title:      item.snippet.title,
-          artist:     item.snippet.channelTitle,
-          country,
-          addedAt:    new Date().toISOString(),
-          releasedAt: item.snippet.publishedAt,
-          verified:   false, // l'admin doit valider
-          autoFound:  true,
-          thumbnail:  item.snippet.thumbnails?.high?.url || '',
-        };
-
-        data.clips.unshift(clip);
-        existingIds.add(videoId);
+      const clip = {
+        id:         `clip_rss_${Date.now()}_${v.videoId}`,
+        videoId:    v.videoId,
+        title:      v.title,
+        artist:     ch.artist,
+        country:    ch.country,
+        addedAt:    new Date().toISOString(),
+        releasedAt: v.published || new Date().toISOString(),
+        verified:   false,     // l'admin valide avant affichage public
+        autoFound:  true,
+        isNew48h,
+      };
+      data.clips.unshift(clip);
+      existingIds.add(v.videoId);
+      if (isNew48h) {
         added++;
+        console.log(`  🆕 ${ch.artist} : "${v.title.slice(0, 50)}" (${v.published?.slice(0,10)})`);
       }
-
-      await new Promise(r => setTimeout(r, 500)); // respecter les quotas
-    } catch (err) {
-      console.warn(`  ⚠ YouTube search "${q}":`, err.response?.data?.error?.message || err.message);
     }
+    await new Promise(r => setTimeout(r, 600));
   }
 
-  data.updatedAt    = new Date().toISOString();
+  data.updatedAt       = new Date().toISOString();
   data.lastAutoRefresh = new Date().toISOString();
   writeJSON(CLIPS_FILE, data);
-  console.log(`  🎬 ${added} nouveaux clips trouvés sur YouTube`);
+  console.log(`  ✅ ${added} nouveau(x) clip(s) des 48h trouvés\n`);
   return added;
 }
+
+// POST /api/clips/auto-refresh — déclenche le scan (admin)
+app.post('/api/clips/auto-refresh', adminAuth, async (req, res) => {
+  if (isRefreshingClips) return res.json({ message: 'Scan clips déjà en cours…' });
+  res.json({ message: '🎬 Scan clips YouTube démarré (RSS gratuit, sans API)…' });
+  isRefreshingClips = true;
+  try   { await refreshClipsFromChannels(); }
+  catch (err) { console.error('❌ Clips refresh:', err.message); }
+  finally     { isRefreshingClips = false; }
+});
+
+// GET /api/clips/new48h — clips des 48 dernières heures (public)
+app.get('/api/clips/new48h', (req, res) => {
+  const data    = readJSON(CLIPS_FILE, { clips: [] });
+  const since48h = Date.now() - 48 * 3600 * 1000;
+  const recent  = (data.clips || []).filter(c => {
+    const ts = c.releasedAt ? new Date(c.releasedAt).getTime() : 0;
+    return ts >= since48h && c.verified !== false; // seulement les clips vérifiés
+  });
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  res.json({ clips: recent, count: recent.length, since: new Date(since48h).toISOString() });
+});
 
 /* ── API Événements ─────────────────────────────────────── */
 
@@ -413,13 +488,12 @@ cron.schedule('0 */6 * * *', async () => {
   finally     { isGenerating = false; }
 });
 
-// Refresh clips YouTube toutes les 6h si clé disponible
+// Refresh clips YouTube toutes les 6h (RSS GRATUIT — pas de clé API)
 cron.schedule('30 */6 * * *', async () => {
-  const key = process.env.YOUTUBE_API_KEY;
-  if (!key || isRefreshingClips) return;
-  console.log('\n⏰ Cron clips YouTube...');
+  if (isRefreshingClips) return;
+  console.log('\n⏰ Cron clips YouTube RSS...');
   isRefreshingClips = true;
-  try   { await refreshYouTubeClips(key); }
+  try   { await refreshClipsFromChannels(); }
   catch (err) { console.error('❌ Cron clips:', err.message); }
   finally     { isRefreshingClips = false; }
 });

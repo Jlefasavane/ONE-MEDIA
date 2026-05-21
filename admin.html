@@ -492,12 +492,12 @@
   <p class="section-title">🎬 Clips automatiques (YouTube 48h)</p>
   <div class="action-card">
     <h3>🔍 Nouveaux clips des 48 dernières heures</h3>
-    <p>Si <code style="color:var(--accent)">YOUTUBE_API_KEY</code> est configurée dans Railway, lance une recherche YouTube pour trouver automatiquement les clips africains sortis dans les 48h.</p>
+    <p>Scan <strong>100% gratuit</strong> — utilise les flux RSS publics des chaînes YouTube des artistes africains suivis. Zéro API, zéro carte bancaire. Tourne automatiquement toutes les 6 heures.</p>
     <div class="action-row">
-      <button class="btn btn-sm" id="clips-auto-btn" style="background:var(--red)">🎬 Scanner YouTube 48h</button>
-      <span id="clips-auto-msg" style="font-size:13px;color:var(--yellow);display:none">⏳ Recherche en cours…</span>
+      <button class="btn btn-sm" id="clips-auto-btn" style="background:var(--red)">🎬 Scanner YouTube 48h maintenant</button>
+      <span id="clips-auto-msg" style="font-size:13px;color:var(--yellow);display:none">⏳ Scan en cours (1-2 min)…</span>
     </div>
-    <p style="margin-top:10px;font-size:12px;color:var(--muted)">⏰ Ce scan tourne aussi automatiquement toutes les 6h si la clé est configurée.</p>
+    <p style="margin-top:10px;font-size:12px;color:var(--muted)">Les clips trouvés apparaissent en attente de validation. Publie-les via le bouton ✅ ci-dessous.</p>
   </div>
 
   <!-- Abonnés newsletter -->
@@ -1037,10 +1037,11 @@
       });
       const d = await r.json();
       if (d.error) {
-        showToast('⚠️ ' + d.error + (d.help ? ' — ' + d.help.slice(0,60) : ''), 'var(--yellow)');
+        showToast('⚠️ ' + d.error, 'var(--yellow)');
       } else {
         showToast('🎬 ' + (d.message || 'Scan lancé !'));
-        setTimeout(async () => { await loadClips(); }, 8000);
+        // Recharge les clips après 90s (scan + résolution handles)
+        setTimeout(async () => { await loadClips(); showToast('✅ Clips mis à jour !'); }, 90000);
       }
     } catch (err) {
       showToast('❌ ' + err.message, 'var(--red)');
