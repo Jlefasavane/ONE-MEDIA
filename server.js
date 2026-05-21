@@ -470,6 +470,23 @@ app.delete('/api/events/:id', adminAuth, (req, res) => {
   res.json({ success: true });
 });
 
+/* ── Proxy Deezer (contourne le blocage CORS navigateur) ─── */
+app.get('/api/music/search', async (req, res) => {
+  const q = req.query.q;
+  if (!q) return res.status(400).json({ error: 'q requis' });
+  try {
+    const r = await axios.get(`https://api.deezer.com/search`, {
+      params: { q, limit: 1 },
+      timeout: 6000,
+      headers: { 'Accept': 'application/json' }
+    });
+    res.json(r.data);
+  } catch (err) {
+    console.warn('Deezer proxy error:', err.message);
+    res.status(502).json({ data: [] });
+  }
+});
+
 /* ── Artists CRUD ────────────────────────────────────────── */
 const ARTISTS_FILE = path.join(__dirname, 'artists.json');
 

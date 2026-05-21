@@ -1,20 +1,26 @@
 /* ===========================================================
    ONE MEDIA — player.js
-   Vraie musique via Deezer Preview API (30s, gratuit, CORS)
+   Musique via proxy Railway → Deezer Preview (30s, gratuit)
    =========================================================== */
 
 (function initMusicPlayer() {
+
+  const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3002'
+    : 'https://one-media-production.up.railway.app';
 
   /* ── Tracks à charger (Guinée/Afrique en priorité) ───────── */
   const QUERIES = [
     { q: 'azaya guinee',            color: '#00F5FF' },
     { q: 'straiker conakry',        color: '#BF5AF2' },
-    { q: 'djanii alpha guinee',     color: '#FF9500' },
+    { q: 'djanii alfa guinee',      color: '#FF9500' },
+    { q: 'ak4seven guinee',         color: '#BF5AF2' },
     { q: 'didi b cote ivoire',      color: '#FF2D55' },
     { q: 'burna boy last last',     color: '#30D158' },
     { q: 'wizkid essence',          color: '#FFE500' },
     { q: 'tyla water',              color: '#ff9f43' },
-    { q: 'davido unavailable',      color: '#00F5FF' },
+    { q: 'rema calm down',          color: '#30D158' },
+    { q: 'aya nakamura djadja',     color: '#BF5AF2' },
   ];
 
   let TRACKS  = [];
@@ -32,7 +38,7 @@
     const results = await Promise.all(QUERIES.map(async ({ q, color }) => {
       try {
         const r = await fetch(
-          `https://api.deezer.com/search?q=${encodeURIComponent(q)}&limit=1`,
+          `${API_BASE}/api/music/search?q=${encodeURIComponent(q)}`,
           { mode: 'cors' }
         );
         const d = await r.json();
