@@ -99,18 +99,29 @@ function parseRSSItems(xml) {
 
 /* ── Récupère et parse un flux RSS ────────────────────────── */
 async function fetchRSS(source) {
+  // Headers qui imitent un navigateur pour éviter les blocages
+  const BROWSER_HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'fr-FR,fr;q=0.9,en;q=0.8',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+  };
   try {
     const res = await axios.get(source.url, {
-      timeout: 10000,
-      headers: {
-        'User-Agent': 'ONE MEDIA News Bot/1.0',
-        'Accept': 'application/rss+xml, application/xml, text/xml, */*',
-      },
+      timeout: 12000,
+      headers: BROWSER_HEADERS,
+      maxRedirects: 5,
     });
+    if (typeof res.data !== 'string' || !res.data.includes('<item')) {
+      console.warn(`  ⚠ RSS ${source.label}: réponse non-XML (${typeof res.data}, longueur: ${String(res.data).length})`);
+      return [];
+    }
     const items = parseRSSItems(res.data);
     return items.map(i => ({ ...i, source: source.label, sourceCat: source.category }));
   } catch (err) {
-    console.warn(`  ⚠ RSS fetch failed for ${source.label}: ${err.message}`);
+    console.warn(`  ⚠ RSS fetch ${source.label}: ${err.message}`);
     return [];
   }
 }
@@ -138,11 +149,16 @@ function isRelevant(item, category) {
 async function rewriteWithGroq(rawItem, category, catLabel) {
   const systemPrompt = `Tu es le rédacteur en chef de ONE MEDIA, un média culturel premium dédié aux cultures africaines et de la diaspora.
 
-RÈGLE ABSOLUE : Tu RÉÉCRIS des informations existantes. Tu ne dois JAMAIS inventer de faits, chiffres, noms ou événements qui ne sont pas dans la source originale. Si l'information est insuffisante, dis-le clairement dans le corps de l'article plutôt qu'inventer.
+RÈGLE ABSOLUE ANTI-HALLUCINATION :
+- Tu RÉÉCRIS uniquement des informations présentes dans la source. ZÉRO invention.
+- N'ajoute aucun nom, chiffre, date, citation ou fait non présent dans la source.
+- Si la description est courte, développe le CONTEXTE général du sujet (pas des faits inventés).
+- Utilise des formulations honnêtes : "selon les informations disponibles", "d'après les observateurs", etc.
+- NE CITE JAMAIS une personne réelle avec des mots qu'elle n'a pas dits.
 
-Ton style :
-- Titres percutants et précis
-- Ton engagé, culturellement informé
+Style ONE MEDIA :
+- Titres percutants et FIDÈLES au contenu
+- Ton engagé et culturellement informé
 - Focus Afrique : Guinée, Côte d'Ivoire, Sénégal, Nigeria, diaspora
 - Phrases dynamiques, rythme soutenu
 - Toujours en français impeccable
@@ -207,8 +223,15 @@ Réécris en article ONE MEDIA. Conserve tous les faits. JSON EXACTEMENT :
 
 /* ── Génération autonome (fallback) ───────────────────────── */
 async function generateAutonomous(topic, catId, catLabel, idx) {
-  const systemPrompt = `Tu es le rédacteur en chef de ONE MEDIA. Rédige un article de fond sur le sujet donné avec des informations générales et vérifiables sur la culture africaine. Ne cite pas de personnes réelles sans être certain des faits. Réponds UNIQUEMENT avec du JSON valide.`;
-  const userPrompt   = `SUJET : ${topic.titleHint}\nANGLE : ${topic.angle}\nCATÉGORIE : ${catLabel}\n\nJSON :\n{"title":"...","excerpt":"...","body":"<h2>...</h2><p>...</p>...","tags":[],"readTime":5}`;
+  const systemPrompt = `Tu es le rédacteur en chef de ONE MEDIA, média culturel africain.
+
+RÈGLES STRICTES :
+1. Ne cite JAMAIS une vraie personne avec des mots qu'elle n'a pas dits — utilise "selon les observateurs du secteur", "d'après les acteurs du milieu", etc.
+2. Ne donne JAMAIS de chiffres précis que tu ne connais pas avec certitude (streams, ventes, revenus). Utilise "des millions de streams" ou "un succès commercial notable".
+3. Si tu mentionnes des artistes ou personnalités, ne dis que des choses généralement connues et vérifiables.
+4. L'article est un ÉDITORIAL / ANALYSE de fond — pas un reportage factuel.
+5. Réponds UNIQUEMENT avec du JSON valide.`;
+  const userPrompt   = `SUJET ÉDITORIAL : ${topic.titleHint}\nANGLE : ${topic.angle}\nCATÉGORIE : ${catLabel}\n\nJSON :\n{"title":"...","excerpt":"...","body":"<h2>...</h2><p>...</p>...","tags":[],"readTime":5}`;
 
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
