@@ -102,7 +102,7 @@ app.listen(PORT, () => {
   console.log('  Refresh manuel : POST /api/refresh\n');
 
   // Génération au démarrage si pas d'articles
-  if (!fs.existsSync(ARTICLES_FILE) && process.env.ANTHROPIC_API_KEY && process.env.NEWS_API_KEY) {
+  if (!fs.existsSync(ARTICLES_FILE) && process.env.GROQ_API_KEY && process.env.NEWS_API_KEY) {
     console.log('📡 Première génération au démarrage...');
     generate().catch(err => console.error('❌ Erreur init :', err.message));
   } else if (!fs.existsSync(ARTICLES_FILE)) {
