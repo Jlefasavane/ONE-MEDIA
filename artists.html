@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Artistes — ONE MEDIA</title>
+<meta name="description" content="Découvrez les artistes guinéens et africains mis en avant par ONE MEDIA."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="design.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0a">
+<style>
+  /* ── Page Artistes ── */
+  .artists-hero {
+    padding: 120px var(--gutter) 60px;
+    text-align: center;
+  }
+  .artists-hero-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #FF6B35;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .artists-hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 10vw, 120px);
+    line-height: 0.9;
+    margin-bottom: 20px;
+  }
+  .artists-hero-title span { color: #FF6B35; }
+  .artists-hero-sub {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 500px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+
+  /* ── Filtres ── */
+  .artists-filters {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0 var(--gutter) 40px;
+  }
+  .filter-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: #FF6B35;
+    border-color: #FF6B35;
+    color: #fff;
+  }
+
+  /* ── Grille artistes ── */
+  .artists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 0 var(--gutter) 80px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .artist-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    position: relative;
+  }
+  .artist-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px #0009; }
+
+  .artist-card-img {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #111;
+  }
+  .artist-card-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+    filter: grayscale(20%);
+  }
+  .artist-card:hover .artist-card-img img {
+    transform: scale(1.08);
+    filter: grayscale(0%);
+  }
+
+  .artist-card-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60%;
+    background: linear-gradient(to top, #000e, transparent);
+  }
+
+  .artist-card-flag {
+    position: absolute;
+    top: 12px; left: 12px;
+    font-size: 20px;
+    background: #000a;
+    border-radius: 6px;
+    padding: 4px 8px;
+  }
+
+  .artist-card-verified {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: #00F5FF22;
+    border: 1px solid #00F5FF44;
+    color: #00F5FF;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+
+  .artist-card-country {
+    position: absolute;
+    bottom: 12px; left: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .artist-card-body {
+    padding: 20px;
+  }
+
+  .artist-card-name {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .artist-card-genre {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .artist-card-bio {
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .artist-card-stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .artist-stat {
+    text-align: center;
+  }
+  .artist-stat-num {
+    font-size: 18px;
+    font-weight: 800;
+    color: #FF6B35;
+  }
+  .artist-stat-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .artist-card-links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .artist-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .artist-link:hover { opacity: 0.8; }
+  .artist-link-articles {
+    background: #FF6B3520;
+    color: #FF6B35;
+  }
+  .artist-link-deezer {
+    background: #ffffff10;
+    color: #aaa;
+  }
+  .artist-link-yt {
+    background: #FF000020;
+    color: #FF4444;
+  }
+
+  /* ── Modal artiste ── */
+  .artist-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+  }
+  .artist-modal.open { display: flex; }
+
+  .artist-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: #000d;
+    backdrop-filter: blur(10px);
+  }
+
+  .artist-modal-inner {
+    position: relative;
+    width: min(95vw, 700px);
+    background: #111;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #333;
+    box-shadow: 0 40px 100px #000;
+    margin: auto;
+  }
+
+  .artist-modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: #fff2;
+    border: none;
+    color: #fff;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 2;
+    transition: background 0.2s;
+  }
+  .artist-modal-close:hover { background: #FF6B35; }
+
+  .artist-modal-hero {
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+  }
+  .artist-modal-hero img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+  .artist-modal-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, #111 0%, transparent 50%);
+  }
+  .artist-modal-hero-info {
+    position: absolute;
+    bottom: 20px; left: 24px;
+  }
+  .artist-modal-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .artist-modal-genre { font-size: 13px; color: #aaa; }
+
+  .artist-modal-body { padding: 24px; }
+
+  .artist-modal-bio {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #ccc;
+    margin-bottom: 24px;
+  }
+
+  .artist-modal-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .artist-modal-articles { margin-bottom: 24px; }
+  .artist-modal-article {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #222;
+    text-decoration: none;
+    color: var(--text);
+    transition: color 0.2s;
+  }
+  .artist-modal-article:hover { color: #FF6B35; }
+  .artist-modal-article img {
+    width: 56px; height: 42px;
+    border-radius: 6px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .artist-modal-article-title {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .artist-modal-socials {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 600px) {
+    .artists-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .artist-card-body { padding: 14px; }
+    .artist-card-name { font-size: 17px; }
+    .artist-card-bio { display: none; }
+    .artist-modal-hero { height: 200px; }
+    .artist-modal-name { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursor-follower"></div>
+
+<!-- HEADER -->
+<header class="header" id="header">
+  <div class="header-inner">
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    <a href="index.html" class="logo">
+      <span class="logo-one">ONE</span><span class="logo-media">MEDIA</span>
+      <span class="logo-signal"></span>
+    </a>
+    <nav class="main-nav">
+      <a href="category.html?cat=musique" class="nav-link">Musique</a>
+      <a href="category.html?cat=cinema" class="nav-link">Cinéma</a>
+      <a href="category.html?cat=mode" class="nav-link">Mode</a>
+      <a href="category.html?cat=art" class="nav-link">Art</a>
+      <a href="category.html?cat=lifestyle" class="nav-link">Lifestyle</a>
+      <a href="category.html?cat=interview" class="nav-link" style="color:var(--c-interview)">🎙 Interviews</a>
+      <a href="artists.html" class="nav-link active" style="color:#FF6B35">🎤 Artistes</a>
+    </nav>
+    <div class="header-actions">
+      <button class="theme-btn" id="theme-btn">☀</button>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE DRAWER -->
+<div class="nav-overlay" id="nav-overlay"></div>
+<aside class="nav-drawer" id="nav-drawer">
+  <div class="nav-drawer-head">
+    <a href="index.html" class="logo" style="font-size:20px"><span class="logo-one">ONE</span><span class="logo-media">MEDIA</span></a>
+    <button class="nav-drawer-close" id="nav-drawer-close">✕</button>
+  </div>
+  <nav class="nav-drawer-links">
+    <a href="category.html?cat=musique">Musique</a>
+    <a href="category.html?cat=cinema">Cinéma</a>
+    <a href="category.html?cat=mode">Mode</a>
+    <a href="category.html?cat=art">Art</a>
+    <a href="category.html?cat=lifestyle">Lifestyle</a>
+    <a href="category.html?cat=interview" style="color:var(--c-interview)">🎙 Interviews</a>
+    <a href="artists.html" style="color:#FF6B35">🎤 Artistes</a>
+  </nav>
+</aside>
+
+<!-- HERO -->
+<div class="artists-hero">
+  <div class="artists-hero-tag">🎤 Scène africaine</div>
+  <h1 class="artists-hero-title">NOS<br><span>ARTISTES</span></h1>
+  <p class="artists-hero-sub">Les voix qui définissent la culture guinéenne et africaine. Vérifiés. Documentés. Mis en avant.</p>
+</div>
+
+<!-- FILTRES -->
+<div class="artists-filters" id="artists-filters">
+  <button class="filter-btn active" data-filter="all">Tous</button>
+  <button class="filter-btn" data-filter="guinee">🇬🇳 Guinée</button>
+  <button class="filter-btn" data-filter="cote_ivoire">🇨🇮 Côte d'Ivoire</button>
+  <button class="filter-btn" data-filter="rap">Rap / Trap</button>
+  <button class="filter-btn" data-filter="afrobeats">Afrobeats</button>
+</div>
+
+<!-- GRILLE -->
+<div class="artists-grid" id="artists-grid"></div>
+
+<!-- MODAL ARTISTE -->
+<div class="artist-modal" id="artist-modal">
+  <div class="artist-modal-backdrop" id="artist-modal-backdrop"></div>
+  <div class="artist-modal-inner" id="artist-modal-inner">
+    <button class="artist-modal-close" id="artist-modal-close">✕</button>
+    <div class="artist-modal-hero">
+      <img id="am-img" src="" alt="">
+      <div class="artist-modal-hero-overlay"></div>
+      <div class="artist-modal-hero-info">
+        <div class="artist-modal-name" id="am-name"></div>
+        <div class="artist-modal-genre" id="am-genre"></div>
+      </div>
+    </div>
+    <div class="artist-modal-body">
+      <p class="artist-modal-bio" id="am-bio"></p>
+      <div class="artist-modal-articles" id="am-articles-wrap">
+        <div class="artist-modal-section-title">Articles ONE MEDIA</div>
+        <div id="am-articles"></div>
+      </div>
+      <div class="artist-modal-section-title">Retrouver sur</div>
+      <div class="artist-modal-socials" id="am-socials"></div>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="main.js"></script>
+<script>
+const ARTISTS = [
+  /* ── GUINÉE ─────────────────────────── */
+  {
+    id: 'azaya',
+    name: 'Azaya',
+    country: 'guinee',
+    flag: '🇬🇳',
+    genre: 'Rap · Trap · Afro',
+    genres: ['rap'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/b269f39903a403507769f9aae9ecfe22/500x500-000000-80-0-0.jpg',
+    bio: 'Azaya est l\'un des rappeurs les plus en vue de Conakry. Avec un style mêlant trap, rap conscient et sonorités mandingues, il porte la voix de la jeunesse guinéenne dans toute l\'Afrique de l\'Ouest. Son titre "Miss Guinée Mariam Touré" est devenu un hymne de la fierté nationale.',
+    clips: 3,
+    articles: ['a-003', 'a-027'],
+    deezer: 'https://www.deezer.com/artist/search/azaya',
+    youtube: 'https://www.youtube.com/results?search_query=azaya+guinee+clip',
+    color: '#00F5FF',
+  },
+  {
+    id: 'ak4seven',
+    name: 'AK4SEVEN',
+    country: 'guinee',
+    flag: '🇬🇳',
+    genre: 'Rap · Drill · Trap',
+    genres: ['rap'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/604dccdd4ef71094d4a3cc8a5764b161/500x500-000000-80-0-0.jpg',
+    bio: 'AK4SEVEN incarne la nouvelle vague du rap guinéen. Son flow précis, ses textes bruts et ses productions percutantes lui ont valu une reconnaissance bien au-delà des frontières de la Guinée. Artiste complet, il est aussi producteur et collabore régulièrement avec la scène panafricaine.',
+    clips: 2,
+    articles: ['a-003', 'a-028'],
+    deezer: 'https://www.deezer.com/artist/search/ak4seven',
+    youtube: 'https://www.youtube.com/results?search_query=AK4SEVEN+clip',
+    color: '#BF5AF2',
+  },
+  {
+    id: 'straiker',
+    name: 'Straiker',
+    country: 'guinee',
+    flag: '🇬🇳',
+    genre: 'Afrobeats · R&B · Soul',
+    genres: ['afrobeats'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/aa7ffbc5507204c67b602b77fd53e8cb/500x500-000000-80-0-0.jpg',
+    bio: 'Straiker est la grande révélation guinéenne de la scène afrobeats. Avec des mélodies accrocheuses et des textes qui parlent d\'amour et d\'identité africaine, il s\'est imposé comme une référence montante sur la scène continentale. Sa voix est reconnaissable entre mille.',
+    clips: 2,
+    articles: ['a-003', 'a-029'],
+    deezer: 'https://www.deezer.com/artist/search/straiker+guinee',
+    youtube: 'https://www.youtube.com/results?search_query=Straiker+guinee+clip',
+    color: '#FF9500',
+  },
+  {
+    id: 'djanii-alpha',
+    name: 'Djanii Alpha',
+    country: 'guinee',
+    flag: '🇬🇳',
+    genre: 'Rap · Slam · Reggae',
+    genres: ['rap'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/7539d7952d976c3d52691a176e4476ac/500x500-000000-80-0-0.jpg',
+    bio: 'Djanii Alpha est une figure emblématique de la scène underground guinéenne. Militant culturel autant qu\'artiste, il mêle slam, rap et reggae pour livrer des messages forts sur l\'identité africaine, la résistance et l\'espoir. Sa plume acérée fait de lui une conscience artistique de sa génération.',
+    clips: 1,
+    articles: ['a-003'],
+    deezer: 'https://www.deezer.com/artist/search/djanii+alpha',
+    youtube: 'https://www.youtube.com/results?search_query=Djanii+Alpha+guinee',
+    color: '#30D158',
+  },
+  {
+    id: 'amaza',
+    name: 'Amaza',
+    country: 'guinee',
+    flag: '🇬🇳',
+    genre: 'Afrobeats · Pop · Dancehall',
+    genres: ['afrobeats'],
+    verified: true,
+    image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&q=85',
+    bio: 'Amaza est l\'une des voix féminines les plus prometteuses de Guinée. Avec son titre "Le Goût est Mélangé" et ses collaborations avec des artistes de renom, elle prouve que la femme guinéenne a toute sa place sur la scène musicale africaine. Élégante, charismatique, incontournable.',
+    clips: 2,
+    articles: ['a-003'],
+    deezer: 'https://www.deezer.com/artist/search/amaza+guinee',
+    youtube: 'https://www.youtube.com/results?search_query=Amaza+artiste+guinée',
+    color: '#FF2D55',
+  },
+  {
+    id: 'djelykaba',
+    name: 'Djelykaba Bintou',
+    country: 'guinee',
+    flag: '🇬🇳',
+    genre: 'Musique mandingue · Afro-pop',
+    genres: ['afrobeats'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/2a6dc9e77004bb1a216c1cd9df2cb135/500x500-000000-80-0-0.jpg',
+    bio: 'Djelykaba Bintou est la gardienne de la tradition mandingue réinventée. Héritière d\'une longue lignée de griots, elle fusion­ne les rythmes ancestraux guinéens avec des productions modernes pour créer un son unique, authentique et universel.',
+    clips: 1,
+    articles: [],
+    deezer: 'https://www.deezer.com/artist/search/djelykaba+bintou',
+    youtube: 'https://www.youtube.com/results?search_query=Djelykaba+Bintou',
+    color: '#FFE500',
+  },
+  /* ── CÔTE D'IVOIRE ──────────────────── */
+  {
+    id: 'didi-b',
+    name: 'Didi B',
+    country: 'cote_ivoire',
+    flag: '🇨🇮',
+    genre: 'Rap · Afro-trap · Hip-hop',
+    genres: ['rap'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/7ff0f0c21c16e60194e48395a79347e4/500x500-000000-80-0-0.jpg',
+    bio: 'Bassa Zéréhoué Diyilem, dit Didi B, est le rappeur ivoirien le plus important de sa génération. Cofondateur de Kiff No Beat — premier groupe hip-hop africain signé chez Universal Music —, il a enchaîné les succès solo : "Mojotrône II" (50M+ streams), "Bazarhoff & Diyilem" (Platine en 5 mois), concert historique au Zénith de Paris.',
+    clips: 3,
+    articles: ['a-002'],
+    deezer: 'https://www.deezer.com/artist/5682022',
+    youtube: 'https://www.youtube.com/results?search_query=Didi+B+clip+officiel',
+    color: '#00F5FF',
+  },
+  {
+    id: 'himra',
+    name: 'Himra',
+    country: 'cote_ivoire',
+    flag: '🇨🇮',
+    genre: 'Rap · Trap · Drill ivoirien',
+    genres: ['rap'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/a00bc6dcc86b10c1b03aa2372ab71a30/500x500-000000-80-0-0.jpg',
+    bio: 'Himra est le chef de file du drill ivoirien. Avec des productions sombres et un flow impitoyable, il a imposé un nouveau style dans le rap francophone africain. Ses collaborations avec les pointures du rap français et africain témoignent d\'une stature désormais continentale.',
+    clips: 2,
+    articles: [],
+    deezer: 'https://www.deezer.com/artist/search/himra+ivoire',
+    youtube: 'https://www.youtube.com/results?search_query=Himra+clip+officiel',
+    color: '#FF2D55',
+  },
+  {
+    id: 'trk',
+    name: 'TRK',
+    country: 'cote_ivoire',
+    flag: '🇨🇮',
+    genre: 'Rap · Afro-pop',
+    genres: ['rap', 'afrobeats'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/d3b9fc41bcaa5456830567d10d649251/500x500-000000-80-0-0.jpg',
+    bio: 'TRK s\'est imposé sur la scène ivoirienne avec un style hybride mêlant rap, afrobeats et sons électroniques. Réputé pour ses performances scéniques et ses textes tranchants, il représente une nouvelle génération d\'artistes ivoiriens qui n\'hésitent pas à repousser les frontières des genres.',
+    clips: 1,
+    articles: [],
+    deezer: 'https://www.deezer.com/artist/search/TRK+ivoire',
+    youtube: 'https://www.youtube.com/results?search_query=TRK+artiste+ivoirien',
+    color: '#BF5AF2',
+  },
+];
+
+/* ── Render ─────────────────────────────────────── */
+const grid = document.getElementById('artists-grid');
+let currentFilter = 'all';
+
+function renderArtists(filter = 'all') {
+  const filtered = ARTISTS.filter(a => {
+    if (filter === 'all') return true;
+    if (filter === 'guinee') return a.country === 'guinee';
+    if (filter === 'cote_ivoire') return a.country === 'cote_ivoire';
+    return a.genres.includes(filter);
+  });
+
+  grid.innerHTML = filtered.map(a => `
+    <div class="artist-card reveal" data-id="${a.id}" style="--artist-color:${a.color}">
+      <div class="artist-card-img">
+        <img src="${a.image}" alt="${a.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&q=80'">
+        <div class="artist-card-overlay"></div>
+        <div class="artist-card-flag">${a.flag}</div>
+        ${a.verified ? '<div class="artist-card-verified">✓ VÉRIFIÉ</div>' : ''}
+        <div class="artist-card-country" style="color:${a.color}">${a.genre}</div>
+      </div>
+      <div class="artist-card-body">
+        <div class="artist-card-name">${a.name}</div>
+        <div class="artist-card-genre">${a.genre}</div>
+        <div class="artist-card-bio">${a.bio}</div>
+        <div class="artist-card-links">
+          <button class="artist-link artist-link-articles" onclick="openModal('${a.id}')">
+            📄 ${a.articles.length} article${a.articles.length > 1 ? 's' : ''}
+          </button>
+          <a class="artist-link artist-link-deezer" href="${a.deezer}" target="_blank" rel="noopener">
+            🎵 Deezer
+          </a>
+          <a class="artist-link artist-link-yt" href="${a.youtube}" target="_blank" rel="noopener">
+            ▶ YouTube
+          </a>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Reveal animation
+  setTimeout(() => {
+    document.querySelectorAll('.reveal').forEach(el => {
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+      }, { threshold: 0.05 });
+      obs.observe(el);
+    });
+  }, 50);
+
+  // Click → modal
+  document.querySelectorAll('.artist-card').forEach(card => {
+    card.addEventListener('click', e => {
+      if (e.target.closest('a')) return;
+      if (e.target.closest('button.artist-link-articles')) openModal(card.dataset.id);
+      else openModal(card.dataset.id);
+    });
+  });
+}
+
+/* ── Filtres ─────────────────────────────────── */
+document.getElementById('artists-filters').querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderArtists(currentFilter);
+  });
+});
+
+/* ── Modal ───────────────────────────────────── */
+function openModal(id) {
+  const a = ARTISTS.find(x => x.id === id);
+  if (!a) return;
+
+  document.getElementById('am-img').src  = a.image;
+  document.getElementById('am-name').textContent  = a.name;
+  document.getElementById('am-genre').textContent = a.genre;
+  document.getElementById('am-bio').textContent   = a.bio;
+
+  // Articles liés
+  const arts = document.getElementById('am-articles');
+  const linked = (typeof ARTICLES !== 'undefined')
+    ? ARTICLES.filter(art => a.articles.includes(art.id))
+    : [];
+
+  if (linked.length) {
+    arts.innerHTML = linked.map(art => `
+      <a href="article.html?id=${art.id}" class="artist-modal-article">
+        <img src="${art.image}" alt="${art.title}">
+        <div class="artist-modal-article-title">${art.title}</div>
+      </a>`).join('');
+  } else {
+    arts.innerHTML = '<p style="font-size:13px;color:var(--muted)">Aucun article pour l\'instant.</p>';
+  }
+
+  // Socials
+  document.getElementById('am-socials').innerHTML = `
+    <a class="artist-link artist-link-deezer" href="${a.deezer}" target="_blank">🎵 Deezer</a>
+    <a class="artist-link artist-link-yt" href="${a.youtube}" target="_blank">▶ YouTube</a>
+  `;
+
+  document.getElementById('artist-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+document.getElementById('artist-modal-close').addEventListener('click', closeModal);
+document.getElementById('artist-modal-backdrop').addEventListener('click', closeModal);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function closeModal() {
+  document.getElementById('artist-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── Init ─────────────────────────────────── */
+renderArtists();
+</script>
+
+<script src="player.js"></script>
+</body>
+</html>
