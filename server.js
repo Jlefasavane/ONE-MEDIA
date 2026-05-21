@@ -269,8 +269,6 @@ const ARTIST_CHANNELS = [
   { handle: '@Tyla',                channelId: null, artist: 'Tyla',         country: 'afrique' },
 ];
 
-const CHANNEL_CACHE_FILE = path.join(__dirname, 'channel_ids.json');
-
 /* ── Résoudre @handle → channel_id (sans API key) ────────── */
 async function resolveChannelId(handle) {
   const url = `https://www.youtube.com/${handle}`;
@@ -472,6 +470,55 @@ app.delete('/api/events/:id', adminAuth, (req, res) => {
   res.json({ success: true });
 });
 
+/* ── Contact form ───────────────────────────────────────── */
+const CONTACTS_FILE     = path.join(__dirname, 'contacts.json');
+const SUBMISSIONS_FILE  = path.join(__dirname, 'submissions.json');
+
+app.post('/api/contact', (req, res) => {
+  const { name, email, subject, message, type, organization, artistName, artistLink } = req.body;
+  if (!name || !email || !subject || !message) return res.status(400).json({ error: 'Champs requis manquants' });
+  const data = readJSON(CONTACTS_FILE, { contacts: [] });
+  data.contacts.push({ id: Date.now().toString(), name, email, subject, message, type: type || 'general', organization, artistName, artistLink, receivedAt: new Date().toISOString(), read: false });
+  writeJSON(CONTACTS_FILE, data);
+  console.log(`📬 Nouveau contact: [${type || 'general'}] ${name} <${email}> — "${subject}"`);
+  res.json({ success: true });
+});
+
+app.get('/api/contacts', adminAuth, (req, res) => {
+  res.json(readJSON(CONTACTS_FILE, { contacts: [] }));
+});
+
+/* ── Artist submissions ──────────────────────────────────── */
+app.post('/api/submission', (req, res) => {
+  const { artist, links, contact, message, submittedAt } = req.body;
+  if (!artist?.stageName || !contact?.email) return res.status(400).json({ error: 'Dossier incomplet' });
+  const data = readJSON(SUBMISSIONS_FILE, { submissions: [] });
+  data.submissions.push({
+    id: Date.now().toString(),
+    artist, links, contact, message,
+    submittedAt: submittedAt || new Date().toISOString(),
+    status: 'pending'  // pending | accepted | rejected
+  });
+  writeJSON(SUBMISSIONS_FILE, data);
+  console.log(`🎤 Nouvelle soumission artiste: ${artist.stageName} (${artist.country}) par ${contact.name} <${contact.email}>`);
+  res.json({ success: true });
+});
+
+app.get('/api/submissions', adminAuth, (req, res) => {
+  res.json(readJSON(SUBMISSIONS_FILE, { submissions: [] }));
+});
+
+app.put('/api/submissions/:id/status', adminAuth, (req, res) => {
+  const { status } = req.body;
+  if (!['pending','accepted','rejected'].includes(status)) return res.status(400).json({ error: 'Status invalide' });
+  const data = readJSON(SUBMISSIONS_FILE, { submissions: [] });
+  const sub  = data.submissions.find(s => s.id === req.params.id);
+  if (!sub) return res.status(404).json({ error: 'Introuvable' });
+  sub.status = status;
+  writeJSON(SUBMISSIONS_FILE, data);
+  res.json({ success: true, submission: sub });
+});
+
 /* ── Newsletter ──────────────────────────────────────────── */
 
 app.post('/api/subscribe', (req, res) => {
@@ -487,6 +534,75 @@ app.post('/api/subscribe', (req, res) => {
 
 app.get('/api/subscribers', adminAuth, (req, res) => {
   res.json(readJSON(SUBSCRIBERS_FILE, { subscribers: [] }));
+});
+
+/* ── Newsletter send (Resend.com) ────────────────────────── */
+app.post('/api/newsletter/send', adminAuth, async (req, res) => {
+  const RESEND_KEY = process.env.RESEND_API_KEY;
+  if (!RESEND_KEY) return res.status(500).json({ error: 'RESEND_API_KEY non configurée. Ajoute-la dans Railway → Variables.' });
+
+  const { subject, html, previewText } = req.body;
+  if (!subject || !html) return res.status(400).json({ error: 'subject et html requis' });
+
+  const data = readJSON(SUBSCRIBERS_FILE, { subscribers: [] });
+  const emails = data.subscribers.filter(e => e && e.includes('@'));
+  if (emails.length === 0) return res.status(400).json({ error: 'Aucun abonné' });
+
+  // Resend batch: max 50 per request (free plan)
+  const BATCH = 50;
+  const results = { sent: 0, failed: 0, errors: [] };
+
+  for (let i = 0; i < emails.length; i += BATCH) {
+    const batch = emails.slice(i, i + BATCH);
+    try {
+      const payload = {
+        from: 'ONE MEDIA <newsletter@onemedia.africa>',
+        to: batch,
+        subject,
+        html: html + `<p style="font-size:11px;color:#666;margin-top:32px;">
+          Tu reçois cet email car tu t'es abonné(e) à ONE MEDIA.<br>
+          <a href="https://one-media-delta.vercel.app" style="color:#FF6B35">Lire sur le site</a> &nbsp;·&nbsp;
+          <a href="https://one-media-production.up.railway.app/api/unsubscribe?email={{email}}" style="color:#666">Se désabonner</a>
+        </p>`,
+        ...(previewText ? { headers: { 'X-Preview-Text': previewText } } : {})
+      };
+      const response = await axios.post('https://api.resend.com/emails/batch', batch.map(to => ({
+        from: 'ONE MEDIA <onboarding@resend.dev>',
+        to: [to],
+        subject,
+        html: payload.html
+      })), {
+        headers: { Authorization: `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
+        timeout: 15000
+      });
+      results.sent += batch.length;
+    } catch (err) {
+      results.failed += batch.length;
+      results.errors.push(err.response?.data?.message || err.message);
+    }
+  }
+
+  console.log(`📧 Newsletter envoyée: ${results.sent} succès, ${results.failed} échecs`);
+  res.json({ success: results.failed === 0, ...results, total: emails.length });
+});
+
+/* ── Unsubscribe (lien email) ────────────────────────────── */
+app.get('/api/unsubscribe', (req, res) => {
+  const { email } = req.query;
+  if (!email) return res.status(400).send('Email manquant');
+  const data = readJSON(SUBSCRIBERS_FILE, { subscribers: [] });
+  const before = data.subscribers.length;
+  data.subscribers = data.subscribers.filter(e => e !== email);
+  writeJSON(SUBSCRIBERS_FILE, data);
+  const removed = data.subscribers.length < before;
+  res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Désabonnement — ONE MEDIA</title>
+  <style>body{font-family:sans-serif;background:#0a0a0a;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
+  .box{text-align:center;max-width:400px;padding:40px}</style></head><body><div class="box">
+  <h1 style="color:#FF6B35;font-size:40px;margin:0 0 16px">${removed ? '✓' : 'ℹ️'}</h1>
+  <h2>${removed ? 'Désabonnement confirmé' : 'Email non trouvé'}</h2>
+  <p style="color:#aaa">${removed ? `<strong>${email}</strong> a bien été retiré(e) de la liste.` : 'Cet email n\'est pas dans notre liste.'}</p>
+  <a href="https://one-media-delta.vercel.app" style="color:#FF6B35">← Retour à ONE MEDIA</a>
+  </div></body></html>`);
 });
 
 /* ── Fallback SPA ────────────────────────────────────────── */

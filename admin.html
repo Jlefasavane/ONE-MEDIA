@@ -501,11 +501,34 @@
   </div>
 
   <!-- Abonnés newsletter -->
-  <p class="section-title">📧 Abonnés newsletter</p>
+  <p class="section-title">📧 Newsletter & Abonnés</p>
   <div class="action-card">
     <div id="subscribers-info">
       <p style="color:var(--muted);font-size:13px">Chargement…</p>
     </div>
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Envoyer une newsletter à tous les abonnés via Resend.com.</p>
+      <div style="display:grid;gap:10px">
+        <input type="text" id="nl-subject" placeholder="Sujet de la newsletter" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:13px;width:100%;box-sizing:border-box">
+        <input type="text" id="nl-preview" placeholder="Texte de prévisualisation (optionnel)" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:13px;width:100%;box-sizing:border-box">
+        <textarea id="nl-html" rows="5" placeholder="HTML de la newsletter (ex: <h1>Titre</h1><p>Contenu…</p>)" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:13px;width:100%;box-sizing:border-box;resize:vertical;font-family:monospace"></textarea>
+      </div>
+      <button class="btn" onclick="sendNewsletter()" style="margin-top:12px;background:#7c3aed">📨 Envoyer la newsletter</button>
+      <div id="nl-result" style="margin-top:10px;font-size:13px"></div>
+    </div>
+  </div>
+
+  <!-- Contacts & Soumissions -->
+  <p class="section-title">📬 Messages de contact</p>
+  <div class="action-card">
+    <button class="btn" onclick="loadContacts()">🔄 Charger les messages</button>
+    <div id="contacts-list" style="margin-top:14px"></div>
+  </div>
+
+  <p class="section-title">🎤 Soumissions artistes</p>
+  <div class="action-card">
+    <button class="btn" onclick="loadSubmissions()">🔄 Charger les soumissions</button>
+    <div id="submissions-list" style="margin-top:14px"></div>
   </div>
 
   <!-- Articles list -->
@@ -1055,6 +1078,106 @@
   if (token) {
     showDashboard();
   }
+
+  /* ── NEWSLETTER SEND ──────────────────────────────────── */
+  async function sendNewsletter() {
+    const subject = document.getElementById('nl-subject').value.trim();
+    const html    = document.getElementById('nl-html').value.trim();
+    const preview = document.getElementById('nl-preview').value.trim();
+    const result  = document.getElementById('nl-result');
+    if (!subject || !html) { result.innerHTML = '<span style="color:#ff6b6b">⚠️ Sujet et HTML requis.</span>'; return; }
+    if (!confirm(`Envoyer "${subject}" à tous les abonnés ?`)) return;
+    result.innerHTML = '<span style="color:var(--muted)">⏳ Envoi en cours…</span>';
+    try {
+      const res = await fetch(`${API}/api/newsletter/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+        body: JSON.stringify({ subject, html, previewText: preview })
+      });
+      const d = await res.json();
+      if (d.success) {
+        result.innerHTML = `<span style="color:var(--green)">✓ Envoyé à ${d.sent} abonné(s).</span>`;
+        document.getElementById('nl-subject').value = '';
+        document.getElementById('nl-html').value = '';
+      } else {
+        result.innerHTML = `<span style="color:#ff6b6b">❌ ${d.error || 'Erreur'} — ${d.sent} envoyés, ${d.failed} échecs.<br>Erreurs: ${(d.errors||[]).join(', ')}</span>`;
+      }
+    } catch (e) {
+      result.innerHTML = `<span style="color:#ff6b6b">❌ ${e.message}</span>`;
+    }
+  }
+
+  /* ── CONTACTS ──────────────────────────────────────────── */
+  async function loadContacts() {
+    const el = document.getElementById('contacts-list');
+    el.innerHTML = '<p style="color:var(--muted);font-size:13px">Chargement…</p>';
+    try {
+      const d = await fetch(`${API}/api/contacts`, { headers: { 'x-admin-token': token } }).then(r => r.json());
+      const contacts = (d.contacts || []).sort((a,b) => new Date(b.receivedAt) - new Date(a.receivedAt));
+      if (!contacts.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucun message reçu.</p>'; return; }
+      el.innerHTML = `<p style="font-size:13px;color:var(--muted);margin-bottom:12px">${contacts.length} message(s)</p>` +
+        contacts.map(c => `
+          <div style="background:#1a1a1a;border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <strong style="font-size:14px">${c.name}</strong>
+              <span style="font-size:11px;color:var(--muted)">${new Date(c.receivedAt).toLocaleDateString('fr')}</span>
+            </div>
+            <div style="font-size:12px;color:var(--accent);margin-bottom:4px">[${c.type || 'général'}] ${c.email}</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px">${c.subject}</div>
+            <div style="font-size:13px;color:var(--muted);white-space:pre-wrap;max-height:80px;overflow:hidden">${c.message}</div>
+          </div>`).join('');
+    } catch (e) {
+      el.innerHTML = `<p style="color:#ff6b6b;font-size:13px">Erreur: ${e.message}</p>`;
+    }
+  }
+
+  /* ── SOUMISSIONS ARTISTES ──────────────────────────────── */
+  async function loadSubmissions() {
+    const el = document.getElementById('submissions-list');
+    el.innerHTML = '<p style="color:var(--muted);font-size:13px">Chargement…</p>';
+    try {
+      const d = await fetch(`${API}/api/submissions`, { headers: { 'x-admin-token': token } }).then(r => r.json());
+      const subs = (d.submissions || []).sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+      if (!subs.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucune soumission reçue.</p>'; return; }
+      el.innerHTML = `<p style="font-size:13px;color:var(--muted);margin-bottom:12px">${subs.length} soumission(s)</p>` +
+        subs.map(s => {
+          const statusColor = { pending:'var(--yellow)', accepted:'var(--green)', rejected:'#ff6b6b' }[s.status] || 'var(--muted)';
+          return `<div style="background:#1a1a1a;border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+              <div>
+                <strong style="font-size:15px">🎤 ${s.artist.stageName}</strong>
+                <span style="margin-left:10px;font-size:12px;color:var(--muted)">${s.artist.country} · ${s.artist.genres}</span>
+              </div>
+              <span style="font-size:11px;color:${statusColor};border:1px solid ${statusColor};border-radius:3px;padding:2px 8px;text-transform:uppercase;white-space:nowrap">${s.status}</span>
+            </div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Par: ${s.contact.name} (${s.contact.role || '—'}) — ${s.contact.email}</div>
+            <div style="font-size:13px;color:#ccc;margin-bottom:10px;max-height:60px;overflow:hidden">${s.artist.bio}</div>
+            ${s.links.youtube ? `<a href="${s.links.youtube}" target="_blank" style="font-size:12px;color:var(--accent);margin-right:12px">▶ YouTube</a>` : ''}
+            ${s.links.spotify ? `<a href="${s.links.spotify}" target="_blank" style="font-size:12px;color:#1db954;margin-right:12px">♪ Spotify</a>` : ''}
+            ${s.links.instagram ? `<a href="${s.links.instagram}" target="_blank" style="font-size:12px;color:#e1306c">IG</a>` : ''}
+            <div style="margin-top:12px;display:flex;gap:8px">
+              <button onclick="updateSubmissionStatus('${s.id}', 'accepted')" style="background:rgba(48,209,88,0.15);border:1px solid var(--green);color:var(--green);border-radius:4px;padding:5px 12px;font-size:12px;cursor:pointer">✓ Accepter</button>
+              <button onclick="updateSubmissionStatus('${s.id}', 'rejected')" style="background:rgba(255,45,85,0.15);border:1px solid var(--red);color:var(--red);border-radius:4px;padding:5px 12px;font-size:12px;cursor:pointer">✕ Refuser</button>
+            </div>
+          </div>`;
+        }).join('');
+    } catch (e) {
+      el.innerHTML = `<p style="color:#ff6b6b;font-size:13px">Erreur: ${e.message}</p>`;
+    }
+  }
+
+  async function updateSubmissionStatus(id, status) {
+    try {
+      await fetch(`${API}/api/submissions/${id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+        body: JSON.stringify({ status })
+      });
+      loadSubmissions();
+    } catch (e) { alert('Erreur: ' + e.message); }
+  }
+
+}
 </script>
 </body>
 </html>

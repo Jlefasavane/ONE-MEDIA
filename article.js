@@ -56,6 +56,21 @@ function renderArticlePage() {
   if (!a) return;
 
   document.title = `${a.title} — ONE MEDIA`;
+
+  /* ── Open Graph dynamique ── */
+  const ogUrl = `https://one-media-delta.vercel.app/article.html?id=${a.id}`;
+  const ogImg = a.image || 'https://one-media-delta.vercel.app/og-cover.jpg';
+  const ogDesc = a.excerpt || 'Le média culturel de référence. Musique, Cinéma, Mode, Art, Lifestyle africain.';
+  const setMeta = (id, attr, val) => { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); };
+  setMeta('og-title',   'content', `${a.title} — ONE MEDIA`);
+  setMeta('og-desc',    'content', ogDesc);
+  setMeta('og-image',   'content', ogImg);
+  setMeta('og-url',     'content', ogUrl);
+  setMeta('tw-title',   'content', `${a.title} — ONE MEDIA`);
+  setMeta('tw-desc',    'content', ogDesc);
+  setMeta('tw-image',   'content', ogImg);
+  setMeta('page-desc',  'content', ogDesc);
+
   const cat = getCategoryMeta(a.category);
 
   /* ── HERO ── */

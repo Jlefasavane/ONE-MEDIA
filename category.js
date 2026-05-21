@@ -12,6 +12,22 @@ function renderCategoryPage() {
   const catId  = getCatFromUrl();
   const cat    = catId ? getCategoryMeta(catId) : null;
 
+  /* ── Open Graph dynamique ── */
+  if (cat) {
+    const label = cat.label;
+    const topImg = catId ? (getArticlesByCategory(catId, 1)[0]?.image || '') : '';
+    const ogImg  = topImg || 'https://one-media-delta.vercel.app/og-cover.jpg';
+    const setMeta = (id, attr, val) => { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); };
+    document.title = `${label} — ONE MEDIA`;
+    setMeta('og-title', 'content', `${label} — ONE MEDIA`);
+    setMeta('og-desc',  'content', `Toute l'actualité ${label} africaine — analyses, découvertes, interviews.`);
+    setMeta('og-image', 'content', ogImg);
+    setMeta('og-url',   'content', `https://one-media-delta.vercel.app/category.html?cat=${catId}`);
+    setMeta('tw-title', 'content', `${label} — ONE MEDIA`);
+    setMeta('tw-desc',  'content', `Toute l'actualité ${label} africaine.`);
+    setMeta('tw-image', 'content', ogImg);
+  }
+
   /* ── HERO ── */
   const hero = document.getElementById('cat-hero');
   if (hero) {
