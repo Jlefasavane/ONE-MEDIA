@@ -19,9 +19,9 @@ const CATEGORIES = [
     label: 'Musique',
     color: '#00F5FF',
     queries: [
-      'afrobeats afrique musique 2026',
-      'rap ivoirien guinéen artiste',
-      'musique africaine sortie album',
+      'afrobeats africa music',
+      'african music artist album',
+      'rap ivoirien guineen musique',
     ],
   },
   {
@@ -29,9 +29,9 @@ const CATEGORIES = [
     label: 'Cinéma',
     color: '#FF2D55',
     queries: [
-      'cinema africain festival film',
-      'nollywood film afrique',
-      'cannes film afrique 2026',
+      'african cinema film festival',
+      'nollywood film africa',
+      'cannes africa film',
     ],
   },
   {
@@ -39,9 +39,9 @@ const CATEGORIES = [
     label: 'Mode',
     color: '#FFE500',
     queries: [
-      'mode africaine designer fashion',
-      'streetwear afrique tendance',
-      'fashion week afrique 2026',
+      'african fashion week designer',
+      'africa clothing brand style',
+      'wax pagne mode afrique',
     ],
   },
   {
@@ -49,9 +49,9 @@ const CATEGORIES = [
     label: 'Art',
     color: '#BF5AF2',
     queries: [
-      'art contemporain afrique exposition',
-      'street art afrique artiste',
-      'art guinéen ivoirien culture',
+      'african contemporary art exhibition',
+      'africa street art culture',
+      'african artist painting sculpture',
     ],
   },
   {
@@ -59,9 +59,9 @@ const CATEGORIES = [
     label: 'Lifestyle',
     color: '#30D158',
     queries: [
-      'culture lifestyle afrique jeunesse',
-      'gastronomie afrique diaspora',
-      'conakry abidjan culture vie',
+      'africa youth culture lifestyle',
+      'african food diaspora gastronomy',
+      'abidjan dakar culture lifestyle',
     ],
   },
 ];
@@ -136,36 +136,47 @@ Réécris en article ONE MEDIA. JSON avec cette structure EXACTE :
   "readTime": 5
 }`;
 
-  try {
-    const response = await axios.post(
-      'https://api.groq.com/openai/v1/chat/completions',
-      {
-        model: 'llama-3.1-8b-instant',
-        max_tokens: 1500,
-        temperature: 0.7,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user',   content: userPrompt },
-        ],
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${GROQ_API_KEY}`,
-          'Content-Type':  'application/json',
+  const maxRetries = 3;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await axios.post(
+        'https://api.groq.com/openai/v1/chat/completions',
+        {
+          model: 'llama-3.1-8b-instant',
+          max_tokens: 1200,
+          temperature: 0.7,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user',   content: userPrompt },
+          ],
         },
-        timeout: 15000,
+        {
+          headers: {
+            'Authorization': `Bearer ${GROQ_API_KEY}`,
+            'Content-Type':  'application/json',
+          },
+          timeout: 20000,
+        }
+      );
+
+      const text = response.data.choices[0].message.content.trim();
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error('No JSON in response');
+      return JSON.parse(jsonMatch[0]);
+
+    } catch (err) {
+      const is429 = err.response?.status === 429;
+      if (is429 && attempt < maxRetries) {
+        const wait = attempt * 8000;
+        console.warn(`  ⏳ Rate limit Groq — attente ${wait/1000}s (tentative ${attempt}/${maxRetries})...`);
+        await new Promise(r => setTimeout(r, wait));
+      } else {
+        console.warn('  ⚠ Groq error:', err.message);
+        return null;
       }
-    );
-
-    const text = response.data.choices[0].message.content.trim();
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('No JSON in response');
-    return JSON.parse(jsonMatch[0]);
-
-  } catch (err) {
-    console.warn('  ⚠ Groq error:', err.message);
-    return null;
+    }
   }
+  return null;
 }
 
 /* ── Générer un article complet ──────────────────────────── */
@@ -251,7 +262,7 @@ async function generate() {
         console.log(`  ✅ "${article.title.slice(0, 55)}..."`);
       }
 
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise(r => setTimeout(r, 2500));
     }
   }
 
