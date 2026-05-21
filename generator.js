@@ -13,29 +13,29 @@ const nodemailer = require('nodemailer');
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const OUTPUT_FILE  = path.join(__dirname, 'articles.json');
 
-/* ── Sources RSS par catégorie ───────────────────────────── */
+/* ── Sources RSS via Google News (accessible sans restriction) */
+// Google News RSS est accessible depuis n'importe quel serveur,
+// pas de clé API, contenu frais des dernières heures.
 const RSS_SOURCES = [
   /* MUSIQUE */
-  { url: 'https://www.rfi.fr/fr/musiques/rss',             category: 'musique',   label: 'RFI Musiques' },
-  { url: 'https://www.rfi.fr/fr/afrique/rss',              category: 'musique',   label: 'RFI Afrique' },
-  { url: 'https://www.jeuneafrique.com/feed/',             category: 'musique',   label: 'Jeune Afrique' },
+  { url: 'https://news.google.com/rss/search?q=musique+guinee+artiste&hl=fr&gl=FR&ceid=FR:fr',      category: 'musique',   label: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=afrobeats+afrique+clip&hl=fr&gl=FR&ceid=FR:fr',      category: 'musique',   label: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=musique+africaine+album+2026&hl=fr&gl=FR&ceid=FR:fr',category: 'musique',   label: 'Google News' },
 
-  /* CINÉMA / CULTURE */
-  { url: 'https://www.rfi.fr/fr/culture/rss',              category: 'cinema',    label: 'RFI Culture' },
-  { url: 'https://feeds.bbci.co.uk/afrique/rss.xml',       category: 'cinema',    label: 'BBC Afrique' },
-  { url: 'https://www.jeuneafrique.com/feed/',             category: 'cinema',    label: 'Jeune Afrique' },
+  /* CINÉMA */
+  { url: 'https://news.google.com/rss/search?q=cinema+africain+film&hl=fr&gl=FR&ceid=FR:fr',        category: 'cinema',    label: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=nollywood+streaming+film+afrique&hl=fr&gl=FR&ceid=FR:fr', category: 'cinema', label: 'Google News' },
 
   /* MODE */
-  { url: 'https://www.jeuneafrique.com/feed/',             category: 'mode',      label: 'Jeune Afrique' },
-  { url: 'https://feeds.bbci.co.uk/afrique/rss.xml',       category: 'mode',      label: 'BBC Afrique' },
+  { url: 'https://news.google.com/rss/search?q=mode+africaine+designer+fashion&hl=fr&gl=FR&ceid=FR:fr', category: 'mode',  label: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=fashion+week+afrique+wax+pagne&hl=fr&gl=FR&ceid=FR:fr',  category: 'mode',  label: 'Google News' },
 
   /* ART */
-  { url: 'https://www.rfi.fr/fr/culture/rss',              category: 'art',       label: 'RFI Culture' },
-  { url: 'https://www.jeuneafrique.com/feed/',             category: 'art',       label: 'Jeune Afrique' },
+  { url: 'https://news.google.com/rss/search?q=art+contemporain+africain+galerie&hl=fr&gl=FR&ceid=FR:fr', category: 'art', label: 'Google News' },
 
   /* LIFESTYLE */
-  { url: 'https://www.rfi.fr/fr/afrique/rss',              category: 'lifestyle', label: 'RFI Afrique' },
-  { url: 'https://feeds.bbci.co.uk/afrique/rss.xml',       category: 'lifestyle', label: 'BBC Afrique' },
+  { url: 'https://news.google.com/rss/search?q=lifestyle+afrique+jeunesse+culture&hl=fr&gl=FR&ceid=FR:fr', category: 'lifestyle', label: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=conakry+abidjan+dakar+culture+2026&hl=fr&gl=FR&ceid=FR:fr', category: 'lifestyle', label: 'Google News' },
 ];
 
 /* Mots-clés pertinents par catégorie pour filtrer les articles */
@@ -394,10 +394,19 @@ async function debugAPIs() {
     result.groq = { ok: false, status: err.response?.status, message: err.message };
   }
 
-  // Test RSS (les 3 premiers)
-  for (const src of RSS_SOURCES.slice(0, 3)) {
+  // Test RSS — un par catégorie
+  const testSources = RSS_SOURCES.filter((s, i, arr) => arr.findIndex(x => x.category === s.category) === i);
+  for (const src of testSources) {
     const items = await fetchRSS(src);
-    result.rss.push({ source: src.label, url: src.url, count: items.length, sample: items[0]?.title?.slice(0, 60) || null });
+    const recent = filterRecent(items, 7);
+    result.rss.push({
+      category: src.category,
+      url:      src.url.slice(0, 80),
+      total:    items.length,
+      recent7:  recent.length,
+      sample:   items[0]?.title?.slice(0, 70) || null,
+      sampleDate: items[0]?.pubDate || null,
+    });
   }
 
   return result;
