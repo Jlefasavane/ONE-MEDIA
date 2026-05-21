@@ -4,9 +4,10 @@
    =========================================================== */
 
 require('dotenv').config();
-const axios  = require('axios');
-const fs     = require('fs');
-const path   = require('path');
+const axios      = require('axios');
+const fs         = require('fs');
+const path       = require('path');
+const nodemailer = require('nodemailer');
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const NEWS_API_KEY = process.env.NEWS_API_KEY;
@@ -290,11 +291,12 @@ async function generate() {
 
 /* ── Newsletter automatique ──────────────────────────────── */
 async function sendNewsletter(articles) {
-  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  const GMAIL_USER     = process.env.GMAIL_USER;
+  const GMAIL_PASS     = process.env.GMAIL_APP_PASSWORD;
   const SUBSCRIBERS_FILE = path.join(__dirname, 'subscribers.json');
 
-  if (!RESEND_API_KEY) {
-    console.log('📧 Newsletter : RESEND_API_KEY non configurée (skip)');
+  if (!GMAIL_USER || !GMAIL_PASS) {
+    console.log('📧 Newsletter : GMAIL_USER/GMAIL_APP_PASSWORD non configurés (skip)');
     return;
   }
   if (!fs.existsSync(SUBSCRIBERS_FILE)) {
@@ -350,20 +352,22 @@ async function sendNewsletter(articles) {
   </div>
 </div></body></html>`;
 
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: { user: GMAIL_USER, pass: GMAIL_PASS },
+  });
+
   let sent = 0;
   for (const email of subscribers) {
     try {
-      await axios.post('https://api.resend.com/emails', {
-        from:    process.env.NEWSLETTER_FROM || 'ONE MEDIA <newsletter@one-media.fr>',
-        to:      [email],
+      await transporter.sendMail({
+        from:    `"ONE MEDIA" <${GMAIL_USER}>`,
+        to:      email,
         subject: `📡 ONE MEDIA — ${top5[0]?.title?.slice(0, 50) || 'Nouveaux articles du jour'}`,
         html,
-      }, {
-        headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-        timeout: 10000,
       });
       sent++;
-      await new Promise(r => setTimeout(r, 200));
+      await new Promise(r => setTimeout(r, 300));
     } catch (err) {
       console.warn(`  ⚠ Email error for ${email}:`, err.message);
     }
