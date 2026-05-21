@@ -266,6 +266,25 @@
   items.forEach(el => obs.observe(el));
 })();
 
+/* ── LAZY IMAGE FADE-IN ──────────────────────────────────── */
+(function initLazyFade() {
+  const fadeInImage = img => {
+    if (img.complete) { img.classList.add('loaded'); return; }
+    img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+  };
+  // Images déjà dans le DOM
+  document.querySelectorAll('img[loading="lazy"]').forEach(fadeInImage);
+  // Observer pour les images ajoutées dynamiquement
+  const mo = new MutationObserver(muts => {
+    muts.forEach(m => m.addedNodes.forEach(node => {
+      if (node.nodeType !== 1) return;
+      const imgs = node.matches?.('img[loading="lazy"]') ? [node] : [...(node.querySelectorAll?.('img[loading="lazy"]') || [])];
+      imgs.forEach(fadeInImage);
+    }));
+  });
+  mo.observe(document.body, { childList: true, subtree: true });
+})();
+
 /* ── ARTICLE CARD RENDERER ───────────────────────────────── */
 function renderArticleCard(a, opts = {}) {
   const cat = getCategoryMeta(a.category);

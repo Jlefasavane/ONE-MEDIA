@@ -438,7 +438,7 @@
       <a href="category.html?cat=art" class="nav-link">Art</a>
       <a href="category.html?cat=lifestyle" class="nav-link">Lifestyle</a>
       <a href="category.html?cat=interview" class="nav-link" style="color:var(--c-interview)">🎙 Interviews</a>
-      <a href="#section-events" class="nav-link" style="color:var(--gold)">📅 Événements</a>
+      <a href="index.html#section-events" class="nav-link" style="color:var(--gold)">📅 Événements</a>
       <a href="artists.html" class="nav-link active" style="color:#FF6B35">🎤 Artistes</a>
     </nav>
     <div class="header-actions">
@@ -1238,6 +1238,93 @@ function closeModal() {
 
 renderArtists();
 </script>
+
+<!-- SIGNAL BANNER (newsletter) -->
+<section class="signal-banner">
+  <div class="signal-banner-inner">
+    <div class="signal-lines">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="signal-content">
+      <div class="signal-label">FRÉQUENCE ONE</div>
+      <h2 class="signal-title">Restez sur le signal.<br>Ne manquez rien.</h2>
+      <p class="signal-sub">La newsletter culturelle qui arrive quand ça vaut le coup. Pas tous les jours. Juste quand c'est essentiel.</p>
+      <form class="signal-form" id="signal-form">
+        <input type="email" placeholder="votre@email.com" required id="signal-email">
+        <button type="submit">S'abonner →</button>
+      </form>
+      <div class="signal-success" id="signal-success" style="display:none;">✓ Tu es sur le signal. Bienvenue.</div>
+      <div class="signal-note">Pas de spam. Désabonnement en un clic.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="index.html" class="logo footer-logo">
+        <span class="logo-one" translate="no">ONE</span><span class="logo-media" translate="no">MEDIA</span>
+        <span class="logo-signal"></span>
+      </a>
+      <p class="footer-tagline">Culture sans frontières.<br>Le signal ne s'arrête jamais.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram">IG</a>
+        <a href="#" aria-label="TikTok">TT</a>
+        <a href="#" aria-label="YouTube">YT</a>
+        <a href="#" aria-label="X / Twitter">X</a>
+        <a href="#" aria-label="Spotify">SP</a>
+      </div>
+    </div>
+    <div class="footer-nav">
+      <div class="footer-col">
+        <h4>Univers</h4>
+        <ul>
+          <li><a href="category.html?cat=musique">Musique</a></li>
+          <li><a href="category.html?cat=cinema">Cinéma</a></li>
+          <li><a href="category.html?cat=mode">Mode</a></li>
+          <li><a href="category.html?cat=art">Art</a></li>
+          <li><a href="category.html?cat=lifestyle">Lifestyle</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>ONE MEDIA</h4>
+        <ul>
+          <li><a href="artists.html" style="color:#FF6B35">🎤 Artistes</a></li>
+          <li><a href="index.html#section-events" style="color:var(--gold)">📅 Événements</a></li>
+          <li><a href="about.html">À propos</a></li>
+          <li><a href="#">Partenariats</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Légal</h4>
+        <ul>
+          <li><a href="#">Mentions légales</a></li>
+          <li><a href="#">Confidentialité</a></li>
+          <li><a href="#">CGU</a></li>
+          <li><a href="#">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 ONE MEDIA — Tous droits réservés</span>
+    <span class="footer-freq">FRÉQUENCE #001</span>
+  </div>
+</footer>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="search-overlay">
+  <div class="search-overlay-inner">
+    <div class="search-bar-wrap">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search-input" placeholder="Rechercher…" autocomplete="off">
+      <button class="search-close" id="search-close">ESC</button>
+    </div>
+    <div class="search-results" id="search-results"></div>
+  </div>
+</div>
 
 <script src="player.js"></script>
 </body>
