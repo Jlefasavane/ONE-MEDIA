@@ -28,7 +28,8 @@
   --c-cinema:    #ff2d55;
   --c-mode:      #ffe500;
   --c-art:       #bf5af2;
-  --c-lifestyle: #30d158;
+  --c-lifestyle:  #30d158;
+  --c-interview:  #ff9500;
 
   /* Type */
   --font-display: 'Bebas Neue', sans-serif;
@@ -245,7 +246,8 @@ button:hover ~ .cursor { width: 14px; height: 14px; }
 .nav-link[data-cat="cinema"].active::after    { background: var(--c-cinema); }
 .nav-link[data-cat="mode"].active::after      { background: var(--c-mode); }
 .nav-link[data-cat="art"].active::after       { background: var(--c-art); }
-.nav-link[data-cat="lifestyle"].active::after { background: var(--c-lifestyle); }
+.nav-link[data-cat="lifestyle"].active::after  { background: var(--c-lifestyle); }
+.nav-link[data-cat="interview"].active::after  { background: var(--c-interview); }
 
 .header-actions {
   display: flex;
@@ -638,7 +640,103 @@ button:hover ~ .cursor { width: 14px; height: 14px; }
 .cat-cinema    { color: var(--c-cinema); }
 .cat-mode      { color: var(--c-mode); }
 .cat-art       { color: var(--c-art); }
-.cat-lifestyle { color: var(--c-lifestyle); }
+.cat-lifestyle  { color: var(--c-lifestyle); }
+.cat-interview  { color: var(--c-interview); }
+
+/* ── VIDEO EMBED ──────────────────────────────────────────── */
+.article-video-wrap {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  margin: 32px 0;
+  background: #000;
+}
+.article-video-wrap iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
+}
+.article-video-label {
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 8px;
+}
+
+/* ── INTERVIEW CARD ───────────────────────────────────────── */
+.interview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+@media (max-width: 768px) {
+  .interview-grid { grid-template-columns: 1fr; }
+}
+.interview-card {
+  background: var(--surface);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-decoration: none;
+  transition: background .2s;
+}
+.interview-card:hover { background: var(--surface2); }
+.interview-card-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--c-interview);
+}
+.interview-card-tag::before {
+  content: '🎙';
+  font-size: 14px;
+}
+.interview-card-img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.interview-card-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform .4s ease;
+}
+.interview-card:hover .interview-card-img img { transform: scale(1.04); }
+.interview-card-title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.interview-card-excerpt {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  -webkit-line-clamp: 3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.interview-card-meta {
+  font-size: 12px;
+  color: var(--ink-mute);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+}
 
 /* ── GRIDS ───────────────────────────────────────────────── */
 .latest-grid {

@@ -88,6 +88,14 @@ function renderArticlePage() {
   if (main) {
     main.innerHTML = `
       <p class="article-lead">${a.excerpt}</p>
+      ${a.video ? `
+      <div class="article-video-label">▶ Vidéo</div>
+      <div class="article-video-wrap">
+        <iframe src="https://www.youtube.com/embed/${a.video}?rel=0&modestbranding=1"
+          title="${a.title}" allowfullscreen
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+        </iframe>
+      </div>` : ''}
       <div class="article-body">
         ${a.body || LOREM_BODY.join('\n')}
       </div>

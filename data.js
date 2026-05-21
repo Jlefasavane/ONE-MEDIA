@@ -24,11 +24,12 @@
 })();
 
 const CATEGORIES = [
-  { id: 'musique',   label: 'Musique',   color: '#00F5FF' },
-  { id: 'cinema',    label: 'Cinéma',    color: '#FF2D55' },
-  { id: 'mode',      label: 'Mode',      color: '#FFE500' },
-  { id: 'art',       label: 'Art',       color: '#BF5AF2' },
-  { id: 'lifestyle', label: 'Lifestyle', color: '#30D158' },
+  { id: 'musique',   label: 'Musique',    color: '#00F5FF' },
+  { id: 'cinema',    label: 'Cinéma',     color: '#FF2D55' },
+  { id: 'mode',      label: 'Mode',       color: '#FFE500' },
+  { id: 'art',       label: 'Art',        color: '#BF5AF2' },
+  { id: 'lifestyle', label: 'Lifestyle',  color: '#30D158' },
+  { id: 'interview', label: 'Interviews', color: '#FF9500' },
 ];
 
 const ARTICLES = [
@@ -44,7 +45,7 @@ const ARTICLES = [
     authorImg: null,
     date: '2026-05-20',
     readTime: 5,
-    image: 'https://cdn-images.dzcdn.net/images/artist/012494cc1a9f8bfe54fad4922686abed/500x500-000000-80-0-0.jpg',
+    image: 'https://www.7info.ci/wp-content/uploads/2026/05/abome-lelephant-670x360.jpg',
     featured: true,
     breaking: true,
     tags: ['abomé l\'éléphant', 'côte d\'ivoire', 'hommage', 'abidjan', 'rap ivoirien'],
@@ -559,6 +560,95 @@ const ARTICLES = [
     breaking: false,
     tags: ['jeunesse africaine', 'entrepreneuriat', 'créativité', 'afrique', 'futur'],
     views: 61700,
+  },
+
+  /* ── INTERVIEWS ──────────────────────────────────────── */
+  {
+    id: 'a-027',
+    slug: 'interview-azaya-guinee-paris-musique-mandingue',
+    title: 'Azaya : "Quand je joue à Paris, je joue pour tout le peuple de Guinée"',
+    excerpt: 'Rencontre avec Mamady Kamissoko alias Azaya, l\'homme qui a fait entrer la musique mandingue dans les grandes salles européennes. Il nous parle de son concert historique à Paris, de sa femme Djelykaba Bintou, et de ce que ça fait d\'être le porte-voix d\'une culture.',
+    category: 'interview',
+    author: 'Marcus D.',
+    authorImg: null,
+    date: '2026-05-21',
+    readTime: 8,
+    image: 'https://cdn-images.dzcdn.net/images/artist/b269f39903a403507769f9aae9ecfe22/500x500-000000-80-0-0.jpg',
+    featured: false,
+    breaking: false,
+    tags: ['azaya', 'interview', 'guinée', 'paris', 'musique mandingue', 'djelykaba'],
+    views: 67800,
+    body: `
+      <p><em>On le retrouve en fin de journée, calme, souriant, dans les coulisses d'une salle de répétition à Conakry. Azaya — Mamady Kamissoko pour l'état civil — vient de rentrer d'Europe. Son concert parisien de décembre 2025 a fait le tour de la toile. Il a bien voulu nous accorder une heure.</em></p>
+      <h2>"Paris, c'était un rêve que je portais depuis Kankan"</h2>
+      <p><strong>ONE MEDIA :</strong> Ce concert à Paris en décembre 2025, qu'est-ce que ça a représenté pour toi ?</p>
+      <p><strong>Azaya :</strong> C'était immense. Je suis né à Kankan, j'ai grandi avec la basse de mon grand-oncle entre les mains, et là tu te retrouves à Paris, devant des milliers de personnes qui connaissent tes paroles, qui chantent avec toi. C'est pas juste un concert. C'est une validation. Pour moi, pour ma famille, pour toute la Guinée.</p>
+      <h2>"La musique mandingue n'est pas régionale — elle est universelle"</h2>
+      <p><strong>ONE MEDIA :</strong> Tu es souvent présenté comme "le Messi de la musique guinéenne". Ça t'embarrasse ou tu l'assumes ?</p>
+      <p><strong>Azaya :</strong> <em>(rires)</em> Je l'assume totalement. Pas pour l'ego — mais parce que ça dit quelque chose d'important. La musique mandingue, l'afro-mandingue, ce que je fais — ça peut toucher tout le monde. Messi joue pour tout le monde, il transcende les frontières. C'est ce que je veux faire avec ma musique.</p>
+      <blockquote>« Je ne veux pas que les Guinéens soient fiers de moi. Je veux qu'ils soient fiers d'eux-mêmes. Moi je suis juste le reflet. »<br><em>— Azaya</em></blockquote>
+      <h2>"Djelykaba est ma partenaire dans tout"</h2>
+      <p><strong>ONE MEDIA :</strong> Ta femme Djelykaba Bintou vient d'annoncer — puis de supprimer — un message de retrait de la musique. Comment vous vivez ça en famille ?</p>
+      <p><strong>Azaya :</strong> C'est difficile. Elle a une pression énorme. Ce que les gens ne voient pas, c'est le travail derrière les récompenses. Le PRIMUD 2025, c'est magnifique. Mais derrière, il y a des jalousies, des attaques, des gens qui veulent te voir tomber. Elle est forte. Mais même les forts ont le droit d'être fatigués. Je suis là pour elle, comme elle a toujours été là pour moi.</p>
+    `,
+  },
+  {
+    id: 'a-028',
+    slug: 'interview-ak4seven-gims-guinee-rap',
+    title: 'AK4SEVEN : "Gims m\'a ouvert une porte — maintenant je dois y faire entrer toute la Guinée"',
+    excerpt: 'Mohamed Alpha Keita, parti de Kamsar avec un bac en maths et des rimes plein la tête, est aujourd\'hui signé chez Géant Rouge, le label de Maître Gims. Premier rappeur guinéen à franchir ce cap. Il nous raconte comment.',
+    category: 'interview',
+    author: 'Kofi A.',
+    authorImg: null,
+    date: '2026-05-20',
+    readTime: 7,
+    image: 'https://cdn-images.dzcdn.net/images/artist/604dccdd4ef71094d4a3cc8a5764b161/500x500-000000-80-0-0.jpg',
+    featured: false,
+    breaking: false,
+    tags: ['ak4seven', 'interview', 'guinée', 'gims', 'rap', 'géant rouge'],
+    views: 54200,
+    body: `
+      <p><em>On l'a joint par appel vidéo depuis Paris. AK4SEVEN — Mohamed Alpha Keita dans le civil — est posé, direct. Il choisit ses mots avec soin. Le genre de mec qui a appris à réfléchir avant de parler, peut-être parce qu'il a grandi loin du bruit parisien, à Kamsar.</em></p>
+      <h2>"J'ai quitté Kamsar avec mon bac en maths et mes instrus"</h2>
+      <p><strong>ONE MEDIA :</strong> Tu es originaire de Kamsar, une ville que beaucoup ne connaissent même pas. Comment tu passes de là à un label parisien ?</p>
+      <p><strong>AK4SEVEN :</strong> En travaillant. Il y a pas d'autre secret. Je suis arrivé en France en 2018, j'avais mon bac en maths, quelques instrus sur mon téléphone et la certitude que j'avais quelque chose à dire. J'ai commencé à poster des freestyles, à construire ma présence petit à petit. La série Alpha Beth, c'est ce qui a tout changé. Quand RFI a mis Alpha Beth 2 dans son hit-parade, là j'ai compris que ça pouvait vraiment se passer.</p>
+      <h2>"Signer chez Géant Rouge, c'est une responsabilité"</h2>
+      <p><strong>ONE MEDIA :</strong> La signature chez Géant Rouge, le label de Gims — comment ça s'est passé ?</p>
+      <p><strong>AK4SEVEN :</strong> C'est une rencontre, une confiance. Gims a écouté ce que je faisais, il a vu quelque chose. Pour moi c'est plus qu'un contrat — c'est un symbole. Je suis le premier de la nouvelle génération guinéenne à signer dans un label français de ce niveau. Ça veut dire que maintenant, tous les rappeurs de Conakry, de Kamsar, de Labé — ils savent que c'est possible. Ma réussite doit ouvrir des portes, pas juste pour moi.</p>
+      <blockquote>« Je rappe en français, parfois en pular, parfois en malinké. Ma langue c'est la Guinée entière. »<br><em>— AK4SEVEN</em></blockquote>
+      <h2>"Le concert de Gims à Conakry, c'était magique"</h2>
+      <p><strong>ONE MEDIA :</strong> En avril 2023, tu es en première partie de Gims à Conakry. Devant ton propre peuple. Qu'est-ce que tu as ressenti ?</p>
+      <p><strong>AK4SEVEN :</strong> C'était la validation ultime. J'avais quitté Kamsar, construit quelque chose loin de chez moi — et là, je reviens sur scène à Conakry, présenté par Gims lui-même. Les gens dans la salle, c'était ma famille, mes amis d'enfance, des gens que je n'avais pas vus depuis des années. Je n'oublierai jamais ce soir-là.</p>
+    `,
+  },
+  {
+    id: 'a-029',
+    slug: 'interview-straiker-poullosophie-rap-philosophique',
+    title: 'Straiker : "Poullosophie n\'est pas un album — c\'est une manière de voir le monde"',
+    excerpt: 'Ibrahima Sory Bah, le rappeur de Pita diplômé en lettres modernes, nous parle de son album "Poullosophie", de son père journaliste de radio rurale, et de ce que signifie rapper en Guinée quand on refuse de faire des concessions.',
+    category: 'interview',
+    author: 'Aminata C.',
+    authorImg: null,
+    date: '2026-05-19',
+    readTime: 6,
+    image: 'https://cdn-images.dzcdn.net/images/artist/aa7ffbc5507204c67b602b77fd53e8cb/500x500-000000-80-0-0.jpg',
+    featured: false,
+    breaking: false,
+    tags: ['straiker', 'interview', 'guinée', 'poullosophie', 'rap philosophique', 'pita'],
+    views: 41600,
+    body: `
+      <p><em>Straiker — Ibrahima Sory Bah — est le genre d'artiste qui prend son temps pour répondre. Pas par arrogance, mais parce que chaque mot compte. Fils d'un journaliste de radio rurale de Labé et d'une enseignante, il a grandi dans le respect de la parole juste. Ça s'entend dans sa musique. Ça se lit dans ses réponses.</em></p>
+      <h2>"Mon père parlait à la radio. Moi je rap. C'est la même chose."</h2>
+      <p><strong>ONE MEDIA :</strong> Ton père était journaliste à la radio rurale de Labé. Est-ce que c'est lui qui t'a appris l'importance des mots ?</p>
+      <p><strong>Straiker :</strong> Totalement. Dans notre maison, les mots n'étaient pas des accessoires. Mon père choisissait ses mots à la radio comme on choisit des pierres précieuses. Moi j'ai pris ça et je l'ai mis dans le rap. Poullosophie, c'est ça — c'est la philosophie peule, la sagesse du Fouta-Djallon, mise en musique hip-hop. Ce n'est pas un paradoxe. C'est une continuation.</p>
+      <h2>"Pita n'est pas une limitation — c'est une richesse"</h2>
+      <p><strong>ONE MEDIA :</strong> Est-ce que venir de Pita — et non de Conakry — a changé ta façon de rapper ?</p>
+      <p><strong>Straiker :</strong> Venir de Pita m'a tout donné. Le Fouta-Djallon, c'est une culture de la réflexion, de la patience, de la profondeur. Je n'aurais pas fait Poullosophie si j'avais grandi à Conakry dans le bruit. J'ai eu la chance de grandir dans le silence relatif d'une ville de province, avec des livres, avec la radio de mon père, avec la montagne. Ça forge.</p>
+      <blockquote>« Je ne veux pas être populaire. Je veux être utile. Ce n'est pas la même chose. »<br><em>— Straiker</em></blockquote>
+      <h2>"Les morceaux retirés de YouTube ? Je ne peux pas tout expliquer maintenant"</h2>
+      <p><strong>ONE MEDIA :</strong> En mai 2026, tu as retiré deux morceaux de YouTube sans explication. Qu'est-ce qui s'est passé ?</p>
+      <p><strong>Straiker :</strong> <em>(sourire)</em> Il y a des moments où l'artiste doit protéger son œuvre. Ces morceaux seront de retour — dans un format différent, dans un contexte différent. Je ne peux pas en dire plus pour l'instant. Mais ceux qui me suivent depuis le début comprendront quand le moment viendra.</p>
+    `,
   },
 
 ];

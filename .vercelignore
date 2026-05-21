@@ -1,0 +1,6 @@
+node_modules
+server.js
+generator.js
+.env
+.env.example
+articles.json

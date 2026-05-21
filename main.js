@@ -355,6 +355,26 @@ function renderArticleCard(a, opts = {}) {
     el.innerHTML = getArticlesByCategory(id, limit).map(a => renderArticleCard(a)).join('');
   });
 
+  /* INTERVIEWS */
+  const interviewGrid = document.getElementById('grid-interview');
+  if (interviewGrid) {
+    const interviews = getArticlesByCategory('interview', 3);
+    interviewGrid.innerHTML = interviews.map(a => `
+      <a href="article.html?id=${a.id}" class="interview-card reveal">
+        <div class="interview-card-tag">Interview exclusive</div>
+        <div class="interview-card-img"><img src="${a.image}" alt="${a.title}" loading="lazy"></div>
+        <div class="interview-card-title">${a.title}</div>
+        <div class="interview-card-excerpt">${a.excerpt}</div>
+        <div class="interview-card-meta">
+          <span>${a.author}</span>
+          <span>·</span>
+          <span>${formatDate(a.date)}</span>
+          <span>·</span>
+          <span>⏱ ${a.readTime} min</span>
+        </div>
+      </a>`).join('');
+  }
+
   /* MOST READ */
   const mrList = document.getElementById('most-read-list');
   if (mrList) {
