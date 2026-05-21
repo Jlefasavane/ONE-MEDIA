@@ -19,9 +19,9 @@ const CATEGORIES = [
     label: 'Musique',
     color: '#00F5FF',
     queries: [
-      'afrobeats africa music',
-      'african music artist album',
-      'rap ivoirien guineen musique',
+      'musique guinee conakry artiste',        // 1. Guinée en priorité
+      'musique afrique abidjan dakar',          // 2. Afrique
+      'afrobeats africa music artist',          // 3. Global africain
     ],
   },
   {
@@ -29,9 +29,9 @@ const CATEGORIES = [
     label: 'Cinéma',
     color: '#FF2D55',
     queries: [
-      'african cinema film festival',
-      'nollywood film africa',
-      'cannes africa film',
+      'cinema guinee cote ivoire film',         // 1. Guinée/Côte d'Ivoire
+      'african cinema film festival',           // 2. Afrique
+      'cannes nollywood africa film',           // 3. Global
     ],
   },
   {
@@ -39,9 +39,9 @@ const CATEGORIES = [
     label: 'Mode',
     color: '#FFE500',
     queries: [
-      'african fashion week designer',
-      'africa clothing brand style',
-      'wax pagne mode afrique',
+      'mode afrique guinee designer',           // 1. Guinée/Afrique
+      'african fashion week wax pagne',         // 2. Afrique
+      'fashion africa diaspora style',          // 3. Diaspora
     ],
   },
   {
@@ -49,9 +49,9 @@ const CATEGORIES = [
     label: 'Art',
     color: '#BF5AF2',
     queries: [
-      'african contemporary art exhibition',
-      'africa street art culture',
-      'african artist painting sculpture',
+      'art contemporain guinee afrique',        // 1. Guinée/Afrique
+      'african contemporary art exhibition',    // 2. Afrique
+      'africa artist culture diaspora',         // 3. Diaspora
     ],
   },
   {
@@ -59,9 +59,9 @@ const CATEGORIES = [
     label: 'Lifestyle',
     color: '#30D158',
     queries: [
-      'africa youth culture lifestyle',
-      'african food diaspora gastronomy',
-      'abidjan dakar culture lifestyle',
+      'jeunesse guinee conakry culture vie',    // 1. Guinée en priorité
+      'afrique culture lifestyle diaspora',     // 2. Afrique
+      'abidjan dakar paris afrique culture',    // 3. Diaspora France
     ],
   },
 ];

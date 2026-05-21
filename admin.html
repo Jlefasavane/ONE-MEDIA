@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ONE MEDIA — Admin</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --card: #111;
+      --border: #222;
+      --accent: #00f5ff;
+      --red: #ff2d55;
+      --green: #30d158;
+      --yellow: #ffe500;
+      --text: #eee;
+      --muted: #666;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* ── LOGIN ── */
+    #login-screen {
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 6px;
+    }
+    .logo span { color: var(--red); }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 32px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .login-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+    }
+
+    .login-card label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+
+    .login-card input {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 15px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 16px;
+    }
+    .login-card input:focus { border-color: var(--accent); }
+
+    .btn {
+      width: 100%;
+      background: var(--accent);
+      color: #000;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 8px;
+      padding: 13px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-danger {
+      background: var(--red);
+      color: #fff;
+    }
+    .btn-sm {
+      width: auto;
+      padding: 8px 16px;
+      font-size: 12px;
+    }
+
+    .error-msg {
+      color: var(--red);
+      font-size: 13px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    /* ── DASHBOARD ── */
+    #dashboard {
+      display: none;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .dash-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .dash-logo { font-size: 22px; font-weight: 900; }
+    .dash-logo span { color: var(--red); }
+
+    .dash-logout {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      padding: 7px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .dash-logout:hover { color: var(--text); border-color: var(--text); }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .card-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+
+    .card-value {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--accent);
+    }
+
+    .card-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .section-title {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .action-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .action-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .action-card p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .generating-msg {
+      font-size: 13px;
+      color: var(--yellow);
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--yellow);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .articles-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .art-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .art-item:last-child { border-bottom: none; }
+
+    .art-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 6px;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--border);
+    }
+
+    .art-info { flex: 1; min-width: 0; }
+    .art-title {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .art-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+    .cat-badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--green);
+      color: #000;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      transform: translateY(80px);
+      transition: transform 0.3s;
+      z-index: 9999;
+    }
+    .toast.show { transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login-screen">
+  <div class="logo">ONE<span>.</span>MEDIA</div>
+  <div class="subtitle">Panneau d'administration</div>
+
+  <div class="login-card">
+    <label for="pwd-input">Mot de passe</label>
+    <input type="password" id="pwd-input" placeholder="••••••••••" autocomplete="current-password">
+    <button class="btn" id="login-btn">Accéder</button>
+    <div class="error-msg" id="error-msg">❌ Mot de passe incorrect</div>
+  </div>
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div id="dashboard">
+  <div class="dash-header">
+    <div class="dash-logo">ONE<span>.</span>MEDIA <span style="font-size:13px;color:var(--muted);font-weight:400">Admin</span></div>
+    <button class="dash-logout" id="logout-btn">Déconnexion</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="cards">
+    <div class="card">
+      <div class="card-label">Statut</div>
+      <div class="card-value" style="font-size:18px;padding-top:6px">
+        <span class="status-dot"></span><span id="status-text">—</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Articles générés</div>
+      <div class="card-value" id="art-count">—</div>
+      <div class="card-sub" id="art-date">—</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Refresh auto</div>
+      <div class="card-value" style="font-size:18px;padding-top:6px">⏰</div>
+      <div class="card-sub">Toutes les 6 heures</div>
+    </div>
+  </div>
+
+  <!-- Action Refresh -->
+  <p class="section-title">Actions</p>
+  <div class="action-card">
+    <h3>🔄 Générer de nouveaux articles</h3>
+    <p>Lance NewsAPI → Groq → articles.json. Dure environ 2 minutes. Le site se met à jour automatiquement.</p>
+    <div class="action-row">
+      <button class="btn btn-sm" id="refresh-btn" style="width:auto">Générer maintenant</button>
+      <div class="generating-msg" id="gen-msg">
+        <div class="spinner"></div>
+        Génération en cours…
+      </div>
+    </div>
+  </div>
+
+  <!-- Articles list -->
+  <p class="section-title">Articles actuels</p>
+  <div class="action-card">
+    <div class="articles-list" id="articles-list">
+      <p style="color:var(--muted);font-size:13px">Chargement…</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = 'https://one-media-production.up.railway.app';
+  const CAT_COLORS = {
+    musique:   '#00F5FF',
+    cinema:    '#FF2D55',
+    mode:      '#FFE500',
+    art:       '#BF5AF2',
+    lifestyle: '#30D158',
+    interview: '#FF9500',
+  };
+
+  let token = localStorage.getItem('om_admin_token');
+
+  /* ── UTILS ── */
+  function showToast(msg, color = 'var(--green)') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = color;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  /* ── AUTH ── */
+  async function login() {
+    const pwd = document.getElementById('pwd-input').value;
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    btn.textContent = '…';
+
+    try {
+      const r = await fetch(`${API}/api/admin/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pwd }),
+      });
+      const d = await r.json();
+      if (d.success) {
+        token = d.token;
+        localStorage.setItem('om_admin_token', token);
+        showDashboard();
+      } else {
+        document.getElementById('error-msg').style.display = 'block';
+      }
+    } catch {
+      document.getElementById('error-msg').style.display = 'block';
+    }
+    btn.disabled = false;
+    btn.textContent = 'Accéder';
+  }
+
+  document.getElementById('login-btn').addEventListener('click', login);
+  document.getElementById('pwd-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') login();
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    localStorage.removeItem('om_admin_token');
+    token = null;
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'block';
+  });
+
+  /* ── DASHBOARD ── */
+  async function showDashboard() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    await loadStatus();
+    await loadArticles();
+  }
+
+  async function loadStatus() {
+    try {
+      const r = await fetch(`${API}/api/status`);
+      const d = await r.json();
+      document.getElementById('status-text').textContent = d.status === 'ok' ? 'En ligne' : 'Aucun article';
+      document.getElementById('art-count').textContent = d.count || '0';
+      if (d.generatedAt) {
+        const date = new Date(d.generatedAt);
+        document.getElementById('art-date').textContent =
+          `Dernière génération : ${date.toLocaleString('fr-FR')}`;
+      }
+    } catch {
+      document.getElementById('status-text').textContent = 'Erreur';
+    }
+  }
+
+  async function loadArticles() {
+    try {
+      const r = await fetch(`${API}/api/articles`);
+      const d = await r.json();
+      const list = document.getElementById('articles-list');
+
+      if (!d.articles?.length) {
+        list.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucun article généré.</p>';
+        return;
+      }
+
+      list.innerHTML = d.articles.map(a => `
+        <div class="art-item">
+          <img class="art-img" src="${a.image || ''}" alt="" loading="lazy"
+               onerror="this.style.display='none'">
+          <div class="art-info">
+            <div class="art-title">${a.title}</div>
+            <div class="art-meta">${a.author || ''} · ${a.date || ''} · ${a.readTime || 5} min</div>
+          </div>
+          <span class="cat-badge" style="background:${CAT_COLORS[a.category] || '#666'}22;color:${CAT_COLORS[a.category] || '#666'}">
+            ${a.category}
+          </span>
+        </div>
+      `).join('');
+    } catch {
+      document.getElementById('articles-list').innerHTML =
+        '<p style="color:var(--muted);font-size:13px">Erreur de chargement.</p>';
+    }
+  }
+
+  /* ── REFRESH ── */
+  document.getElementById('refresh-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('refresh-btn');
+    const msg = document.getElementById('gen-msg');
+    btn.disabled = true;
+    msg.style.display = 'flex';
+
+    try {
+      await fetch(`${API}/api/refresh`, {
+        method: 'POST',
+        headers: { 'x-admin-token': token },
+      });
+      showToast('✅ Génération démarrée !');
+
+      // Poll jusqu'à la fin
+      const poll = setInterval(async () => {
+        try {
+          const r = await fetch(`${API}/api/refresh/status`);
+          const d = await r.json();
+          if (!d.generating) {
+            clearInterval(poll);
+            btn.disabled = false;
+            msg.style.display = 'none';
+            showToast('🎉 Nouveaux articles générés !');
+            await loadStatus();
+            await loadArticles();
+          }
+        } catch {}
+      }, 5000);
+
+    } catch {
+      showToast('❌ Erreur', 'var(--red)');
+      btn.disabled = false;
+      msg.style.display = 'none';
+    }
+  });
+
+  /* ── AUTO-LOGIN si token existant ── */
+  if (token) {
+    showDashboard();
+  }
+</script>
+</body>
+</html>

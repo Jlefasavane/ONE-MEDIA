@@ -1,73 +1,61 @@
 /* ===========================================================
    ONE MEDIA — player.js
-   Bande musicale : Dernières sorties
+   Vraie musique via Deezer Preview API (30s, gratuit, CORS)
    =========================================================== */
 
 (function initMusicPlayer() {
 
-  const TRACKS = [
-    {
-      title:    'Water',
-      artist:   'Tyla',
-      label:    'Epic Records · 2023',
-      duration: 187,
-      img:      'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=120&q=80',
-      spotify:  'https://open.spotify.com/track/219mg0lqLCIHJWBjFNVwM8',
-      color:    '#ff9f43',
-    },
-    {
-      title:    "It's Plenty",
-      artist:   'Burna Boy',
-      label:    'Atlantic · 2023',
-      duration: 218,
-      img:      'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=120&q=80',
-      spotify:  'https://open.spotify.com/artist/3wcj11K77LjEY1PkEazffa',
-      color:    '#00f5ff',
-    },
-    {
-      title:    'Unavailable',
-      artist:   'Davido ft. Musa Keys',
-      label:    'Sony Music · 2023',
-      duration: 195,
-      img:      'https://images.unsplash.com/photo-1493676304819-0d7a8d026dcf?w=120&q=80',
-      spotify:  'https://open.spotify.com/artist/0Y3agQaa6g2r0YmHPOO9rh',
-      color:    '#bf5af2',
-    },
-    {
-      title:    'Commas',
-      artist:   'Asake',
-      label:    'YBNL · 2023',
-      duration: 178,
-      img:      'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=120&q=80',
-      spotify:  'https://open.spotify.com/artist/7iZtZyCzp3LItcw1wtPI3D',
-      color:    '#ffe500',
-    },
-    {
-      title:    'Rush',
-      artist:   'Ayra Starr',
-      label:    'Mavin · 2023',
-      duration: 161,
-      img:      'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=120&q=80',
-      spotify:  'https://open.spotify.com/artist/7ne4VBA60CxGM75vw0mMT3',
-      color:    '#ff2d55',
-    },
-    {
-      title:    'Cruel Santino',
-      artist:   'Cruel Santino',
-      label:    'Subculture · 2024',
-      duration: 204,
-      img:      'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=120&q=80',
-      spotify:  'https://open.spotify.com/artist/1e4oBBVKw5OELA7M5jLLCT',
-      color:    '#30d158',
-    },
+  /* ── Tracks à charger (Guinée/Afrique en priorité) ───────── */
+  const QUERIES = [
+    { q: 'azaya guinee',            color: '#00F5FF' },
+    { q: 'straiker conakry',        color: '#BF5AF2' },
+    { q: 'djanii alpha guinee',     color: '#FF9500' },
+    { q: 'didi b cote ivoire',      color: '#FF2D55' },
+    { q: 'burna boy last last',     color: '#30D158' },
+    { q: 'wizkid essence',          color: '#FFE500' },
+    { q: 'tyla water',              color: '#ff9f43' },
+    { q: 'davido unavailable',      color: '#00F5FF' },
   ];
 
-  let current  = 0;
-  let playing  = false;
-  let elapsed  = 0;
-  let ticker   = null;
-  let eqTimer  = null;
+  let TRACKS  = [];
+  let audio   = new Audio();
+  let current = 0;
+  let playing = false;
+  let ticker  = null;
+  let eqTimer = null;
   let listOpen = false;
+
+  audio.crossOrigin = 'anonymous';
+
+  /* ── Chargement Deezer ──────────────────────────────────── */
+  async function loadTracks() {
+    const results = await Promise.all(QUERIES.map(async ({ q, color }) => {
+      try {
+        const r = await fetch(
+          `https://api.deezer.com/search?q=${encodeURIComponent(q)}&limit=1`,
+          { mode: 'cors' }
+        );
+        const d = await r.json();
+        const t = d.data?.[0];
+        if (!t?.preview) return null;
+        return {
+          title:   t.title_short || t.title,
+          artist:  t.artist.name,
+          label:   t.album.title,
+          duration: t.duration,
+          img:     t.album.cover_medium || t.album.cover,
+          preview: t.preview,
+          deezer:  `https://www.deezer.com/track/${t.id}`,
+          color,
+        };
+      } catch { return null; }
+    }));
+    TRACKS = results.filter(Boolean);
+    if (TRACKS.length > 0) {
+      load(0);
+      bar.classList.add('ready');
+    }
+  }
 
   /* ── BUILD HTML ── */
   const bar = document.createElement('div');
@@ -86,7 +74,7 @@
       <button class="mp-btn" id="mp-prev" title="Précédent">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
       </button>
-      <button class="mp-play" id="mp-play" title="Écouter sur Spotify">
+      <button class="mp-play" id="mp-play" title="Écouter">
         <svg class="icon-play" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         <svg class="icon-pause" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
       </button>
@@ -97,14 +85,16 @@
       <div class="mp-track" id="mp-track-btn">
         <div class="mp-art" id="mp-art"><img id="mp-img" src="" alt=""></div>
         <div class="mp-info">
-          <div class="mp-title" id="mp-title"></div>
+          <div class="mp-title" id="mp-title">Chargement…</div>
           <div class="mp-artist" id="mp-artist"></div>
         </div>
       </div>
 
       <div class="mp-progress-wrap">
         <span class="mp-time" id="mp-elapsed">0:00</span>
-        <div class="mp-bar"><div class="mp-fill" id="mp-fill"></div></div>
+        <div class="mp-bar" id="mp-bar-click">
+          <div class="mp-fill" id="mp-fill"></div>
+        </div>
         <span class="mp-time" id="mp-duration">0:00</span>
       </div>
 
@@ -114,13 +104,14 @@
     </div>
 
     <div class="mp-right">
-      <a class="mp-spotify" id="mp-spotify" href="#" target="_blank" title="Ouvrir sur Spotify">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-        Spotify
+      <a class="mp-spotify" id="mp-deezer" href="#" target="_blank" title="Ouvrir sur Deezer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.81 11.647a.18.18 0 0 1-.178.155h-2.135a.18.18 0 0 1-.178-.155l-.27-1.964h3.03zm-4.63.992a.18.18 0 0 1-.178.155H11.87a.18.18 0 0 1-.178-.155l-.27-1.964h3.03zm4.63 1.937a.18.18 0 0 1-.178.155h-2.135a.18.18 0 0 1-.178-.155l-.27-1.964h3.03zM5.19 11.647a.18.18 0 0 1-.178.155H2.877a.18.18 0 0 1-.178-.155l-.27-1.964H5.46zm4.63.992a.18.18 0 0 1-.178.155H7.507a.18.18 0 0 1-.178-.155l-.27-1.964h3.03zm4.63 0a.18.18 0 0 1-.178.155h-2.135a.18.18 0 0 1-.178-.155l-.27-1.964h3.03z"/>
+        </svg>
+        Deezer
       </a>
     </div>
 
-    <!-- TRACKLIST POPUP -->
     <div class="mp-list" id="mp-list">
       <div class="mp-list-head">Dernières sorties · ONE MEDIA</div>
       <div class="mp-list-items" id="mp-list-items"></div>
@@ -139,12 +130,13 @@
   const fillEl    = document.getElementById('mp-fill');
   const elapsedEl = document.getElementById('mp-elapsed');
   const durEl     = document.getElementById('mp-duration');
-  const spotifyA  = document.getElementById('mp-spotify');
+  const deezerA   = document.getElementById('mp-deezer');
   const eqEl      = document.getElementById('mp-eq');
   const listEl    = document.getElementById('mp-list');
   const listItems = document.getElementById('mp-list-items');
   const trackBtn  = document.getElementById('mp-track-btn');
   const toggleBtn = document.getElementById('mp-toggle');
+  const barClick  = document.getElementById('mp-bar-click');
 
   /* ── UTILS ── */
   function fmt(s) {
@@ -153,46 +145,68 @@
 
   /* ── LOAD TRACK ── */
   function load(idx, autoPlay = false) {
+    if (!TRACKS.length) return;
     const t = TRACKS[idx];
-    titleEl.textContent  = t.title;
-    artistEl.textContent = t.artist;
-    imgEl.src            = t.img;
-    durEl.textContent    = fmt(t.duration);
-    spotifyA.href        = t.spotify;
-    fillEl.style.width   = '0%';
+    titleEl.textContent   = t.title;
+    artistEl.textContent  = t.artist;
+    imgEl.src             = t.img;
+    durEl.textContent     = fmt(t.duration);
+    deezerA.href          = t.deezer;
+    fillEl.style.width    = '0%';
     elapsedEl.textContent = '0:00';
     artEl.style.setProperty('--track-color', t.color);
     bar.style.setProperty('--track-color', t.color);
-    elapsed = 0;
+
+    audio.pause();
+    audio.src = t.preview;
+    audio.load();
+
     renderList();
-    if (autoPlay) start();
+    if (autoPlay) startPlay();
   }
 
   /* ── PLAY / PAUSE ── */
-  function start() {
-    playing = true;
-    playBtn.querySelector('.icon-play').style.display  = 'none';
-    playBtn.querySelector('.icon-pause').style.display = '';
-    bar.classList.add('playing');
-    clearInterval(ticker);
-    ticker = setInterval(() => {
-      elapsed++;
-      const t = TRACKS[current];
-      if (elapsed >= t.duration) { elapsed = 0; goNext(); return; }
-      fillEl.style.width    = (elapsed / t.duration * 100) + '%';
-      elapsedEl.textContent = fmt(elapsed);
-    }, 1000);
-    animEQ();
+  function startPlay() {
+    audio.play().then(() => {
+      playing = true;
+      playBtn.querySelector('.icon-play').style.display  = 'none';
+      playBtn.querySelector('.icon-pause').style.display = '';
+      bar.classList.add('playing');
+      animEQ();
+    }).catch(e => console.warn('Audio play error:', e));
   }
 
   function pause() {
+    audio.pause();
     playing = false;
     playBtn.querySelector('.icon-play').style.display  = '';
     playBtn.querySelector('.icon-pause').style.display = 'none';
     bar.classList.remove('playing');
-    clearInterval(ticker);
     cancelAnimationFrame(eqTimer);
   }
+
+  /* ── Sync barre de progression avec l'audio ── */
+  audio.addEventListener('timeupdate', () => {
+    const pct = audio.duration ? audio.currentTime / audio.duration : 0;
+    fillEl.style.width    = (pct * 100) + '%';
+    elapsedEl.textContent = fmt(audio.currentTime);
+    durEl.textContent     = fmt(audio.duration || TRACKS[current]?.duration || 0);
+  });
+
+  audio.addEventListener('ended', () => goNext());
+
+  audio.addEventListener('error', () => {
+    console.warn('Audio error — passage au suivant');
+    goNext();
+  });
+
+  /* ── Seek en cliquant sur la barre ── */
+  barClick.addEventListener('click', e => {
+    if (!audio.duration) return;
+    const rect = barClick.getBoundingClientRect();
+    const pct  = (e.clientX - rect.left) / rect.width;
+    audio.currentTime = pct * audio.duration;
+  });
 
   /* ── EQ ANIMATION ── */
   function animEQ() {
@@ -209,15 +223,16 @@
 
   /* ── TRACKLIST ── */
   function renderList() {
+    if (!TRACKS.length) return;
     listItems.innerHTML = TRACKS.map((t, i) => `
       <div class="mp-list-item ${i === current ? 'active' : ''}" data-idx="${i}">
-        <div class="mp-list-art"><img src="${t.img}" alt="${t.artist}"></div>
+        <div class="mp-list-art"><img src="${t.img}" alt="${t.artist}" loading="lazy"></div>
         <div class="mp-list-info">
           <div class="mp-list-title">${t.title}</div>
           <div class="mp-list-artist">${t.artist} · ${t.label}</div>
         </div>
-        <a href="${t.spotify}" target="_blank" class="mp-list-spot" title="Spotify">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        <a href="${t.deezer}" target="_blank" class="mp-list-spot" title="Deezer">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.81 11.647a.18.18 0 0 1-.178.155h-2.135a.18.18 0 0 1-.178-.155l-.27-1.964h3.03zm-4.63.992a.18.18 0 0 1-.178.155H11.87a.18.18 0 0 1-.178-.155l-.27-1.964h3.03zm4.63 1.937a.18.18 0 0 1-.178.155h-2.135a.18.18 0 0 1-.178-.155l-.27-1.964h3.03zM5.19 11.647a.18.18 0 0 1-.178.155H2.877a.18.18 0 0 1-.178-.155l-.27-1.964H5.46zm4.63.992a.18.18 0 0 1-.178.155H7.507a.18.18 0 0 1-.178-.155l-.27-1.964h3.03zm4.63 0a.18.18 0 0 1-.178.155h-2.135a.18.18 0 0 1-.178-.155l-.27-1.964h3.03z"/></svg>
         </a>
         <span class="mp-list-dur">${fmt(t.duration)}</span>
       </div>`).join('');
@@ -235,22 +250,20 @@
 
   /* ── EVENTS ── */
   playBtn.addEventListener('click', () => {
-    if (playing) pause(); else start();
+    if (!TRACKS.length) return;
+    if (playing) pause(); else startPlay();
   });
   prevBtn.addEventListener('click', goPrev);
   nextBtn.addEventListener('click', goNext);
-
   trackBtn.addEventListener('click', () => {
     listOpen = !listOpen;
     listEl.classList.toggle('open', listOpen);
   });
-
   toggleBtn.addEventListener('click', () => {
     bar.classList.toggle('collapsed');
-    const icon = toggleBtn.querySelector('svg');
-    icon.style.transform = bar.classList.contains('collapsed') ? 'rotate(180deg)' : '';
+    toggleBtn.querySelector('svg').style.transform =
+      bar.classList.contains('collapsed') ? 'rotate(180deg)' : '';
   });
-
   document.addEventListener('click', e => {
     if (listOpen && !listEl.contains(e.target) && !trackBtn.contains(e.target)) {
       listOpen = false;
@@ -259,7 +272,9 @@
   });
 
   /* ── INIT ── */
-  load(0);
-  setTimeout(() => bar.classList.add('visible'), 3000);
+  setTimeout(() => {
+    bar.classList.add('visible');
+    loadTracks();
+  }, 2000);
 
 })();
