@@ -1567,6 +1567,11 @@ button:hover ~ .cursor { width: 14px; height: 14px; }
   .footer-nav { grid-template-columns: 1fr 1fr; }
   .search-overlay { padding-top: 80px; }
   #search-input { font-size: 22px; }
+  /* ── Fix scroll horizontal : images full-bleed et éléments qui débordent ── */
+  .article-body .article-img-full { margin: 32px 0; width: 100%; }
+  .article-body .article-img-full img { height: 240px; }
+  .most-read-item:hover { margin: 0; padding-left: var(--gutter); padding-right: var(--gutter); }
+  .signal-banner { overflow: hidden; }
 }
 
 /* ═══════════════════════════════════════════════════

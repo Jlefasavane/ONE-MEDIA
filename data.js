@@ -202,7 +202,7 @@ const ARTICLES = [
     authorImg: null,
     date: '2026-05-12',
     readTime: 9,
-    image: 'https://images.unsplash.com/photo-1461360370896-922624d12aa1?w=1400&q=85',
+    image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1400&q=85',
     featured: false,
     breaking: false,
     tags: ['guinée', 'patrimoine', 'amazones', 'balla', 'musique traditionnelle'],
@@ -369,101 +369,150 @@ const ARTICLES = [
   /* ── CINÉMA ───────────────────────────────────────── */
   {
     id: 'a-009',
-    slug: 'cinema-guineen-renaissance-conakry',
-    title: 'Le cinéma guinéen se réveille : ces films tournés à Conakry qui font le tour des festivals',
-    excerpt: 'Après des décennies d\'absence sur la scène internationale, une nouvelle génération de cinéastes guinéens revient avec des œuvres puissantes. Cannes, Berlin, Toronto — ils arrivent.',
+    slug: 'omar-sy-idris-elba-acteurs-noirs-hollywwod-2026',
+    title: 'Omar Sy, Idris Elba, Lupita Nyong\'o : l\'année des acteurs noirs qui ne demandent plus la permission',
+    excerpt: 'Omar Sy tourne à Hollywood avec Spielberg. Idris Elba produit et joue dans une série BBC au budget record. Lupita Nyong\'o est confirmée pour le prochain film de Ryan Coogler. 2026 est peut-être l\'année où les acteurs noirs ont définitivement changé les règles du jeu.',
     category: 'cinema',
     author: 'Léa M.',
     authorImg: null,
-    date: '2026-05-17',
+    date: '2026-05-19',
     readTime: 7,
     image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=1400&q=85',
     featured: false,
     breaking: false,
-    tags: ['cinéma guinéen', 'conakry', 'festival', 'réalisateurs', 'afrique'],
-    views: 34500,
+    tags: ['omar sy', 'idris elba', 'lupita nyong\'o', 'cinéma noir', 'hollywood', 'représentation'],
+    views: 89300,
+    body: `
+      <h2>Omar Sy : de Lupin à Spielberg</h2>
+      <p>Depuis <em>Lupin</em> sur Netflix — la série française la plus regardée à l'international avec 70 millions de foyers touchés — Omar Sy n'a pas ralenti. En 2026, il confirme un rôle principal dans un film de Steven Spielberg, dont le titre reste confidentiel mais dont la sortie est prévue pour l'été 2027. L'acteur français d'origine sénégalo-mauritanienne est devenu l'un des rares visages noirs à pouvoir porter seul un blockbuster hollywoodien. Pas juste un second rôle — la tête d'affiche.</p>
+      <h2>Idris Elba : producteur et acteur, la formule gagnante</h2>
+      <p>Idris Elba l'a compris avant tout le monde : pour avoir le contrôle de sa carrière, il faut produire. Sa société Green Door Pictures est derrière plusieurs projets en développement, dont une série BBC épique sur l'Empire du Mali (budget : 40 millions de livres sterling), dans laquelle il jouera également. L'acteur originaire du Sierra Leone a refusé publiquement le rôle de James Bond — "trop vieux", dit-il — et préfère développer des histoires qui lui ressemblent vraiment.</p>
+      <blockquote>« Il n'y a aucune raison pour que les histoires africaines ne soient pas universelles. Elles l'ont toujours été. Personne n'a voulu les raconter. Maintenant on le fait nous-mêmes. »<br><em>— Idris Elba</em></blockquote>
+      <h2>Lupita Nyong'o : la prochaine avec Ryan Coogler</h2>
+      <p>Lupita Nyong'o, Oscar de la meilleure actrice dans un second rôle pour <em>12 Years a Slave</em>, vient d'être confirmée pour le prochain film de Ryan Coogler après <em>Black Panther: Wakanda Forever</em>. Le projet est encore secret, mais des sources proches de la production évoquent un thriller politique tourné en partie au Kenya. Viola Davis, de son côté, vient de signer avec Amazon Prime pour une série en 8 épisodes qu'elle co-produit et dans laquelle elle incarne une diplomate africaine.</p>
+    `,
   },
   {
     id: 'a-010',
-    slug: 'nollywood-afrique-ouest-collaboration',
-    title: 'Nollywood rencontre l\'Afrique de l\'Ouest francophone : une alliance cinématographique historique',
-    excerpt: 'Les productions nigérianes et les cinéastes francophones d\'Afrique de l\'Ouest commencent à collaborer. Ce que ça change pour le cinéma africain dans son ensemble.',
+    slug: 'cinema-africain-cannes-festival-2026',
+    title: 'Cannes, Berlin, FESPACO 2026 : le cinéma africain n\'est plus un invité — il est en compétition',
+    excerpt: 'À Cannes 2026, deux films africains en compétition officielle. Au FESPACO de Ouagadougou, un film guinéen primé pour la première fois depuis 1989. À Berlin, une réalisatrice ivoirienne repart avec l\'Ours d\'Argent. Le continent est en train d\'écrire une nouvelle page de son histoire cinématographique.',
     category: 'cinema',
     author: 'Kofi A.',
     authorImg: null,
-    date: '2026-05-13',
+    date: '2026-05-15',
     readTime: 8,
     image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1400&q=85',
     featured: false,
     breaking: false,
-    tags: ['nollywood', 'cinéma africain', 'collaboration', 'francophone', 'nigeria'],
-    views: 51200,
+    tags: ['cannes', 'fespaco', 'berlin', 'cinéma africain', 'guinée', 'prix'],
+    views: 73800,
+    body: `
+      <h2>FESPACO 2026 : un film guinéen sur le podium</h2>
+      <p>Le Festival Panafricain du Cinéma et de la Télévision de Ouagadougou (FESPACO) s'est tenu en mars 2026. Pour la première fois depuis <em>Dakan</em> de Mohamed Camara en 1989 — premier film africain avec un personnage gay en vedette — un film guinéen monte sur le podium principal. <em>Kololi</em>, de la réalisatrice Mariama Sylla (née à Conakry, formée à la FEMIS de Paris), remporte le Prix Spécial du Jury. Un film sur une femme qui cherche des terres pour sa famille après les inondations de 2023 à Conakry.</p>
+      <h2>Cannes 2026 : deux films africains en compétition officielle</h2>
+      <p>Pour la première fois, deux films africains sont en compétition officielle à Cannes la même année. Le film marocain <em>Jnoun</em> de Yasmine Benkiran et le film sénégalais <em>Père et Fils</em> de Mamadou Diallo ont tous deux reçu des retours critiques exceptionnels lors de leurs premières mondiales. La presse spécialisée parle d'un "tournant structurel" dans la façon dont l'industrie mondiale perçoit le cinéma africain.</p>
+      <blockquote>« Le cinéma africain n'a jamais manqué de talent. Il manquait de financement et d'exposition. Ces deux-là, on les construit. »<br><em>— Thierno I. Dia, critique et directeur artistique</em></blockquote>
+    `,
   },
   {
     id: 'a-011',
-    slug: 'cannes-2026-afrique-au-sommet',
-    title: 'Cannes 2026 : l\'Afrique n\'est plus un invité — elle prend la place qui lui revient',
-    excerpt: 'Trois films africains en compétition officielle, une Quinzaine portée par des voix du continent. Analyse d\'un tournant historique pour le cinéma mondial.',
+    slug: 'viola-davis-denzel-washington-legacy-cinema-noir',
+    title: 'Viola Davis, Denzel Washington : ce que deux légendes noires ont changé à Hollywood pour toujours',
+    excerpt: 'Viola Davis est la première actrice noire à avoir remporté l\'Oscar, l\'Emmy et le Tony Award. Denzel Washington a produit et joué dans <em>The Piano Lesson</em> pour Netflix avec son fils John David. Deux monstres sacrés qui ne font pas que jouer — ils façonnent l\'industrie.',
     category: 'cinema',
     author: 'Fatou N.',
     authorImg: null,
-    date: '2026-05-10',
+    date: '2026-05-11',
     readTime: 6,
     image: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1400&q=85',
     featured: false,
     breaking: false,
-    tags: ['cannes', 'afrique', 'cinéma', 'festival', 'palme d\'or'],
-    views: 62100,
+    tags: ['viola davis', 'denzel washington', 'hollywood', 'cinéma noir', 'oscar', 'héritage'],
+    views: 81500,
+    body: `
+      <h2>Viola Davis : la "Triple Couronne" et le reste</h2>
+      <p>Viola Davis est la première actrice noire — et l'une des rares actrices tout court — à avoir remporté la "Triple Couronne" de la comédie : l'Oscar (pour <em>Fences</em>), l'Emmy (pour <em>How to Get Away with Murder</em>) et le Tony Award (pour la version Broadway de <em>Fences</em>). En 2026, elle prend un nouveau virage avec sa maison de production JuVee Productions, qui développe des projets centrés sur des personnages noirs complexes. Son prochain film, <em>Madam President</em>, sort en décembre 2026.</p>
+      <h2>Denzel Washington : père et fils à l'écran</h2>
+      <p>Avec <em>The Piano Lesson</em> (Netflix, 2024), Denzel Washington a réalisé un double exploit : adapter August Wilson pour l'écran et partager l'affiche avec son fils John David Washington. Le film a été salué par la critique mondiale et a introduit l'œuvre d'August Wilson à une nouvelle génération. À 71 ans, Denzel Washington n'est pas en fin de carrière — il est en train de bâtir une maison de production qui va façonner le cinéma américain pour les trente prochaines années.</p>
+      <blockquote>« On ne joue pas la couleur de peau. On joue l'humanité. La couleur de peau est juste le contexte. »<br><em>— Denzel Washington</em></blockquote>
+    `,
   },
 
   /* ── MODE ─────────────────────────────────────────── */
   {
     id: 'a-012',
-    slug: 'createurs-mode-conakry-emergence',
-    title: 'Les créateurs de mode de Conakry qui font craquer Paris',
-    excerpt: 'Tissus Bazin brodés, coupe afro-minimaliste, couleurs saturées — de jeunes designers guinéens imposent une esthétique qui mélange tradition et modernité avec un talent rare.',
+    slug: 'amy-sanoh-modele-guineenne-internationale',
+    title: 'Amy Sanoh : le mannequin guinéen qui a conquis les podiums de Paris et Milan',
+    excerpt: 'Née à Conakry, repérée à 17 ans dans un marché de Kaloum, Amy Sanoh est aujourd\'hui l\'un des visages les plus demandés des Fashion Weeks de Paris et Milan. Elle défile pour Valentino, Jacquemus et des maisons africaines comme Orange Culture. Retour sur le parcours d\'une pionnière.',
     category: 'mode',
     author: 'Awa D.',
     authorImg: null,
-    date: '2026-05-18',
+    date: '2026-05-20',
     readTime: 6,
     image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1400&q=85',
     featured: false,
     breaking: false,
-    tags: ['mode guinéenne', 'conakry', 'designers', 'bazin', 'afrique'],
-    views: 41800,
+    tags: ['amy sanoh', 'mannequin guinéen', 'conakry', 'fashion week paris', 'modèle africain'],
+    views: 58400,
+    body: `
+      <h2>De Kaloum aux podiums de Paris</h2>
+      <p>Amy Sanoh grandit dans le quartier populaire de Kaloum, au cœur de Conakry. Fille d'un commerçant et d'une couturière, elle baigne dans les tissus depuis l'enfance — wax, bazin, foulards colorés. À 17 ans, elle est repérée par un photographe lors d'un défilé associatif. Ce soir-là change sa vie. En quelques mois, elle signe avec une agence de Dakar, puis est contactée par une agence parisienne.</p>
+      <p>Aujourd'hui, Amy Sanoh figure sur les castings de Valentino, Jacquemus et Dior. Elle est l'une des rares mannequins guinéennes à avoir marché sur les trois grandes Fashion Weeks — Paris, Milan, New York. Sa silhouette, sa démarche, et surtout son regard ont conquis des directeurs artistiques qui cherchaient autre chose que les standards habituels.</p>
+      <blockquote>« Quand je marche sur un podium à Paris, je pense toujours au marché de Kaloum. C'est de là que vient ma force. »<br><em>— Amy Sanoh</em></blockquote>
+      <h2>Castings à venir : Conakry Fashion Week 2026</h2>
+      <p>Amy Sanoh sera l'une des égéries de la Conakry Fashion Week 2026, prévue en novembre. L'événement, qui réunit chaque année les plus grands créateurs guinéens et ouest-africains, recherche actuellement de nouveaux visages. Les castings sont ouverts aux candidates de 16 à 28 ans, résidant en Guinée ou dans la diaspora. Les inscriptions se font via l'agence Model One Guinea à Conakry.</p>
+    `,
   },
   {
     id: 'a-013',
-    slug: 'mode-africaine-streetwear-global',
-    title: 'Streetwear africain vs grandes maisons : la guerre de l\'influence a commencé',
-    excerpt: 'Quand Off-White et Balenciaga s\'inspirent des marchés de Lagos ou des sapeurs de Kinshasa, qui gagne vraiment ? Le débat qui déchire le monde de la mode.',
+    slug: 'conakry-fashion-week-2026-casting-evenements',
+    title: 'Conakry Fashion Week 2026 : casting ouvert, programme et créateurs confirmés',
+    excerpt: 'La Conakry Fashion Week revient en novembre 2026. Casting ouvert jusqu\'en juillet pour les nouveaux visages, 12 créateurs confirmés dont Elhadj Diallo, Mariama Bah et le collectif Wax & Rage. On vous dit tout sur les événements à ne pas manquer.',
     category: 'mode',
     author: 'Inès K.',
     authorImg: null,
-    date: '2026-05-15',
+    date: '2026-05-18',
     readTime: 5,
     image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=1400&q=85',
     featured: false,
-    breaking: false,
-    tags: ['streetwear', 'afrique', 'mode', 'influence', 'tendances'],
-    views: 37600,
+    breaking: true,
+    tags: ['conakry fashion week', 'casting', 'mode guinéenne', 'événement', '2026'],
+    views: 71200,
+    body: `
+      <h2>Le casting est ouvert</h2>
+      <p>La Conakry Fashion Week 2026 recherche ses futurs visages. Le casting est ouvert jusqu'au 31 juillet 2026 pour les candidates et candidats âgés de 16 à 28 ans. Pas besoin d'expérience préalable — les organisateurs cherchent des personnalités, des corps et des regards qui reflètent la diversité guinéenne. Les inscriptions se font en ligne sur le site officiel et dans les bureaux de l'agence Model One Guinea, Kaloum, Conakry.</p>
+      <h2>Les créateurs confirmés</h2>
+      <p>Douze créateurs ont déjà confirmé leur participation : <strong>Elhadj Diallo</strong> (fondateur de la marque Diallo Couture, spécialisée bazin brodé), <strong>Mariama Bah</strong> (fondatrice de MB Créations, connue pour ses robes de soirée afro-contemporaines), et le collectif <strong>Wax & Rage</strong>, qui mélange streetwear et imprimés africains dans une esthétique revendiquée.</p>
+      <blockquote>« La mode guinéenne n'imite plus — elle crée. La CFW est la preuve que Conakry a son propre langage esthétique. »<br><em>— Elhadj Diallo, créateur</em></blockquote>
+      <h2>Programme et dates</h2>
+      <p>La Conakry Fashion Week 2026 se tiendra du <strong>14 au 16 novembre 2026</strong> au Palais du Peuple de Conakry. Trois soirées de défilés, une exposition de photographie de mode, et un forum "Mode & Business" ouvert aux jeunes entrepreneurs du textile. Accès gratuit pour le forum, billets à tarif réduit pour les défilés (15 000 GNF pour le public général, 8 000 GNF pour les étudiants).</p>
+    `,
   },
   {
     id: 'a-014',
-    slug: 'fashion-week-abidjan-emergence',
-    title: 'La Fashion Week d\'Abidjan est devenue le rendez-vous mode qu\'on ne peut plus ignorer',
-    excerpt: 'Des acheteurs de Milan, des rédactrices de Vogue, des influenceurs de Lagos. La capitale ivoirienne s\'est imposée comme hub mode de l\'Afrique subsaharienne.',
+    slug: 'fatima-diabate-modele-guineenne-diaspora',
+    title: 'Fatima Diabaté, Hawa Barry, Kadiatou Sow : les mannequins guinéens qui font la loi en Europe',
+    excerpt: 'Trois femmes, trois parcours, un même fil : la Guinée. Fatima Diabaté (Paris), Hawa Barry (Londres), Kadiatou Sow (Bruxelles) — elles ont quitté Conakry, Labé ou Kindia pour conquérir les agences européennes. Portraits de celles qui portent haut la beauté guinéenne.',
     category: 'mode',
     author: 'Chloé B.',
     authorImg: null,
-    date: '2026-05-11',
-    readTime: 5,
+    date: '2026-05-14',
+    readTime: 7,
     image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1400&q=85',
     featured: false,
     breaking: false,
-    tags: ['abidjan', 'fashion week', 'mode africaine', 'côte d\'ivoire'],
-    views: 28900,
+    tags: ['mannequins guinéens', 'diaspora', 'paris', 'mode africaine', 'beauté'],
+    views: 44300,
+    body: `
+      <h2>Fatima Diabaté : de Labé à l'agence Elite Paris</h2>
+      <p>Fatima Diabaté est née à Labé, dans le Fouta-Djallon. Grande, mince, avec un port de tête qui rappelle les princesses peules, elle arrive à Paris à 19 ans pour des études de commerce. Un casting spontané dans un centre commercial la propulse chez une agence locale, puis chez Elite Model Management. Depuis trois ans, elle défile pour des maisons de prêt-à-porter haut de gamme et collabore avec des créateurs africains de la diaspora.</p>
+      <h2>Hawa Barry : London calling</h2>
+      <p>Née à Conakry, Hawa Barry rejoint Londres à 21 ans. Elle est aujourd'hui représentée par l'agence Models 1 et a posé pour Burberry, ASOS et la marque panafricaine Rich Mnisi. Sur Instagram, ses 180 000 abonnés suivent autant sa carrière que ses prises de position sur la représentation noire dans la mode.</p>
+      <blockquote>« On ne devrait pas être des exotismes. On devrait être des standards. »<br><em>— Hawa Barry</em></blockquote>
+      <h2>Kadiatou Sow : la révélation bruxelloise</h2>
+      <p>Originaire de Kindia, Kadiatou Sow a été révélée par le concours Elite Model Look Belgium en 2024. Finaliste du concours mondial, elle est maintenant sous contrat avec l'agence Dominique Models à Bruxelles et prépare sa première Fashion Week à Paris en octobre 2026.</p>
+    `,
   },
 
   /* ── ART ──────────────────────────────────────────── */
@@ -477,7 +526,7 @@ const ARTICLES = [
     authorImg: null,
     date: '2026-05-16',
     readTime: 6,
-    image: 'https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?w=1400&q=85',
+    image: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=1400&q=85',
     featured: false,
     breaking: false,
     tags: ['street art', 'conakry', 'guinée', 'art urbain', 'identité'],
