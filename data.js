@@ -105,6 +105,16 @@ const ARTICLES = [
     breaking: false,
     tags: ['conakry', 'guinée', 'culture', 'renaissance', 'afrique de l\'ouest'],
     views: 67300,
+    body: `
+      <h2>Quelque chose a changé à Conakry</h2>
+      <p>Ceux qui connaissent la ville depuis longtemps le sentent. Il y a une énergie nouvelle dans les rues de Kaloum, de Kipé, de Ratoma. Les studios d'enregistrement ouvrent. Les galeries aussi. Les restaurants qui servent de la cuisine guinéenne contemporaine, les clubs qui accueillent des artistes locaux, les cafés culturels qui organisent des podcasts en live — tout ça existait à moitié il y a cinq ans. Aujourd'hui ça existe vraiment.</p>
+      <p>Ce n'est pas un miracle. C'est le résultat d'une génération entière qui a décidé de ne plus attendre les conditions idéales. <strong>Azaya</strong> remplit des salles en Europe. <strong>Djelykaba Bintou</strong> gagne le PRIMUD. <strong>AK4SEVEN</strong> signe chez Gims. <strong>Amaza</strong> bat les records de streaming. Ces noms-là, il y a dix ans, auraient été inconnus hors des frontières guinéennes. Aujourd'hui, ils représentent la Guinée sur la scène mondiale.</p>
+      <h2>La mode, l'art, et le reste</h2>
+      <p>La musique mène la danse — mais elle n'est pas seule. La mode guinéenne trouve ses repères : la Conakry Fashion Week revient en force, des mannequins guinéens défilent à Paris et Londres, des créateurs développent des collections qui mêlent le bazin au streetwear contemporain. Les artistes plasticiens peignent sur les murs de la ville et exposent en Europe. Les chefs de cuisine réinventent la tradition à la table.</p>
+      <blockquote>« Conakry n'a jamais manqué de talent. Elle manquait de confiance. Et là, cette confiance est revenue. »<br><em>— Une journaliste culturelle de Conakry</em></blockquote>
+      <h2>Ce que ça veut dire pour la suite</h2>
+      <p>La renaissance culturelle de Conakry n'est pas un phénomène isolé. Elle s'inscrit dans un mouvement plus large de l'Afrique de l'Ouest — Lagos, Abidjan, Dakar, Bamako — où la créativité locale ne cherche plus la validation externe. Elle se légitime elle-même, trouve ses propres marchés, construit ses propres infrastructures. Conakry est en retard ? Non. Conakry arrive exactement au moment où le monde est prêt à l'écouter.</p>
+    `,
   },
 
   /* ── BREAKING ─────────────────────────────────────── */
@@ -175,6 +185,18 @@ const ARTICLES = [
     breaking: false,
     tags: ['rap ivoirien', 'abidjan', 'côte d\'ivoire', 'didi b', 'hip-hop africain'],
     views: 56800,
+    body: `
+      <h2>Comment Abidjan est devenu la capitale du rap francophone</h2>
+      <p>Il y a dix ans, quand on parlait de rap francophone, on pensait Paris. Marseille. Bordeaux. Abidjan était sur le radar — mais pas au centre. En 2026, la carte a changé. Didi B remplit le Zénith de Paris. Himra est l'artiste le plus streamé de l'histoire ivoirienne, toutes plateformes confondues. TRK trône en tête d'Apple Music Côte d'Ivoire depuis des mois. Quelque chose s'est passé à Abidjan — et ce n'est pas un accident.</p>
+      <p>La ville a toujours été en ébullition créative. Mais c'est la signature de Kiff No Beat chez Universal Music en 2017 qui a changé la donne. Cette décision — un major américain qui parie sur un groupe de rap africain — a envoyé un signal à toute la scène : ici aussi, ça peut se faire. Et depuis, chaque génération a poussé un peu plus loin.</p>
+      <h2>Didi B : l'architecte tranquille</h2>
+      <p>Bassa Zéréhoué Diyilem, alias Didi B, n'est pas le type à faire du bruit pour rien. Il construit. Album après album, il a posé des fondations. <em>History</em> est devenu disque de diamant — une première absolue en Côte d'Ivoire. Son concert au Zénith de Paris en avril 2026 ? Sold out en quelques heures. Didi B est devenu une institution. Mais ce qui le distingue, c'est qu'il reste accessible. Il répond aux DMs. Il passe au quartier. Il n'a pas oublié d'où il vient.</p>
+      <blockquote>« Le rap ivoirien ne se contente plus d'exister — il définit les codes. Et ça, c'est nouveau. »<br><em>— Pan-African Music Magazine, 2026</em></blockquote>
+      <h2>Himra : le phénomène nouchi qui a tout cassé</h2>
+      <p>Himra n'a pas suivi les règles — il les a ignorées. Son rap en nouchi, le parler populaire d'Abidjan, a conquis des millions d'auditeurs qui n'avaient jamais entendu parler de lui. <em>Jeune & Riche</em> est passé de platine à diamant en moins d'un an. Le Black Trophy aux African Talent Awards 2024 — le plus haut prix possible dans son genre. Himra est la preuve que la langue n'est pas une barrière quand le son est universel.</p>
+      <h2>TRK : la nouvelle vague qui arrive</h2>
+      <p>TRK est le futur. Pas du futur — le futur maintenant. Surnommé le "Golden Boy", son EP <em>BABI TAPE Vol. 1</em> a imposé un son résolument abidjanais — trap, afrobeats et identité locale. Il domine Apple Music Côte d'Ivoire depuis des mois. La prochaine génération a déjà son porte-étendard.</p>
+    `,
   },
   {
     id: 'a-007',
@@ -191,6 +213,16 @@ const ARTICLES = [
     breaking: false,
     tags: ['afrobeats', 'guinée', 'producteurs', 'conakry', 'world music'],
     views: 38200,
+    body: `
+      <h2>Ils ne cherchent pas les sunlights — ils construisent le son</h2>
+      <p>Dans un studio improvisé du quartier de Kipé à Conakry, un beatmaker pose ses mains sur un clavier MIDI et écoute en boucle un sample d'une kora vieille de trente ans. Il s'appelle Karamo. Il a 24 ans. Il n'a pas de contrat avec un label. Mais trois de ses productions ont été utilisées sur des singles qui ont dépassé le million de streams cette année. C'est ça, l'Afrobeats made in Guinée — une puissance invisible qui travaille dans l'ombre.</p>
+      <p>La Guinée est souvent présentée comme un réservoir de talents vocaux — Azaya, Djelykaba, Amaza. Ce qu'on oublie, c'est l'écosystème de production derrière eux. Les beatmakers de Conakry ont développé un son propre : des basses plus épaisses, des percussions qui rappellent le djembé, une utilisation du balafon et de la kora comme instruments de lead — pas juste de décor. Ce son guinéen est en train de s'exporter sans que personne ne le remarque vraiment.</p>
+      <h2>Le paradoxe de la richesse et de l'invisibilité</h2>
+      <p>La Guinée possède l'un des patrimoines musicaux les plus riches d'Afrique de l'Ouest — et c'est précisément ce patrimoine qui nourrit une nouvelle génération de producteurs. Les fils et filles de musiciens traditionnels réinterprètent les gammes mandingues, les rythmes peuls, les mélodies forestières de Guinée maritime — et les mettent au service de l'afrobeats contemporain. Le résultat est d'une richesse fascinante.</p>
+      <blockquote>« À Conakry, on a le son. Ce qu'on n'a pas encore, c'est l'infrastructure pour le diffuser. Mais ça vient. »<br><em>— Un producteur de Kipé</em></blockquote>
+      <h2>Paris, Lagos, Abidjan — et Conakry</h2>
+      <p>Les plateformes de streaming ne mentent pas : les artistes guinéens gagnent des parts d'audience en Europe et en Amérique du Nord. La diaspora est là, massive, fidèle. Et chaque mois, de nouveaux auditeurs hors de Guinée découvrent ce son. L'équation est simple : quand le son est bon, les frontières disparaissent. Et le son de Conakry — ce mélange unique de tradition et de modernité — est très, très bon.</p>
+    `,
   },
   {
     id: 'a-008',
@@ -207,6 +239,17 @@ const ARTICLES = [
     breaking: false,
     tags: ['guinée', 'patrimoine', 'amazones', 'balla', 'musique traditionnelle'],
     views: 29700,
+    body: `
+      <h2>Ce que le monde entier a oublié de dire sur la musique guinéenne</h2>
+      <p>En 2004, Youssou N'Dour remporte le Grammy Award du Best Contemporary World Music Album pour <em>Egypt</em> — et tout le monde parle du Sénégal. En 2022, Tyla gagne le Grammy de Best African Music Performance — et tout le monde parle de l'Afrique du Sud. Ce qu'on dit rarement, c'est que la Guinée a précédé tout le monde. Dès les années 1960, sous Sékou Touré, la Guinée a eu la vision de créer des ensembles musicaux d'État parmi les plus influents d'Afrique : le Ballet National Djoliba, les Amazones de Guinée, Balla et ses Balladins, le Bembeya Jazz National.</p>
+      <h2>Les Amazones de Guinée : l'orchestre féminin qui a tout inventé</h2>
+      <p>Fondé dans les années 1960 par Sékou Touré, l'Orchestre des Amazones de Guinée était entièrement composé de femmes — policières de leur métier, musiciennes de leur vocation. Elles jouaient de la musique afro-cubaine, du jazz africain, du mbalax avant l'heure. Leur son était une révolution. Après des décennies de silence, elles ont été remises à l'honneur en 2018 avec un album acclamé par la presse internationale. NPR Music, Pitchfork, The Guardian — tout le monde a salué ce retour. Tout le monde sauf la Guinée officielle, qui peine encore à valoriser ce patrimoine comme il le mérite.</p>
+      <h2>Balla et ses Balladins : le groove tropical qui a influencé la planète</h2>
+      <p>Balla Onivogui et ses Balladins ont créé dans les années 1960-70 un son unique : des rythmes afro-cubains fusionnés avec des mélodies mandingues, une production qui, si elle avait été mieux distribuée, aurait pu avoir l'impact mondial qu'ont eu le highlife ghanéen ou le soukous congolais. Les disques vinyles s'arrachent aujourd'hui chez les collectionneurs du monde entier. La Guinée n'a toujours pas de musée digne de ce nom pour les honorer.</p>
+      <blockquote>« La Guinée a le meilleur jazz africain que peu de gens connaissent. C'est un crime contre la culture mondiale. »<br><em>— Un musicologue parisien</em></blockquote>
+      <h2>Il est temps de changer ça</h2>
+      <p>La question n'est pas de savoir si ce patrimoine existe — il existe. La question est de savoir qui va prendre la responsabilité de le numériser, de le documenter, de le rendre accessible. Le Nigeria a fondé une fondation pour le highlife. Le Ghana protège son patrimoine musical par la loi. En Guinée, l'urgence est là. Les artistes de la nouvelle génération — Azaya, Djelykaba Bintou — s'appuient sur ces racines. Il serait temps que les institutions leur emboîtent le pas.</p>
+    `,
   },
 
   /* ── ARTISTES GUINÉENS ────────────────────────────── */
@@ -531,6 +574,16 @@ const ARTICLES = [
     breaking: false,
     tags: ['street art', 'conakry', 'guinée', 'art urbain', 'identité'],
     views: 33400,
+    body: `
+      <h2>Un mur n'est pas un mur — c'est une déclaration</h2>
+      <p>Dans le quartier de Matam, un mur de sept mètres de long a été transformé en fresque monumentale représentant les grandes figures de la résistance guinéenne : Almamy Samory Touré, Bocar Biro Barry, et une femme sans nom dont le visage tourne vers l'avenir. Autour d'elle, en lettres arabes et latines : <em>Sinemory</em> — "demain" en soussou. L'auteur : un collectif de jeunes artistes de Conakry qui refuse de signer individuellement. "C'est un œuvre collective, comme la résistance l'était."</p>
+      <p>À Hamdallaye, à Dixinn, à Ratoma — la ville parle. Les murs sont devenus des journaux intimes géants. On y lit l'amour, la colère, les rêves et les deuils d'une génération qui a grandi sous la chape de plomb politique et qui s'exprime maintenant que la parole est un peu plus libre. Ce mouvement n'a pas de nom officiel, pas de galerie, pas de représentant. Il existe parce qu'il existe.</p>
+      <h2>Le graffiti comme outil politique</h2>
+      <p>Certaines fresques disparaissent du jour au lendemain — recouvertes de blanc, sans explication. D'autres résistent depuis des années. Le street art est devenu un espace de négociation entre les artistes et l'espace public, entre la création et le contrôle. Et dans cette tension, l'art trouve sa puissance la plus brute.</p>
+      <blockquote>« On ne peint pas pour l'éternité. On peint pour aujourd'hui. »<br><em>— Un artiste de Matam</em></blockquote>
+      <h2>Vers une reconnaissance internationale</h2>
+      <p>En 2025, un photographe français a documenté ces fresques pour une exposition à la Galerie des Colonies à Paris. Pour la première fois, le street art de Conakry a trouvé un écho hors de Guinée. La diaspora a partagé massivement. De jeunes créateurs européens ont commencé à s'intéresser à ce mouvement. Le monde commence à regarder les murs de Conakry.</p>
+    `,
   },
   {
     id: 'a-016',
@@ -547,6 +600,15 @@ const ARTICLES = [
     breaking: false,
     tags: ['art guinéen', 'diaspora', 'exposition', 'paris', 'identité'],
     views: 27800,
+    body: `
+      <h2>Porteurs d'un double héritage</h2>
+      <p>Ils sont nés à Conakry, à Kindia, à Kankan. Ils ont grandi entre deux cultures — celle du Fouta ou de la forêt guinéenne, et celle des villes européennes où ils ont étudié l'art. Et de cette tension, ils ont fait une œuvre. Pas un compromis — une synthèse. Leurs toiles mélangent les pigments de l'Afrique de l'Ouest et les techniques de l'expressionnisme abstrait. Leurs sculptures jouent avec le masque dogon et la géométrie minimaliste.</p>
+      <h2>Ibrahima Kouyaté : les textiles comme cartographie</h2>
+      <p>Ibrahima Kouyaté est né à Conakry en 1988. Aujourd'hui basé à Paris, il travaille avec des tissus wax et bogolan qu'il détourne pour créer des cartographies imaginaires de la Guinée. Ses œuvres ont été exposées à la Fondation Louis Vuitton, au Palais de Tokyo et à la Galerie Chloé Salgado à Bruxelles. Son travail pose une question simple : qu'est-ce qu'une frontière quand on a grandi entre deux continents ?</p>
+      <blockquote>« Je ne veux pas être un artiste africain en Europe. Je veux être un artiste qui a quelque chose à dire — et ce quelque chose vient de Guinée. »<br><em>— Ibrahima Kouyaté</em></blockquote>
+      <h2>Mariama Sow : la sculpture comme résurrection</h2>
+      <p>Mariama Sow, née à Kindia en 1993, travaille le métal et le bois de récupération dans son atelier londonien. Ses sculptures — toujours des femmes, toujours debout — ont été acquises par la collection d'art contemporain du Victoria & Albert Museum en 2025. Elle prépare une exposition solo à New York pour l'automne 2026.</p>
+    `,
   },
   {
     id: 'a-017',
@@ -563,6 +625,15 @@ const ARTICLES = [
     breaking: false,
     tags: ['street art', 'abidjan', 'côte d\'ivoire', 'art urbain'],
     views: 24600,
+    body: `
+      <h2>Cocody se réveille en couleur</h2>
+      <p>À Cocody, le quartier résidentiel et commercial d'Abidjan, des fresques géantes ont commencé à apparaître sur les façades des immeubles depuis 2023. Des visages de femmes aux teintes ocre et rouge, des silhouettes d'éléphants stylisés, des hommages à Dj Arafat, à Gadji Celi, aux grandes figures de la culture ivoirienne. L'initiative vient du collectif <strong>Abidjan Paint</strong>, fondé par cinq jeunes artistes formés aux Beaux-Arts de Dakar et de Paris.</p>
+      <h2>Yopougon : le quartier populaire qui peint ses rêves</h2>
+      <p>À Yopougon, le quartier populaire par excellence — berceau du coupé-décalé, du zouglou, de la joie abidjanaise — les murs parlent aussi. Ici, ce sont des artistes locaux, sans formation académique, qui peignent avec ce qu'ils ont : de la peinture de chantier, des pinceaux improvisés, des bombes aérosol récupérées. Le résultat est brut, vivant, et profondément ancré dans la culture de la rue.</p>
+      <blockquote>« On ne peint pas pour exposer en galerie. On peint pour que le quartier sache qu'il existe. »<br><em>— Un artiste de Yopougon</em></blockquote>
+      <h2>Un œil international sur Abidjan</h2>
+      <p>En 2025, le magazine d'art contemporain <em>Artnet</em> a consacré un dossier entier au street art abidjanais. Les collectionneurs européens commencent à s'y intéresser. Des galeries de Paris et Berlin ont approché des artistes. Ce qui était une expression locale devient un phénomène mondial — avec toutes les questions que ça pose sur l'appropriation et la représentation.</p>
+    `,
   },
 
   /* ── LIFESTYLE ────────────────────────────────────── */
@@ -581,6 +652,16 @@ const ARTICLES = [
     breaking: false,
     tags: ['conakry', 'nightlife', 'guinée', 'sortie', 'vie nocturne'],
     views: 52400,
+    body: `
+      <h2>Kipé ne s'arrête plus à minuit</h2>
+      <p>Il y a cinq ans, Conakry s'arrêtait avec le coucher du soleil. Les coupures d'électricité, l'insécurité perçue, le manque d'infrastructures — tout invitait à rentrer tôt. En 2026, la ville a changé de rythme. Les groupes électrogènes ont cédé la place aux panneaux solaires. Les quartiers de Kipé, Lambanyi et Ratoma sont devenus les épicentres d'une vie nocturne qui n'a rien à envier aux capitales africaines voisines.</p>
+      <p>Le <strong>Nimba Club</strong>, ouvert en 2023, est devenu la référence. Chaque vendredi, la terrasse accueille des soirées qui mélangent afrobeats guinéen, soukous, rap local et son mandingue revisité. L'entrée est à 50 000 GNF — abordable pour la classe moyenne émergente de Conakry. Et les artistes qui s'y produisent ? Amaza, Straiker, des beatmakers qui jouent leurs productions en live. La salle est toujours pleine.</p>
+      <h2>Kaloum : les restaurants qui réinventent la table guinéenne</h2>
+      <p>Le centre de Kaloum n'est plus seulement le quartier des affaires. Il est aussi devenu un pôle gastronomique. Des restaurants comme <strong>Le Mangrove</strong> et <strong>Bafoulabeya</strong> proposent des menus qui mélangent cuisine guinéenne traditionnelle et influences contemporaines. Le fouti sauté au safran, le tiga dégué revisité avec du lait de coco, la sauce feuilles accompagnée de riz au gingembre et citronnelle — une cuisine locale qui se réinvente sans se renier.</p>
+      <blockquote>« Conakry n'est pas une ville qui dort. Elle n'a jamais dormi — on ne la regardait juste pas. »<br><em>— Un habitant de Kipé</em></blockquote>
+      <h2>Le café culturel : nouveau lieu de la création</h2>
+      <p>Entre les clubs et les restaurants, une nouvelle catégorie d'espaces s'est développée : le café culturel. Des lieux hybrides où on vient écouter des podcasts enregistrés en direct, assister à des battles de rap improvisé, voir des expositions photos. <strong>Espace Baobab</strong>, ouvert en 2024, est le plus emblématique. Chaque semaine, il programme un artiste de la scène locale et une table ronde sur la culture guinéenne contemporaine.</p>
+    `,
   },
   {
     id: 'a-019',
@@ -597,6 +678,16 @@ const ARTICLES = [
     breaking: false,
     tags: ['cuisine guinéenne', 'gastronomie', 'conakry', 'diaspora', 'food'],
     views: 39800,
+    body: `
+      <h2>Le fouti, le tiga dégué, la sauce feuilles — vous en avez déjà entendu parler ?</h2>
+      <p>Si vous avez mangé dans un restaurant africain à Paris, vous connaissez probablement le thiéboudienne sénégalais, l'attiéké ivoirien, le ndolé camerounais. Mais le <em>fouti</em> — cette bouillie de farine de maïs onctueuse servie avec de la sauce arachide ? Le <em>tiga dégué</em> — ce dessert d'arachides écrasées, de noisettes et de chocolat qui arrive en fin de repas dans toutes les familles guinéennes ? Probablement pas. La cuisine guinéenne est l'une des grandes cuisines africaines inconnues en Europe. Et certains veulent changer ça.</p>
+      <h2>Des chefs qui portent la cuisine guinéenne hors des frontières</h2>
+      <p>À Paris, dans le 18e arrondissement, le restaurant <strong>Conakry Street</strong> a ouvert en 2024. Son fondateur, Oumar Camara, né à Kindia et formé à l'école hôtelière de Lyon, veut proposer la cuisine guinéenne telle qu'elle est : généreuse, épicée, profondément ancrée dans la tradition. "Le problème avec la cuisine africaine en France, c'est qu'on l'exotise. Moi je veux juste qu'on la mange."</p>
+      <p>À Conakry, des chefs comme <strong>Mariame Diallo</strong> et <strong>Ibrahima Touré</strong> revisitent les classiques avec des produits locaux en circuit court. Leur démarche est à la fois gastronomique et politique : valoriser les agriculteurs de Guinée forestière, réduire les importations, et créer une identité culinaire guinéenne contemporaine.</p>
+      <blockquote>« La cuisine, c'est la carte d'identité d'un peuple. Quand on ne connaît pas votre cuisine, c'est parce qu'on ne vous a pas encore vraiment rencontré. »<br><em>— Oumar Camara, chef</em></blockquote>
+      <h2>La sauce feuilles : le patrimoine immatériel qui se mange</h2>
+      <p>La sauce feuilles — à base de feuilles de patate douce ou de manioc, d'huile de palme rouge et d'épices — est l'un des plats les plus emblématiques de la Guinée forestière. Dans chaque famille, elle a sa version. C'est le plat du dimanche, celui qu'on fait quand il faut dire à quelqu'un qu'on l'aime sans le dire. Elle commence à apparaître sur des tables européennes. Ce n'est que le début.</p>
+    `,
   },
   {
     id: 'a-020',
@@ -613,6 +704,16 @@ const ARTICLES = [
     breaking: false,
     tags: ['jeunesse africaine', 'entrepreneuriat', 'créativité', 'afrique', 'futur'],
     views: 61700,
+    body: `
+      <h2>Ils n'attendent plus le feu vert</h2>
+      <p>Quelque chose a changé dans la façon dont la jeunesse africaine pense à l'avenir. Moins de "si". Moins de "quand les conditions seront réunies". Plus de maintenant. De Dakar à Conakry, d'Abidjan à Douala et Nairobi, une génération entière s'est réveillée avec une conviction simple : si personne ne crée les conditions pour nous, on les crée nous-mêmes.</p>
+      <p>Ce n'est pas du naïf optimisme. C'est une stratégie. Les jeunes entrepreneurs africains ont compris que le marché continental est immense, que la diaspora est une ressource inépuisable, et que les outils numériques permettent de toucher le monde depuis n'importe quel quartier de Conakry, Abidjan ou Dakar.</p>
+      <h2>Aminata, 27 ans, Conakry : des tissus wax vendus à Tokyo</h2>
+      <p>Aminata Kourouma a grandi à Ratoma. À 23 ans, elle lance <strong>Wax World</strong>, une boutique en ligne qui vend des tissus guinéens et ouest-africains à une clientèle internationale. En deux ans, elle a des clients au Japon, en Allemagne et aux États-Unis. "Les gens veulent de l'authenticité. Moi j'ai les contacts directs avec les tisserands. C'est simple." Son chiffre d'affaires mensuel dépasse désormais celui d'un directeur commercial guinéen moyen.</p>
+      <h2>Ibrahima, 24 ans, Dakar : podcaster à 200 000 abonnés</h2>
+      <p>Ibrahima Ndiaye a commencé son podcast <em>Demain Afrique</em> avec un téléphone et des écouteurs dans sa chambre. Deux ans plus tard, il a 200 000 abonnés sur toutes les plateformes, des partenariats avec des marques africaines et une invitation à parler à la conférence TED à Nairobi. "Je n'ai rien demandé. J'ai juste eu une conversation honnête sur les sujets qui nous concernent."</p>
+      <blockquote>« On n'est pas la génération qui attend. On est la génération qui construit. »<br><em>— Aminata Kourouma, Conakry</em></blockquote>
+    `,
   },
 
   /* ── INTERVIEWS ──────────────────────────────────────── */
