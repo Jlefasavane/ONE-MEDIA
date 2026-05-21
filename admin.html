@@ -765,11 +765,15 @@
   async function showDashboard() {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
-    await loadStatus();
-    await loadEvents();
-    await loadClips();
-    await loadSubscribers();
-    await loadArticles();
+    // Chargements prioritaires
+    await Promise.all([loadStatus(), loadSubscribers()]);
+    // Chargements secondaires en parallèle
+    loadEvents();
+    loadClips();
+    loadArticles();
+    loadContacts();
+    loadSubmissions();
+    loadArtistsList();
   }
 
   async function loadStatus() {
@@ -1452,7 +1456,6 @@
     } catch (e) { alert('Erreur: ' + e.message); }
   }
 
-}
 </script>
 </body>
 </html>
