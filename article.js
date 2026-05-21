@@ -89,7 +89,7 @@ function renderArticlePage() {
     main.innerHTML = `
       <p class="article-lead">${a.excerpt}</p>
       <div class="article-body">
-        ${LOREM_BODY.join('\n')}
+        ${a.body || LOREM_BODY.join('\n')}
       </div>
       <div class="article-tags">
         ${a.tags.map(t => `<a href="category.html?cat=${a.category}&tag=${encodeURIComponent(t)}" class="article-tag"># ${t}</a>`).join('')}
