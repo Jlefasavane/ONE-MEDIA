@@ -61,6 +61,7 @@
       <a href="category.html?cat=art"       class="nav-link" data-cat="art">Art</a>
       <a href="category.html?cat=lifestyle" class="nav-link" data-cat="lifestyle">Lifestyle</a>
       <a href="category.html?cat=interview" class="nav-link" data-cat="interview" style="color:var(--c-interview)">🎙 Interviews</a>
+      <a href="#section-events" class="nav-link" style="color:var(--gold)">📅 Événements</a>
       <a href="#section-clips" class="nav-link" style="color:#FF6B35">🎬 Clips</a>
       <a href="artists.html" class="nav-link" style="color:#FF6B35">🎤 Artistes</a>
       <a href="about.html" class="nav-link">À propos</a>
@@ -268,6 +269,34 @@
       </form>
       <div class="submit-success" id="submit-success" style="display:none">
         ✅ Reçu ! On écoute et on te revient.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION ÉVÉNEMENTS -->
+<section class="events-section" id="section-events">
+  <div class="events-header">
+    <div class="events-header-left">
+      <span class="events-tag">📅 AGENDA</span>
+      <h2 class="events-title">Événements à venir</h2>
+      <p class="events-sub">Concerts, festivals, défilés — ne rate rien.</p>
+    </div>
+  </div>
+  <div class="events-scroll" id="events-scroll">
+    <!-- filled by JS -->
+  </div>
+  <!-- Modal LIVE -->
+  <div class="live-modal" id="live-modal">
+    <div class="live-modal-backdrop" id="live-modal-backdrop"></div>
+    <div class="live-modal-inner">
+      <button class="live-modal-close" id="live-modal-close">✕</button>
+      <div class="live-modal-badge">🔴 EN DIRECT</div>
+      <div class="live-modal-event-title" id="live-modal-event-title"></div>
+      <div class="live-embed-wrap">
+        <iframe id="live-iframe" src="" allowfullscreen
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+        </iframe>
       </div>
     </div>
   </div>

@@ -560,6 +560,171 @@ function renderArticleCard(a, opts = {}) {
 })();
 
 /* ═══════════════════════════════════════════════════
+   ÉVÉNEMENTS — Section agenda + LIVE polling
+═══════════════════════════════════════════════════ */
+(function initEvents() {
+  const scrollEl  = document.getElementById('events-scroll');
+  if (!scrollEl) return;
+
+  const MONTHS_FR = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  const CAT_LABELS = { concert: 'Concert', festival: 'Festival', expo: 'Exposition', conference: 'Conférence', mode: 'Défilé', sport: 'Sport' };
+
+  let _liveModalOpen = false;
+  let _knownLiveIds  = new Set();
+
+  /* ── Rendu d'une carte ── */
+  function renderCard(evt) {
+    const d    = new Date(evt.date);
+    const day  = d.getDate();
+    const mon  = MONTHS_FR[d.getMonth()];
+    const cat  = CAT_LABELS[evt.category] || evt.category;
+
+    const liveClass = evt.isLive ? 'is-live' : '';
+    const liveBadge = evt.isLive
+      ? `<div class="event-live-badge">EN DIRECT</div>` : '';
+    const catBadge  = !evt.isLive
+      ? `<div class="event-cat-badge">${cat}</div>` : '';
+
+    const ticketBtn = evt.ticketUrl
+      ? `<a href="${evt.ticketUrl}" target="_blank" rel="noopener" class="event-btn event-btn-ticket">Réserver →</a>`
+      : `<span class="event-btn event-btn-ticket" style="opacity:.45;cursor:default">Bientôt →</span>`;
+
+    const liveBtn = evt.isLive
+      ? `<button class="event-btn event-btn-live" onclick="openLiveModal('${evt.id}')">SUIVRE EN LIVE</button>`
+      : '';
+
+    return `
+    <div class="event-card ${liveClass}" id="evtcard-${evt.id}">
+      ${liveBadge}
+      <div class="event-img-wrap">
+        <img src="${evt.image || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80'}"
+             alt="${evt.title}" loading="lazy"
+             onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80'">
+        ${catBadge}
+        <div class="event-date-badge">
+          <div class="event-date-day">${day}</div>
+          <div class="event-date-month">${mon}</div>
+        </div>
+      </div>
+      <div class="event-body">
+        <div class="event-artist">${evt.artist || ''}</div>
+        <div class="event-title-card">${evt.title}</div>
+        <div class="event-venue">📍 ${evt.venue}</div>
+        <div class="event-city">${evt.city}</div>
+        <div class="event-time">🕐 ${evt.time}</div>
+        <div class="event-actions">
+          ${ticketBtn}
+          ${liveBtn}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  /* ── Chargement des événements ── */
+  async function loadEvents() {
+    try {
+      const r = await fetch(`${API_BASE}/api/events`);
+      if (!r.ok) return;
+      const { events } = await r.json();
+      if (!events?.length) {
+        scrollEl.innerHTML = `<p class="events-empty">Aucun événement annoncé pour le moment. Revenez bientôt.</p>`;
+        return;
+      }
+      // Trier par date + isLive en premier
+      events.sort((a, b) => {
+        if (a.isLive && !b.isLive) return -1;
+        if (!a.isLive && b.isLive) return 1;
+        return new Date(a.date) - new Date(b.date);
+      });
+      scrollEl.innerHTML = events.map(renderCard).join('');
+
+      // Détecter nouveaux events LIVE pour la notification
+      events.forEach(evt => {
+        if (evt.isLive && !_knownLiveIds.has(evt.id)) {
+          _knownLiveIds.add(evt.id);
+          showLiveAlert(evt);
+        }
+      });
+      _knownLiveIds = new Set(events.filter(e => e.isLive).map(e => e.id));
+    } catch (e) {
+      console.warn('Events load error', e);
+    }
+  }
+
+  /* ── Bannière notification LIVE ── */
+  function showLiveAlert(evt) {
+    let alert = document.getElementById('live-alert-banner');
+    if (!alert) {
+      alert = document.createElement('div');
+      alert.className = 'live-alert';
+      alert.id = 'live-alert-banner';
+      document.body.appendChild(alert);
+    }
+    alert.innerHTML = `<span class="live-alert-dot"></span> 🔴 ${evt.title} est EN DIRECT maintenant — <u>Rejoindre le live</u>`;
+    alert.onclick = () => openLiveModal(evt.id);
+    requestAnimationFrame(() => alert.classList.add('show'));
+    // Se cache après 12s si non cliqué
+    setTimeout(() => alert.classList.remove('show'), 12000);
+  }
+
+  /* ── Modal LIVE ── */
+  let _eventsCache = [];
+  window.openLiveModal = function(evtId) {
+    fetch(`${API_BASE}/api/events`).then(r => r.json()).then(({ events }) => {
+      const evt = events.find(e => e.id === evtId);
+      if (!evt || !evt.isLive) return;
+      _eventsCache = events;
+      const modal = document.getElementById('live-modal');
+      const iframe = document.getElementById('live-iframe');
+      const titleEl = document.getElementById('live-modal-event-title');
+      if (!modal || !iframe) return;
+      // Convertir une URL YouTube/Twitch en embed
+      const src = buildEmbedUrl(evt.liveUrl);
+      iframe.src = src;
+      if (titleEl) titleEl.textContent = evt.title;
+      modal.classList.add('open');
+      _liveModalOpen = true;
+    });
+  };
+
+  function buildEmbedUrl(url) {
+    if (!url) return '';
+    // YouTube live
+    const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+    if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0`;
+    // YouTube live direct embed
+    const ytEmbed = url.match(/youtube\.com\/embed\/([^?&\s]+)/);
+    if (ytEmbed) return url;
+    // Twitch
+    const twitch = url.match(/twitch\.tv\/([^\/\s?]+)/);
+    if (twitch) return `https://player.twitch.tv/?channel=${twitch[1]}&parent=${window.location.hostname}&autoplay=true`;
+    // URL déjà prête
+    return url;
+  }
+
+  // Fermeture du modal
+  function closeLiveModal() {
+    const modal  = document.getElementById('live-modal');
+    const iframe = document.getElementById('live-iframe');
+    if (modal)  modal.classList.remove('open');
+    if (iframe) iframe.src = '';
+    _liveModalOpen = false;
+  }
+
+  document.addEventListener('click', e => {
+    if (e.target.id === 'live-modal-backdrop' || e.target.id === 'live-modal-close') {
+      closeLiveModal();
+    }
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLiveModal(); });
+
+  /* ── Polling LIVE toutes les 30 secondes ── */
+  loadEvents();
+  setInterval(loadEvents, 30000);
+
+})();
+
+/* ═══════════════════════════════════════════════════
    PWA — Bannière d'installation
 ═══════════════════════════════════════════════════ */
 (function initPWA() {

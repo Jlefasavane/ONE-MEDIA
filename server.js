@@ -16,6 +16,7 @@ const PORT = process.env.PORT || 3002;
 const ARTICLES_FILE    = path.join(__dirname, 'articles.json');
 const CLIPS_FILE       = path.join(__dirname, 'clips.json');
 const SUBSCRIBERS_FILE = path.join(__dirname, 'subscribers.json');
+const EVENTS_FILE      = path.join(__dirname, 'events.json');
 const ADMIN_PASSWORD   = process.env.ADMIN_PASSWORD || 'onemedia2026!';
 
 /* ── Helpers fichiers ─────────────────────────────────────── */
@@ -31,7 +32,7 @@ function writeJSON(file, data) {
 app.use(express.json());
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type,x-admin-token');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
@@ -158,6 +159,67 @@ app.post('/api/clips/submit', (req, res) => {
   data.pending.push({ videoId, title, artist, email, submittedAt: new Date().toISOString() });
   writeJSON(CLIPS_FILE, data);
   res.json({ success: true, message: 'Soumission reçue !' });
+});
+
+/* ── API Événements ─────────────────────────────────────── */
+
+// GET /api/events — liste publique, triée par date croissante
+app.get('/api/events', (req, res) => {
+  const data = readJSON(EVENTS_FILE, { events: [] });
+  data.events.sort((a, b) => new Date(a.date) - new Date(b.date));
+  res.json(data);
+});
+
+// POST /api/events/add — créer un événement (admin)
+app.post('/api/events/add', adminAuth, (req, res) => {
+  const { title, artist, date, time, venue, city, country, category, image, description, ticketUrl } = req.body;
+  if (!title || !date) return res.status(400).json({ error: 'title et date requis' });
+  const data = readJSON(EVENTS_FILE, { events: [] });
+  const evt = {
+    id: `evt_${Date.now()}`,
+    title, artist: artist || '', date, time: time || '20:00',
+    venue: venue || '', city: city || '', country: country || 'guinee',
+    category: category || 'concert',
+    image: image || '',
+    description: description || '',
+    ticketUrl: ticketUrl || '',
+    isLive: false, liveUrl: '',
+    addedAt: new Date().toISOString(),
+  };
+  data.events.push(evt);
+  writeJSON(EVENTS_FILE, data);
+  res.json({ success: true, event: evt });
+});
+
+// POST /api/events/:id/live — activer/désactiver le LIVE (admin)
+app.post('/api/events/:id/live', adminAuth, (req, res) => {
+  const { isLive, liveUrl } = req.body;
+  const data = readJSON(EVENTS_FILE, { events: [] });
+  const evt = data.events.find(e => e.id === req.params.id);
+  if (!evt) return res.status(404).json({ error: 'Événement introuvable' });
+  evt.isLive  = !!isLive;
+  evt.liveUrl = liveUrl !== undefined ? liveUrl : evt.liveUrl;
+  writeJSON(EVENTS_FILE, data);
+  console.log(`📡 Event "${evt.title}" → ${evt.isLive ? '🔴 EN LIVE' : '⚫ offline'}`);
+  res.json({ success: true, event: evt });
+});
+
+// PUT /api/events/:id — modifier un événement (admin)
+app.put('/api/events/:id', adminAuth, (req, res) => {
+  const data = readJSON(EVENTS_FILE, { events: [] });
+  const idx = data.events.findIndex(e => e.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'Événement introuvable' });
+  data.events[idx] = { ...data.events[idx], ...req.body, id: req.params.id };
+  writeJSON(EVENTS_FILE, data);
+  res.json({ success: true, event: data.events[idx] });
+});
+
+// DELETE /api/events/:id — supprimer (admin)
+app.delete('/api/events/:id', adminAuth, (req, res) => {
+  const data = readJSON(EVENTS_FILE, { events: [] });
+  data.events = data.events.filter(e => e.id !== req.params.id);
+  writeJSON(EVENTS_FILE, data);
+  res.json({ success: true });
 });
 
 /* ── Newsletter ──────────────────────────────────────────── */

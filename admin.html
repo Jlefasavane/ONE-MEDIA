@@ -401,6 +401,48 @@
     <div style="margin-top:20px" id="pending-section"></div>
   </div>
 
+  <!-- Événements -->
+  <p class="section-title">📅 Gestion des événements</p>
+  <div class="action-card" id="events-panel">
+    <h3>Ajouter un événement</h3>
+    <p>Concerts, festivals, défilés, expos. L'admin choisit quel événement passe EN LIVE.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+      <input id="evt-title" placeholder="Titre de l'événement *" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none;grid-column:1/-1">
+      <input id="evt-artist" placeholder="Artiste / Intervenant" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
+      <input id="evt-date" type="date" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
+      <input id="evt-time" type="time" placeholder="20:00" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
+      <input id="evt-venue" placeholder="Salle / Lieu" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
+      <input id="evt-city" placeholder="Ville, Pays" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
+      <select id="evt-category" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
+        <option value="concert">🎤 Concert</option>
+        <option value="festival">🎪 Festival</option>
+        <option value="mode">👗 Défilé / Fashion</option>
+        <option value="expo">🎨 Exposition</option>
+        <option value="conference">🎙 Conférence</option>
+        <option value="sport">⚽ Sport</option>
+      </select>
+      <select id="evt-country" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
+        <option value="guinee">🇬🇳 Guinée</option>
+        <option value="cote_ivoire">🇨🇮 Côte d'Ivoire</option>
+        <option value="senegal">🇸🇳 Sénégal</option>
+        <option value="france">🇫🇷 France</option>
+        <option value="nigeria">🇳🇬 Nigeria</option>
+        <option value="afrique">🌍 Afrique (autre)</option>
+      </select>
+      <input id="evt-image" placeholder="URL image (optionnel)" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none;grid-column:1/-1">
+      <input id="evt-ticket" placeholder="Lien billetterie (optionnel)" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none;grid-column:1/-1">
+    </div>
+    <div style="margin-top:12px;display:flex;align-items:center;gap:12px">
+      <button class="btn btn-sm" id="evt-add-btn">Ajouter l'événement</button>
+      <span id="evt-add-msg" style="font-size:13px;color:var(--green);display:none">✅ Événement ajouté !</span>
+    </div>
+
+    <!-- Liste des événements -->
+    <div style="margin-top:24px" id="events-list-admin">
+      <p style="color:var(--muted);font-size:13px">Chargement…</p>
+    </div>
+  </div>
+
   <!-- Abonnés newsletter -->
   <p class="section-title">📧 Abonnés newsletter</p>
   <div class="action-card">
@@ -487,6 +529,7 @@
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
     await loadStatus();
+    await loadEvents();
     await loadClips();
     await loadSubscribers();
     await loadArticles();
@@ -661,6 +704,108 @@
       document.getElementById('subscribers-info').innerHTML = '<p style="color:var(--muted);font-size:13px">Erreur de chargement</p>';
     }
   }
+
+  /* ── ÉVÉNEMENTS ── */
+  async function loadEvents() {
+    const res = await fetch(`${API}/api/events`).then(r => r.json()).catch(() => ({ events: [] }));
+    const events = (res.events || []).sort((a,b) => new Date(a.date)-new Date(b.date));
+    const el = document.getElementById('events-list-admin');
+
+    if (!events.length) {
+      el.innerHTML = '<p style="color:var(--muted);font-size:13px;margin-top:4px">Aucun événement.</p>';
+      return;
+    }
+
+    const MONTHS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+    el.innerHTML = `<h3 style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">${events.length} événement(s)</h3>`
+    + events.map(e => {
+      const d = new Date(e.date);
+      const dateStr = `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+      const liveStyle = e.isLive
+        ? 'background:var(--red);color:#fff;'
+        : 'background:#1a1a1a;color:var(--muted);border:1px solid #333;';
+      return `
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid #1a1a1a">
+        <img src="${e.image || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&q=60'}"
+             style="width:60px;height:60px;border-radius:8px;object-fit:cover;flex-shrink:0"
+             onerror="this.style.display='none'">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.title}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px">${e.artist} · ${dateStr} ${e.time} · ${e.city}</div>
+          <!-- Champ URL LIVE -->
+          <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input id="liveurl-${e.id}" placeholder="URL live (YouTube / Twitch)"
+              value="${e.liveUrl || ''}"
+              style="flex:1;min-width:160px;background:#111;border:1px solid #333;border-radius:6px;color:#eee;padding:6px 10px;font-size:12px;outline:none">
+            <button onclick="toggleLive('${e.id}')"
+              style="${liveStyle}border:none;border-radius:6px;padding:6px 14px;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;white-space:nowrap;transition:opacity .2s">
+              ${e.isLive ? '🔴 EN LIVE — Couper' : '▶ Passer EN LIVE'}
+            </button>
+            <button onclick="deleteEvent('${e.id}')"
+              style="background:transparent;border:1px solid #333;color:var(--red);border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer">
+              Suppr.
+            </button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  window.toggleLive = async (id) => {
+    const data = await fetch(`${API}/api/events`).then(r => r.json()).catch(() => ({ events: [] }));
+    const evt  = (data.events || []).find(e => e.id === id);
+    if (!evt) return;
+    const newLive = !evt.isLive;
+    const liveUrl = document.getElementById(`liveurl-${id}`)?.value?.trim() || evt.liveUrl || '';
+    if (newLive && !liveUrl) {
+      showToast('⚠️ Colle d\'abord l\'URL du live (YouTube ou Twitch)', 'var(--yellow)');
+      return;
+    }
+    await fetch(`${API}/api/events/${id}/live`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+      body: JSON.stringify({ isLive: newLive, liveUrl }),
+    });
+    showToast(newLive ? '🔴 Événement passé EN LIVE !' : '⚫ Live coupé', newLive ? 'var(--red)' : 'var(--muted)');
+    await loadEvents();
+  };
+
+  window.deleteEvent = async (id) => {
+    if (!confirm('Supprimer cet événement ?')) return;
+    await fetch(`${API}/api/events/${id}`, { method: 'DELETE', headers: { 'x-admin-token': token } });
+    showToast('🗑 Événement supprimé');
+    await loadEvents();
+  };
+
+  document.getElementById('evt-add-btn').addEventListener('click', async () => {
+    const title   = document.getElementById('evt-title').value.trim();
+    const date    = document.getElementById('evt-date').value;
+    if (!title || !date) { showToast('⚠️ Titre et date requis', 'var(--yellow)'); return; }
+    const body = {
+      title,
+      artist:   document.getElementById('evt-artist').value.trim(),
+      date,
+      time:     document.getElementById('evt-time').value || '20:00',
+      venue:    document.getElementById('evt-venue').value.trim(),
+      city:     document.getElementById('evt-city').value.trim(),
+      category: document.getElementById('evt-category').value,
+      country:  document.getElementById('evt-country').value,
+      image:    document.getElementById('evt-image').value.trim(),
+      ticketUrl:document.getElementById('evt-ticket').value.trim(),
+    };
+    await fetch(`${API}/api/events/add`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+      body: JSON.stringify(body),
+    });
+    ['evt-title','evt-artist','evt-venue','evt-city','evt-image','evt-ticket'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    const msg = document.getElementById('evt-add-msg');
+    msg.style.display = 'inline';
+    setTimeout(() => { msg.style.display = 'none'; }, 2500);
+    await loadEvents();
+  });
 
   /* ── AUTO-LOGIN si token existant ── */
   if (token) {
