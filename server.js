@@ -236,25 +236,37 @@ app.post('/api/clips/submit', (req, res) => {
    ══════════════════════════════════════════════════════════ */
 
 // Chaînes des artistes africains/guinéens suivis par ONE MEDIA
-// Format : { handle, artist, country }
-// Les channel_id sont résolus automatiquement et mis en cache.
+// channelId direct = pas besoin de résolution (plus rapide)
 const ARTIST_CHANNELS = [
-  { handle: '@BurnaBoyTV',          artist: 'Burna Boy',      country: 'nigeria' },
-  { handle: '@wizkidayo',           artist: 'Wizkid',         country: 'nigeria' },
-  { handle: '@DavidoOfficial',      artist: 'Davido',         country: 'nigeria' },
-  { handle: '@RemaOfficial',        artist: 'Rema',           country: 'nigeria' },
-  { handle: '@OmahLayOfficial',     artist: 'Omah Lay',       country: 'nigeria' },
-  { handle: '@FireboyDML',          artist: 'Fireboy DML',    country: 'nigeria' },
-  { handle: '@TiwaSavageVEVO',      artist: 'Tiwa Savage',    country: 'nigeria' },
-  { handle: '@AyaNakamuraOfficiel', artist: 'Aya Nakamura',   country: 'france' },
-  { handle: '@MHDofficiel',         artist: 'MHD',            country: 'france' },
-  { handle: '@YoussouNDourOfficiel',artist: 'Youssou N\'Dour', country: 'senegal' },
-  { handle: '@FallyIpupaOfficiel',  artist: 'Fally Ipupa',    country: 'afrique' },
-  { handle: '@DidiB',               artist: 'Didi B',         country: 'cote_ivoire' },
-  { handle: '@HimraOfficiel',       artist: 'Himra',          country: 'cote_ivoire' },
-  { handle: '@Tyla',                artist: 'Tyla',           country: 'afrique' },
-  // Artistes guinéens — handles à confirmer quand leurs chaînes sont connues
-  // { handle: '@AzayaOfficiel', artist: 'Azaya', country: 'guinee' },
+  // 🇬🇳 GUINÉE — channel IDs vérifiés
+  { handle: '@AzayaOfficiel',       channelId: 'UCZTxOvGsnZ_BpCwyO8SBkaw', artist: 'Azaya',           country: 'guinee' },
+  { handle: '@Straiker',            channelId: 'UCvQJ64ZOVrfDSRUZppEyczg', artist: 'Straiker',         country: 'guinee' },
+  { handle: '@AK4SEVEN',            channelId: 'UCxLMyx_l2xVDqYqNr6W7tzQ', artist: 'AK4SEVEN',         country: 'guinee' },
+  { handle: '@DjaniiAlfa',          channelId: 'UCn-taVB8ecvYdOMxCPYpeEA', artist: 'Djanii Alfa',       country: 'guinee' },
+  { handle: '@djelykababintou',     channelId: 'UCQbckj_GH8g80f6L6PnSYfQ', artist: 'Djelykaba Bintou', country: 'guinee' },
+  { handle: '@AmazaOfficiel',       channelId: null,                        artist: 'Amaza',            country: 'guinee' },
+
+  // 🇳🇬 NIGERIA
+  { handle: '@BurnaBoyTV',          channelId: null, artist: 'Burna Boy',    country: 'nigeria' },
+  { handle: '@wizkidayo',           channelId: null, artist: 'Wizkid',       country: 'nigeria' },
+  { handle: '@DavidoOfficial',      channelId: null, artist: 'Davido',       country: 'nigeria' },
+  { handle: '@RemaOfficial',        channelId: null, artist: 'Rema',         country: 'nigeria' },
+  { handle: '@OmahLayOfficial',     channelId: null, artist: 'Omah Lay',     country: 'nigeria' },
+  { handle: '@FireboyDML',          channelId: null, artist: 'Fireboy DML',  country: 'nigeria' },
+  { handle: '@TiwaSavageVEVO',      channelId: null, artist: 'Tiwa Savage',  country: 'nigeria' },
+
+  // 🇨🇮 CÔTE D'IVOIRE
+  { handle: '@DidiB',               channelId: null, artist: 'Didi B',       country: 'cote_ivoire' },
+  { handle: '@HimraOfficiel',       channelId: null, artist: 'Himra',        country: 'cote_ivoire' },
+
+  // 🇸🇳 SÉNÉGAL
+  { handle: '@YoussouNDourOfficiel',channelId: null, artist: 'Youssou N\'Dour', country: 'senegal' },
+
+  // 🌍 AFRIQUE / DIASPORA
+  { handle: '@AyaNakamuraOfficiel', channelId: null, artist: 'Aya Nakamura', country: 'france' },
+  { handle: '@MHDofficiel',         channelId: null, artist: 'MHD',          country: 'france' },
+  { handle: '@FallyIpupaOfficiel',  channelId: null, artist: 'Fally Ipupa',  country: 'afrique' },
+  { handle: '@Tyla',                channelId: null, artist: 'Tyla',         country: 'afrique' },
 ];
 
 const CHANNEL_CACHE_FILE = path.join(__dirname, 'channel_ids.json');
@@ -318,7 +330,11 @@ async function refreshClipsFromChannels() {
   let cache = readJSON(CHANNEL_CACHE_FILE, {});
 
   // 2. Résoudre les handles manquants dans le cache
+  // Les artistes avec channelId direct sont immédiatement mis en cache
   for (const ch of ARTIST_CHANNELS) {
+    if (ch.channelId && !cache[ch.handle]) {
+      cache[ch.handle] = ch.channelId; // channel ID connu directement
+    }
     if (!cache[ch.handle]) {
       console.log(`  🔍 Résolution ${ch.handle}…`);
       const id = await resolveChannelId(ch.handle);
