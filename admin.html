@@ -256,7 +256,7 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .articles-list {
-      max-height: 400px;
+      max-height: 500px;
       overflow-y: auto;
     }
 
@@ -297,6 +297,51 @@
       letter-spacing: 0.5px;
       flex-shrink: 0;
     }
+
+    /* ── EDIT MODAL ── */
+    .edit-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.85);
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    .edit-modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+    .edit-modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      width: 100%;
+      max-width: 720px;
+      margin: auto;
+    }
+    .edit-modal h2 { font-size: 18px; margin-bottom: 20px; }
+    .edit-field { margin-bottom: 14px; }
+    .edit-field label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .edit-field input,
+    .edit-field select,
+    .edit-field textarea {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 14px;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color .2s;
+      font-family: inherit;
+    }
+    .edit-field input:focus,
+    .edit-field select:focus,
+    .edit-field textarea:focus { border-color: var(--accent); }
+    .edit-field textarea { min-height: 200px; resize: vertical; line-height: 1.5; font-size: 13px; }
+    .edit-modal-actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    .btn-ghost { background: none; border: 1px solid var(--border); color: var(--muted); }
+    .btn-ghost:hover { border-color: var(--text); color: var(--text); }
 
     .toast {
       position: fixed;
@@ -361,7 +406,7 @@
   <p class="section-title">Actions</p>
   <div class="action-card">
     <h3>🔄 Générer de nouveaux articles</h3>
-    <p>Lance NewsAPI → Groq → articles.json. Dure environ 2 minutes. Le site se met à jour automatiquement.</p>
+    <p>Lance la recherche RSS (RFI, BBC Afrique, Jeune Afrique…) → Groq réécriture → articles.json. Dure 2-3 min. Le site se met à jour automatiquement.</p>
     <div class="action-row">
       <button class="btn btn-sm" id="refresh-btn" style="width:auto">Générer maintenant</button>
       <div class="generating-msg" id="gen-msg">
@@ -443,6 +488,18 @@
     </div>
   </div>
 
+  <!-- Auto-refresh clips YouTube -->
+  <p class="section-title">🎬 Clips automatiques (YouTube 48h)</p>
+  <div class="action-card">
+    <h3>🔍 Nouveaux clips des 48 dernières heures</h3>
+    <p>Si <code style="color:var(--accent)">YOUTUBE_API_KEY</code> est configurée dans Railway, lance une recherche YouTube pour trouver automatiquement les clips africains sortis dans les 48h.</p>
+    <div class="action-row">
+      <button class="btn btn-sm" id="clips-auto-btn" style="background:var(--red)">🎬 Scanner YouTube 48h</button>
+      <span id="clips-auto-msg" style="font-size:13px;color:var(--yellow);display:none">⏳ Recherche en cours…</span>
+    </div>
+    <p style="margin-top:10px;font-size:12px;color:var(--muted)">⏰ Ce scan tourne aussi automatiquement toutes les 6h si la clé est configurée.</p>
+  </div>
+
   <!-- Abonnés newsletter -->
   <p class="section-title">📧 Abonnés newsletter</p>
   <div class="action-card">
@@ -452,10 +509,70 @@
   </div>
 
   <!-- Articles list -->
-  <p class="section-title">Articles actuels</p>
+  <p class="section-title">📰 Articles IA (édition & gestion)</p>
   <div class="action-card">
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Clique sur ✏️ pour éditer un article, 🗑 pour le supprimer. Les modifications sont sauvegardées immédiatement sur le serveur.</p>
     <div class="articles-list" id="articles-list">
       <p style="color:var(--muted);font-size:13px">Chargement…</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL ÉDITION ARTICLE ── -->
+<div class="edit-modal-overlay" id="edit-modal-overlay">
+  <div class="edit-modal">
+    <h2>✏️ Modifier l'article</h2>
+    <input type="hidden" id="edit-article-id">
+
+    <div class="edit-field">
+      <label>Titre</label>
+      <input type="text" id="edit-title" placeholder="Titre de l'article">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="edit-field">
+        <label>Catégorie</label>
+        <select id="edit-category">
+          <option value="musique">Musique</option>
+          <option value="cinema">Cinéma</option>
+          <option value="mode">Mode</option>
+          <option value="art">Art</option>
+          <option value="lifestyle">Lifestyle</option>
+          <option value="interview">Interview</option>
+        </select>
+      </div>
+      <div class="edit-field">
+        <label>Temps de lecture (min)</label>
+        <input type="number" id="edit-readtime" min="1" max="60" value="5">
+      </div>
+    </div>
+    <div class="edit-field">
+      <label>Image (URL)</label>
+      <input type="url" id="edit-image" placeholder="https://...">
+    </div>
+    <div class="edit-field">
+      <label>Chapeau (excerpt)</label>
+      <textarea id="edit-excerpt" style="min-height:80px" placeholder="Introduction de l'article…"></textarea>
+    </div>
+    <div class="edit-field">
+      <label>Corps de l'article (HTML)</label>
+      <textarea id="edit-body" placeholder="<h2>Titre section</h2><p>Contenu…</p>"></textarea>
+    </div>
+    <div class="edit-field">
+      <label>Tags (séparés par virgule)</label>
+      <input type="text" id="edit-tags" placeholder="musique, guinée, afrobeats">
+    </div>
+    <div style="display:flex;gap:20px;margin-top:10px;align-items:center">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
+        <input type="checkbox" id="edit-featured"> Article featured (héro)
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
+        <input type="checkbox" id="edit-breaking"> Breaking news
+      </label>
+    </div>
+    <div class="edit-modal-actions">
+      <button class="btn btn-sm" id="edit-save-btn">💾 Sauvegarder</button>
+      <button class="btn btn-sm btn-ghost" id="edit-cancel-btn">Annuler</button>
+      <span id="edit-save-msg" style="font-size:13px;color:var(--green);display:none">✅ Sauvegardé !</span>
     </div>
   </div>
 </div>
@@ -551,28 +668,44 @@
     }
   }
 
+  let articlesCache = [];
+
   async function loadArticles() {
     try {
       const r = await fetch(`${API}/api/articles`);
       const d = await r.json();
+      articlesCache = d.articles || [];
       const list = document.getElementById('articles-list');
 
-      if (!d.articles?.length) {
+      if (!articlesCache.length) {
         list.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucun article généré.</p>';
         return;
       }
 
-      list.innerHTML = d.articles.map(a => `
-        <div class="art-item">
+      list.innerHTML = articlesCache.map(a => `
+        <div class="art-item" id="art-item-${a.id}">
           <img class="art-img" src="${a.image || ''}" alt="" loading="lazy"
-               onerror="this.style.display='none'">
+               onerror="this.src='https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=80&q=60'">
           <div class="art-info">
             <div class="art-title">${a.title}</div>
-            <div class="art-meta">${a.author || ''} · ${a.date || ''} · ${a.readTime || 5} min</div>
+            <div class="art-meta">
+              ${a.sourceName ? `<span style="color:var(--accent)">📰 ${a.sourceName}</span> · ` : ''}
+              ${a.category} · ${a.date || ''} · ${a.readTime || 5} min
+              ${a.featured ? ' · <span style="color:var(--yellow)">★ Featured</span>' : ''}
+              ${a.editedAt ? ' · <span style="color:var(--muted)">✏ Modifié</span>' : ''}
+            </div>
           </div>
-          <span class="cat-badge" style="background:${CAT_COLORS[a.category] || '#666'}22;color:${CAT_COLORS[a.category] || '#666'}">
-            ${a.category}
-          </span>
+          <div style="display:flex;gap:6px;flex-shrink:0">
+            <span class="cat-badge" style="background:${CAT_COLORS[a.category]||'#666'}22;color:${CAT_COLORS[a.category]||'#666'}">
+              ${a.category}
+            </span>
+            <button onclick="openEditModal('${a.id}')"
+              style="background:#1a1a1a;border:1px solid #333;color:var(--accent);border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer"
+              title="Modifier">✏️</button>
+            <button onclick="deleteArticle('${a.id}')"
+              style="background:#ff2d5512;border:1px solid #ff2d5540;color:#ff2d55;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer"
+              title="Supprimer">🗑</button>
+          </div>
         </div>
       `).join('');
     } catch {
@@ -580,6 +713,89 @@
         '<p style="color:var(--muted);font-size:13px">Erreur de chargement.</p>';
     }
   }
+
+  /* ── ÉDITION ARTICLES ── */
+  window.openEditModal = (id) => {
+    const a = articlesCache.find(x => x.id === id);
+    if (!a) return;
+
+    document.getElementById('edit-article-id').value  = a.id;
+    document.getElementById('edit-title').value       = a.title || '';
+    document.getElementById('edit-category').value    = a.category || 'musique';
+    document.getElementById('edit-readtime').value    = a.readTime || 5;
+    document.getElementById('edit-image').value       = a.image || '';
+    document.getElementById('edit-excerpt').value     = a.excerpt || '';
+    document.getElementById('edit-body').value        = a.body || '';
+    document.getElementById('edit-tags').value        = (a.tags || []).join(', ');
+    document.getElementById('edit-featured').checked  = !!a.featured;
+    document.getElementById('edit-breaking').checked  = !!a.breaking;
+
+    document.getElementById('edit-modal-overlay').classList.add('open');
+    document.getElementById('edit-save-msg').style.display = 'none';
+  };
+
+  document.getElementById('edit-cancel-btn').addEventListener('click', () => {
+    document.getElementById('edit-modal-overlay').classList.remove('open');
+  });
+  document.getElementById('edit-modal-overlay').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('edit-modal-overlay')) {
+      document.getElementById('edit-modal-overlay').classList.remove('open');
+    }
+  });
+
+  document.getElementById('edit-save-btn').addEventListener('click', async () => {
+    const id  = document.getElementById('edit-article-id').value;
+    const btn = document.getElementById('edit-save-btn');
+    const msg = document.getElementById('edit-save-msg');
+    btn.disabled = true;
+    btn.textContent = '⏳ Sauvegarde…';
+
+    const body = {
+      title:    document.getElementById('edit-title').value.trim(),
+      category: document.getElementById('edit-category').value,
+      readTime: parseInt(document.getElementById('edit-readtime').value) || 5,
+      image:    document.getElementById('edit-image').value.trim(),
+      excerpt:  document.getElementById('edit-excerpt').value.trim(),
+      body:     document.getElementById('edit-body').value.trim(),
+      tags:     document.getElementById('edit-tags').value.split(',').map(t => t.trim()).filter(Boolean),
+      featured: document.getElementById('edit-featured').checked,
+      breaking: document.getElementById('edit-breaking').checked,
+    };
+
+    try {
+      const r = await fetch(`${API}/api/articles/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+        body: JSON.stringify(body),
+      });
+      const d = await r.json();
+      if (d.success) {
+        msg.style.display = 'inline';
+        showToast('✅ Article modifié !');
+        await loadArticles();
+        setTimeout(() => {
+          document.getElementById('edit-modal-overlay').classList.remove('open');
+        }, 1000);
+      } else {
+        showToast('❌ ' + (d.error || 'Erreur'), 'var(--red)');
+      }
+    } catch (err) {
+      showToast('❌ ' + err.message, 'var(--red)');
+    }
+    btn.disabled = false;
+    btn.textContent = '💾 Sauvegarder';
+  });
+
+  window.deleteArticle = async (id) => {
+    const a = articlesCache.find(x => x.id === id);
+    if (!confirm(`Supprimer "${a?.title?.slice(0,50)||id}" ?`)) return;
+    try {
+      await fetch(`${API}/api/articles/${id}`, { method: 'DELETE', headers: { 'x-admin-token': token } });
+      showToast('🗑 Article supprimé');
+      await loadArticles();
+      await loadStatus();
+    } catch { showToast('❌ Erreur suppression', 'var(--red)'); }
+  };
 
   /* ── REFRESH ── */
   document.getElementById('refresh-btn').addEventListener('click', async () => {
@@ -805,6 +1021,33 @@
     msg.style.display = 'inline';
     setTimeout(() => { msg.style.display = 'none'; }, 2500);
     await loadEvents();
+  });
+
+  /* ── AUTO-CLIPS YOUTUBE ── */
+  document.getElementById('clips-auto-btn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('clips-auto-btn');
+    const msg = document.getElementById('clips-auto-msg');
+    btn.disabled = true;
+    msg.style.display = 'inline';
+
+    try {
+      const r = await fetch(`${API}/api/clips/auto-refresh`, {
+        method: 'POST',
+        headers: { 'x-admin-token': token },
+      });
+      const d = await r.json();
+      if (d.error) {
+        showToast('⚠️ ' + d.error + (d.help ? ' — ' + d.help.slice(0,60) : ''), 'var(--yellow)');
+      } else {
+        showToast('🎬 ' + (d.message || 'Scan lancé !'));
+        setTimeout(async () => { await loadClips(); }, 8000);
+      }
+    } catch (err) {
+      showToast('❌ ' + err.message, 'var(--red)');
+    }
+
+    msg.style.display = 'none';
+    btn.disabled = false;
   });
 
   /* ── AUTO-LOGIN si token existant ── */

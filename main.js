@@ -315,8 +315,13 @@ function renderArticleCard(a, opts = {}) {
   const heroGrid = document.getElementById('hero-grid');
   if (!heroGrid) return;
 
-  /* HERO */
-  const featured = getFeaturedArticles().slice(0, 3);
+  /* HERO — sélection aléatoire à chaque visite */
+  const allForHero = (window.ARTICLES || []).filter(a => a.title && a.image && a.excerpt);
+  // Mélange Fisher-Yates (déterministe par session via seed basé sur la minute)
+  const seed = Math.floor(Date.now() / 60000); // change chaque minute
+  const rng  = (i) => ((seed * 1103515245 + i * 12345 + 7) >>> 0) / 0xFFFFFFFF;
+  const shuffled = [...allForHero].sort((a, b) => rng(allForHero.indexOf(a)) - rng(allForHero.indexOf(b)));
+  const featured = shuffled.slice(0, 3);
   const [main, ...sides] = featured;
   if (!main) return;
 
