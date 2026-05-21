@@ -8,7 +8,7 @@ const express = require('express');
 const path    = require('path');
 const fs      = require('fs');
 const cron    = require('node-cron');
-const { generate } = require('./generator');
+const { generate, debugAPIs } = require('./generator');
 
 const app  = express();
 const PORT = process.env.PORT || 3002;
@@ -118,6 +118,28 @@ app.post('/api/refresh', adminAuth, async (req, res) => {
 // GET /api/refresh/status — état de la génération
 app.get('/api/refresh/status', (req, res) => {
   res.json({ generating: isGenerating });
+});
+
+// GET /api/debug — diagnostic clés API (admin)
+app.get('/api/debug', adminAuth, async (req, res) => {
+  try {
+    const result = await debugAPIs();
+    res.json({
+      ...result,
+      env: {
+        GROQ_API_KEY: process.env.GROQ_API_KEY ? `✅ Présente (${process.env.GROQ_API_KEY.length} chars)` : '❌ Manquante',
+        NEWS_API_KEY: process.env.NEWS_API_KEY ? `✅ Présente` : '⚠ Non utilisée (génération autonome)',
+        ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ? '✅ Défini' : '⚠ Valeur par défaut',
+        GMAIL_USER: process.env.GMAIL_USER || '❌ Non configuré',
+      },
+      articlesFile: fs.existsSync(ARTICLES_FILE)
+        ? JSON.parse(fs.readFileSync(ARTICLES_FILE, 'utf8'))
+        : { count: 0, generatedAt: null },
+      isGenerating,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 /* ── API Clips ───────────────────────────────────────────── */
