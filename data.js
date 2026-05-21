@@ -5,8 +5,12 @@
    =========================================================== */
 
 // Chargement dynamique des articles IA
+const API_BASE = window.location.hostname === 'localhost'
+  ? ''
+  : 'https://one-media-production.up.railway.app';
+
 (function loadAIArticles() {
-  fetch('/api/articles')
+  fetch(`${API_BASE}/api/articles`)
     .then(r => r.ok ? r.json() : null)
     .then(data => {
       if (!data || !data.articles?.length) return;
