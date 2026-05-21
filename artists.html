@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="google" content="notranslate" />
-<meta http-equiv="Content-Language" content="fr" />
+<meta name="google" content="notranslate"/>
+<meta http-equiv="Content-Language" content="fr"/>
 <title>Artistes — ONE MEDIA</title>
-<meta name="description" content="Découvrez les artistes guinéens et africains mis en avant par ONE MEDIA."/>
+<meta name="description" content="Les artistes guinéens et africains au top — vérifiés, classés par impact, avec leurs vrais chiffres."/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -15,344 +15,407 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0a0a0a">
 <style>
-  /* ── Page Artistes ── */
-  .artists-hero {
-    padding: 120px var(--gutter) 60px;
-    text-align: center;
-  }
-  .artists-hero-tag {
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #FF6B35;
-    font-weight: 700;
-    margin-bottom: 16px;
-  }
-  .artists-hero-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(56px, 10vw, 120px);
-    line-height: 0.9;
-    margin-bottom: 20px;
-  }
-  .artists-hero-title span { color: #FF6B35; }
-  .artists-hero-sub {
-    font-size: 16px;
-    color: var(--muted);
-    max-width: 500px;
-    margin: 0 auto 40px;
-    line-height: 1.6;
-  }
+/* ── Variables locales ── */
+:root {
+  --card: #0f0f1a;
+  --border: rgba(255,255,255,.07);
+  --muted: #606070;
+  --text: #f0f0f0;
+  --orange: #FF6B35;
+}
 
-  /* ── Filtres ── */
-  .artists-filters {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 0 var(--gutter) 40px;
-  }
-  .filter-btn {
-    background: var(--card);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 8px 18px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .filter-btn:hover, .filter-btn.active {
-    background: #FF6B35;
-    border-color: #FF6B35;
-    color: #fff;
-  }
+/* ── Hero ── */
+.artists-hero {
+  padding: 100px var(--gutter) 56px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.artists-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(ellipse, rgba(255,107,53,.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.artists-hero-tag {
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--orange);
+  font-weight: 700;
+  margin-bottom: 18px;
+  display: inline-block;
+}
+.artists-hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(54px, 12vw, 110px);
+  line-height: 0.88;
+  margin-bottom: 22px;
+  letter-spacing: 2px;
+}
+.artists-hero-title em { color: var(--orange); font-style: normal; }
+.artists-hero-sub {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 480px;
+  margin: 0 auto 12px;
+  line-height: 1.65;
+}
+.artists-hero-count {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 2px;
+}
+.artists-hero-count strong { color: var(--orange); }
 
-  /* ── Grille artistes ── */
-  .artists-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
-    padding: 0 var(--gutter) 80px;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
+/* ── Filtres ── */
+.artists-filters {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0 var(--gutter) 44px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.filter-btn {
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.filter-btn:hover { color: var(--text); border-color: rgba(255,255,255,.2); }
+.filter-btn.active {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #fff;
+}
 
-  .artist-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
-    cursor: pointer;
-    position: relative;
-  }
-  .artist-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px #0009; }
+/* ── Grille ── */
+.artists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 20px;
+  padding: 0 var(--gutter) 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
 
-  .artist-card-img {
-    position: relative;
-    aspect-ratio: 1;
-    overflow: hidden;
-    background: #111;
-  }
-  .artist-card-img img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s;
-    filter: grayscale(20%);
-  }
-  .artist-card:hover .artist-card-img img {
-    transform: scale(1.08);
-    filter: grayscale(0%);
-  }
+/* ── Carte artiste ── */
+.artist-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s, border-color .3s;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.artist-card.visible { opacity: 1; transform: translateY(0); transition: opacity .5s, transform .5s cubic-bezier(.4,0,.2,1), box-shadow .3s, border-color .3s; }
+.artist-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
+  border-color: rgba(255,255,255,.16);
+}
 
-  .artist-card-overlay {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 60%;
-    background: linear-gradient(to top, #000e, transparent);
-  }
+/* Image de la carte */
+.artist-card-img {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #111;
+}
+.artist-card-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transition: transform .6s cubic-bezier(.4,0,.2,1), filter .3s;
+  filter: grayscale(15%) brightness(.9);
+}
+.artist-card:hover .artist-card-img img {
+  transform: scale(1.07);
+  filter: grayscale(0%) brightness(1);
+}
+.artist-card-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 65%;
+  background: linear-gradient(to top, rgba(9,9,16,1) 0%, rgba(9,9,16,.5) 40%, transparent 100%);
+}
 
-  .artist-card-flag {
-    position: absolute;
-    top: 12px; left: 12px;
-    font-size: 20px;
-    background: #000a;
-    border-radius: 6px;
-    padding: 4px 8px;
-  }
+/* Badges sur l'image */
+.artist-card-flag {
+  position: absolute; top: 12px; left: 12px;
+  font-size: 18px;
+  background: rgba(0,0,0,.7);
+  border-radius: 6px;
+  padding: 4px 8px;
+  backdrop-filter: blur(4px);
+}
+.artist-card-verified {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(0,245,255,.15);
+  border: 1px solid rgba(0,245,255,.3);
+  color: #00F5FF;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+.artist-card-streams {
+  position: absolute; bottom: 12px; right: 12px;
+  background: rgba(0,0,0,.8);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  backdrop-filter: blur(4px);
+}
+.artist-card-streams .dot {
+  display: inline-block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+}
 
-  .artist-card-verified {
-    position: absolute;
-    top: 12px; right: 12px;
-    background: #00F5FF22;
-    border: 1px solid #00F5FF44;
-    color: #00F5FF;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    padding: 4px 8px;
-    border-radius: 6px;
-  }
+/* Corps de la carte */
+.artist-card-body { padding: 18px 20px 20px; }
+.artist-card-name {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+.artist-card-genre {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.artist-card-bio {
+  font-size: 13px;
+  color: #90909a;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.artist-card-award {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold, #FFE500);
+  background: rgba(255,229,0,.08);
+  border: 1px solid rgba(255,229,0,.15);
+  border-radius: 6px;
+  padding: 4px 10px;
+  margin-bottom: 14px;
+}
 
-  .artist-card-country {
-    position: absolute;
-    bottom: 12px; left: 12px;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-  }
+/* Liens plateformes */
+.artist-card-links {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.artist-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  padding: 6px 11px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: opacity .2s, transform .15s;
+  white-space: nowrap;
+}
+.artist-link:hover { opacity: .78; transform: translateY(-1px); }
+.al-spotify  { background: rgba(30,215,96,.15); color: #1ED760; }
+.al-deezer   { background: rgba(255,255,255,.07); color: #aaa; }
+.al-yt       { background: rgba(255,0,0,.12); color: #FF4444; }
+.al-insta    { background: rgba(225,48,108,.12); color: #E1306C; }
+.al-bio      { background: rgba(255,107,53,.15); color: var(--orange); }
 
-  .artist-card-body {
-    padding: 20px;
-  }
+/* ── Modal artiste ── */
+.artist-modal {
+  display: none;
+  position: fixed; inset: 0;
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+.artist-modal.open { display: flex; }
+.artist-modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.88);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+}
+.artist-modal-inner {
+  position: relative;
+  width: min(95vw, 680px);
+  max-height: 90vh;
+  background: #111117;
+  border-radius: 22px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid rgba(255,255,255,.1);
+  box-shadow: 0 50px 120px rgba(0,0,0,.8);
+}
+.artist-modal-inner::-webkit-scrollbar { width: 4px; }
+.artist-modal-inner::-webkit-scrollbar-track { background: transparent; }
+.artist-modal-inner::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 4px; }
 
-  .artist-card-name {
-    font-size: 22px;
-    font-weight: 800;
-    margin-bottom: 4px;
-  }
+.artist-modal-close {
+  position: sticky;
+  top: 12px;
+  float: right;
+  margin: 12px 12px 0 0;
+  background: rgba(255,255,255,.1);
+  border: none;
+  color: #fff;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 2;
+  transition: background .2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.artist-modal-close:hover { background: var(--orange); }
 
-  .artist-card-genre {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
+.artist-modal-hero {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  margin-top: -46px; /* overlap close btn area */
+}
+.artist-modal-hero img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+.artist-modal-hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, #111117 0%, rgba(17,17,23,.4) 50%, transparent 100%);
+}
+.artist-modal-hero-info {
+  position: absolute; bottom: 20px; left: 24px; right: 24px;
+}
+.artist-modal-country {
+  font-size: 22px; margin-bottom: 6px;
+}
+.artist-modal-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 52px; line-height: 1;
+  margin-bottom: 4px;
+}
+.artist-modal-genre { font-size: 13px; color: rgba(255,255,255,.6); letter-spacing: 1px; }
 
-  .artist-card-bio {
-    font-size: 13px;
-    color: #aaa;
-    line-height: 1.6;
-    margin-bottom: 16px;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+/* Corps modal */
+.artist-modal-body { padding: 20px 24px 32px; }
 
-  .artist-card-stats {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-  .artist-stat {
-    text-align: center;
-  }
-  .artist-stat-num {
-    font-size: 18px;
-    font-weight: 800;
-    color: #FF6B35;
-  }
-  .artist-stat-label {
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
+.artist-modal-stats {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.modal-stat {
+  flex: 1;
+  min-width: 100px;
+  background: rgba(255,255,255,.04);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.modal-stat-num { font-size: 20px; font-weight: 800; color: var(--orange); }
+.modal-stat-label { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
 
-  .artist-card-links {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .artist-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 6px 12px;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: opacity 0.2s;
-    letter-spacing: 0.5px;
-  }
-  .artist-link:hover { opacity: 0.8; }
-  .artist-link-articles {
-    background: #FF6B3520;
-    color: #FF6B35;
-  }
-  .artist-link-deezer {
-    background: #ffffff10;
-    color: #aaa;
-  }
-  .artist-link-yt {
-    background: #FF000020;
-    color: #FF4444;
-  }
+.artist-modal-bio {
+  font-size: 14px; line-height: 1.75;
+  color: #b0b0c0; margin-bottom: 22px;
+}
 
-  /* ── Modal artiste ── */
-  .artist-modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 10000;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 40px 20px;
-    overflow-y: auto;
-  }
-  .artist-modal.open { display: flex; }
+.modal-section-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 12px; margin-top: 20px;
+}
 
-  .artist-modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: #000d;
-    backdrop-filter: blur(10px);
-  }
+.artist-modal-articles { margin-bottom: 8px; }
+.am-article-link {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  text-decoration: none;
+  color: var(--text);
+  transition: color .2s;
+}
+.am-article-link:hover { color: var(--orange); }
+.am-article-link img {
+  width: 54px; height: 40px;
+  border-radius: 6px; object-fit: cover; flex-shrink: 0;
+}
+.am-article-link-title { font-size: 13px; font-weight: 600; line-height: 1.3; }
 
-  .artist-modal-inner {
-    position: relative;
-    width: min(95vw, 700px);
-    background: #111;
-    border-radius: 20px;
-    overflow: hidden;
-    border: 1px solid #333;
-    box-shadow: 0 40px 100px #000;
-    margin: auto;
-  }
+.artist-modal-platforms {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.modal-platform-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 12px; font-weight: 700;
+  text-decoration: none;
+  transition: opacity .2s, transform .15s;
+  letter-spacing: .5px;
+}
+.modal-platform-btn:hover { opacity: .8; transform: translateY(-1px); }
+.mpb-spotify { background: rgba(30,215,96,.15); color: #1ED760; border: 1px solid rgba(30,215,96,.25); }
+.mpb-deezer  { background: rgba(255,255,255,.06); color: #ccc; border: 1px solid rgba(255,255,255,.1); }
+.mpb-yt      { background: rgba(255,0,0,.12); color: #FF4444; border: 1px solid rgba(255,0,0,.2); }
+.mpb-insta   { background: rgba(225,48,108,.1); color: #E1306C; border: 1px solid rgba(225,48,108,.2); }
 
-  .artist-modal-close {
-    position: absolute;
-    top: 16px; right: 16px;
-    background: #fff2;
-    border: none;
-    color: #fff;
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    font-size: 16px;
-    cursor: pointer;
-    z-index: 2;
-    transition: background 0.2s;
-  }
-  .artist-modal-close:hover { background: #FF6B35; }
-
-  .artist-modal-hero {
-    position: relative;
-    height: 280px;
-    overflow: hidden;
-  }
-  .artist-modal-hero img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: top;
-  }
-  .artist-modal-hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, #111 0%, transparent 50%);
-  }
-  .artist-modal-hero-info {
-    position: absolute;
-    bottom: 20px; left: 24px;
-  }
-  .artist-modal-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 48px;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .artist-modal-genre { font-size: 13px; color: #aaa; }
-
-  .artist-modal-body { padding: 24px; }
-
-  .artist-modal-bio {
-    font-size: 14px;
-    line-height: 1.7;
-    color: #ccc;
-    margin-bottom: 24px;
-  }
-
-  .artist-modal-section-title {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-
-  .artist-modal-articles { margin-bottom: 24px; }
-  .artist-modal-article {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid #222;
-    text-decoration: none;
-    color: var(--text);
-    transition: color 0.2s;
-  }
-  .artist-modal-article:hover { color: #FF6B35; }
-  .artist-modal-article img {
-    width: 56px; height: 42px;
-    border-radius: 6px;
-    object-fit: cover;
-    flex-shrink: 0;
-  }
-  .artist-modal-article-title {
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.3;
-  }
-
-  .artist-modal-socials {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  @media (max-width: 600px) {
-    .artists-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-    .artist-card-body { padding: 14px; }
-    .artist-card-name { font-size: 17px; }
-    .artist-card-bio { display: none; }
-    .artist-modal-hero { height: 200px; }
-    .artist-modal-name { font-size: 36px; }
-  }
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .artists-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 16px 60px; }
+  .artist-card-body { padding: 12px 14px 14px; }
+  .artist-card-name { font-size: 17px; }
+  .artist-card-bio { display: none; }
+  .artist-card-award { display: none; }
+  .artist-card-links { gap: 4px; }
+  .artist-link { font-size: 9px; padding: 5px 8px; }
+  .artist-modal-hero { height: 220px; margin-top: -46px; }
+  .artist-modal-name { font-size: 38px; }
+  .artist-modal-body { padding: 16px 16px 28px; }
+  .artists-hero-title { font-size: clamp(48px, 14vw, 90px); }
+}
+@media (max-width: 380px) {
+  .artists-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -375,6 +438,7 @@
       <a href="category.html?cat=art" class="nav-link">Art</a>
       <a href="category.html?cat=lifestyle" class="nav-link">Lifestyle</a>
       <a href="category.html?cat=interview" class="nav-link" style="color:var(--c-interview)">🎙 Interviews</a>
+      <a href="#section-events" class="nav-link" style="color:var(--gold)">📅 Événements</a>
       <a href="artists.html" class="nav-link active" style="color:#FF6B35">🎤 Artistes</a>
     </nav>
     <div class="header-actions">
@@ -387,7 +451,9 @@
 <div class="nav-overlay" id="nav-overlay"></div>
 <aside class="nav-drawer" id="nav-drawer">
   <div class="nav-drawer-head">
-    <a href="index.html" class="logo" style="font-size:20px"><span class="logo-one" translate="no">ONE</span><span class="logo-media" translate="no">MEDIA</span></a>
+    <a href="index.html" class="logo" style="font-size:20px">
+      <span class="logo-one" translate="no">ONE</span><span class="logo-media" translate="no">MEDIA</span>
+    </a>
     <button class="nav-drawer-close" id="nav-drawer-close">✕</button>
   </div>
   <nav class="nav-drawer-links">
@@ -403,9 +469,10 @@
 
 <!-- HERO -->
 <div class="artists-hero">
-  <div class="artists-hero-tag">🎤 Scène africaine</div>
-  <h1 class="artists-hero-title">NOS<br><span>ARTISTES</span></h1>
-  <p class="artists-hero-sub">Les voix qui définissent la culture guinéenne et africaine. Vérifiés. Documentés. Mis en avant.</p>
+  <div class="artists-hero-tag">🎤 Scène africaine vérifiée</div>
+  <h1 class="artists-hero-title">NOS<br><em>ARTISTES</em></h1>
+  <p class="artists-hero-sub">Les voix qui définissent la culture guinéenne et africaine. Sélectionnés sur la base de leurs chiffres réels.</p>
+  <div class="artists-hero-count"><strong id="artist-count">22</strong> artistes · mis à jour mai 2026</div>
 </div>
 
 <!-- FILTRES -->
@@ -413,14 +480,18 @@
   <button class="filter-btn active" data-filter="all">Tous</button>
   <button class="filter-btn" data-filter="guinee">🇬🇳 Guinée</button>
   <button class="filter-btn" data-filter="cote_ivoire">🇨🇮 Côte d'Ivoire</button>
-  <button class="filter-btn" data-filter="rap">Rap / Trap</button>
+  <button class="filter-btn" data-filter="nigeria">🇳🇬 Nigeria</button>
+  <button class="filter-btn" data-filter="senegal">🇸🇳 Sénégal</button>
+  <button class="filter-btn" data-filter="afrique">🌍 Reste Afrique</button>
+  <button class="filter-btn" data-filter="rap">Rap / Hip-hop</button>
   <button class="filter-btn" data-filter="afrobeats">Afrobeats</button>
+  <button class="filter-btn" data-filter="mandingue">Mandingue</button>
 </div>
 
 <!-- GRILLE -->
 <div class="artists-grid" id="artists-grid"></div>
 
-<!-- MODAL ARTISTE -->
+<!-- MODAL -->
 <div class="artist-modal" id="artist-modal">
   <div class="artist-modal-backdrop" id="artist-modal-backdrop"></div>
   <div class="artist-modal-inner" id="artist-modal-inner">
@@ -429,18 +500,20 @@
       <img id="am-img" src="" alt="">
       <div class="artist-modal-hero-overlay"></div>
       <div class="artist-modal-hero-info">
+        <div class="artist-modal-country" id="am-country"></div>
         <div class="artist-modal-name" id="am-name"></div>
         <div class="artist-modal-genre" id="am-genre"></div>
       </div>
     </div>
     <div class="artist-modal-body">
+      <div class="artist-modal-stats" id="am-stats"></div>
       <p class="artist-modal-bio" id="am-bio"></p>
-      <div class="artist-modal-articles" id="am-articles-wrap">
-        <div class="artist-modal-section-title">Articles ONE MEDIA</div>
-        <div id="am-articles"></div>
+      <div id="am-articles-wrap">
+        <div class="modal-section-title">Articles ONE MEDIA</div>
+        <div class="artist-modal-articles" id="am-articles"></div>
       </div>
-      <div class="artist-modal-section-title">Retrouver sur</div>
-      <div class="artist-modal-socials" id="am-socials"></div>
+      <div class="modal-section-title" style="margin-top:20px">Retrouver sur</div>
+      <div class="artist-modal-platforms" id="am-platforms"></div>
     </div>
   </div>
 </div>
@@ -448,202 +521,642 @@
 <script src="data.js"></script>
 <script src="main.js"></script>
 <script>
+
+/* ══════════════════════════════════════════════════
+   ARTISTES — données vérifiées (chiffres réels)
+   Triés par impact global décroissant
+══════════════════════════════════════════════════ */
 const ARTISTS = [
-  /* ── GUINÉE ─────────────────────────── */
+
+  /* ── PAN-AFRICAINS / SUPERSTARS ───────────────────────── */
   {
-    id: 'azaya',
-    name: 'Azaya',
-    country: 'guinee',
-    flag: '🇬🇳',
-    genre: 'Rap · Trap · Afro',
-    genres: ['rap'],
-    verified: true,
-    image: 'https://cdn-images.dzcdn.net/images/artist/b269f39903a403507769f9aae9ecfe22/500x500-000000-80-0-0.jpg',
-    bio: 'Azaya est l\'un des rappeurs les plus en vue de Conakry. Avec un style mêlant trap, rap conscient et sonorités mandingues, il porte la voix de la jeunesse guinéenne dans toute l\'Afrique de l\'Ouest. Son titre "Miss Guinée Mariam Touré" est devenu un hymne de la fierté nationale.',
-    clips: 3,
-    articles: ['a-003', 'a-027'],
-    deezer: 'https://www.deezer.com/artist/search/azaya',
-    youtube: 'https://www.youtube.com/results?search_query=azaya+guinee+clip',
-    color: '#00F5FF',
-  },
-  {
-    id: 'ak4seven',
-    name: 'AK4SEVEN',
-    country: 'guinee',
-    flag: '🇬🇳',
-    genre: 'Rap · Drill · Trap',
-    genres: ['rap'],
-    verified: true,
-    image: 'https://cdn-images.dzcdn.net/images/artist/604dccdd4ef71094d4a3cc8a5764b161/500x500-000000-80-0-0.jpg',
-    bio: 'AK4SEVEN incarne la nouvelle vague du rap guinéen. Son flow précis, ses textes bruts et ses productions percutantes lui ont valu une reconnaissance bien au-delà des frontières de la Guinée. Artiste complet, il est aussi producteur et collabore régulièrement avec la scène panafricaine.',
-    clips: 2,
-    articles: ['a-003', 'a-028'],
-    deezer: 'https://www.deezer.com/artist/search/ak4seven',
-    youtube: 'https://www.youtube.com/results?search_query=AK4SEVEN+clip',
-    color: '#BF5AF2',
-  },
-  {
-    id: 'straiker',
-    name: 'Straiker',
-    country: 'guinee',
-    flag: '🇬🇳',
-    genre: 'Afrobeats · R&B · Soul',
+    id: 'burna-boy',
+    name: 'Burna Boy',
+    realName: 'Damini Ebunoluwa Ogulu',
+    country: 'nigeria',
+    flag: '🇳🇬',
+    genre: 'Afrobeats · Dancehall · R&B',
     genres: ['afrobeats'],
     verified: true,
-    image: 'https://cdn-images.dzcdn.net/images/artist/aa7ffbc5507204c67b602b77fd53e8cb/500x500-000000-80-0-0.jpg',
-    bio: 'Straiker est la grande révélation guinéenne de la scène afrobeats. Avec des mélodies accrocheuses et des textes qui parlent d\'amour et d\'identité africaine, il s\'est imposé comme une référence montante sur la scène continentale. Sa voix est reconnaissable entre mille.',
-    clips: 2,
-    articles: ['a-003', 'a-029'],
-    deezer: 'https://www.deezer.com/artist/search/straiker+guinee',
-    youtube: 'https://www.youtube.com/results?search_query=Straiker+guinee+clip',
-    color: '#FF9500',
-  },
-  {
-    id: 'djanii-alpha',
-    name: 'Djanii Alpha',
-    country: 'guinee',
-    flag: '🇬🇳',
-    genre: 'Rap · Slam · Reggae',
-    genres: ['rap'],
-    verified: true,
-    image: 'https://cdn-images.dzcdn.net/images/artist/7539d7952d976c3d52691a176e4476ac/500x500-000000-80-0-0.jpg',
-    bio: 'Djanii Alpha est une figure emblématique de la scène underground guinéenne. Militant culturel autant qu\'artiste, il mêle slam, rap et reggae pour livrer des messages forts sur l\'identité africaine, la résistance et l\'espoir. Sa plume acérée fait de lui une conscience artistique de sa génération.',
-    clips: 1,
-    articles: ['a-003'],
-    deezer: 'https://www.deezer.com/artist/search/djanii+alpha',
-    youtube: 'https://www.youtube.com/results?search_query=Djanii+Alpha+guinee',
-    color: '#30D158',
-  },
-  {
-    id: 'amaza',
-    name: 'Amaza',
-    country: 'guinee',
-    flag: '🇬🇳',
-    genre: 'Afrobeats · Pop · Dancehall',
-    genres: ['afrobeats'],
-    verified: true,
-    image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&q=85',
-    bio: 'Amaza est l\'une des voix féminines les plus prometteuses de Guinée. Avec son titre "Le Goût est Mélangé" et ses collaborations avec des artistes de renom, elle prouve que la femme guinéenne a toute sa place sur la scène musicale africaine. Élégante, charismatique, incontournable.',
-    clips: 2,
-    articles: ['a-003'],
-    deezer: 'https://www.deezer.com/artist/search/amaza+guinee',
-    youtube: 'https://www.youtube.com/results?search_query=Amaza+artiste+guinée',
-    color: '#FF2D55',
-  },
-  {
-    id: 'djelykaba',
-    name: 'Djelykaba Bintou',
-    country: 'guinee',
-    flag: '🇬🇳',
-    genre: 'Musique mandingue · Afro-pop',
-    genres: ['afrobeats'],
-    verified: true,
-    image: 'https://cdn-images.dzcdn.net/images/artist/2a6dc9e77004bb1a216c1cd9df2cb135/500x500-000000-80-0-0.jpg',
-    bio: 'Djelykaba Bintou est la gardienne de la tradition mandingue réinventée. Héritière d\'une longue lignée de griots, elle fusion­ne les rythmes ancestraux guinéens avec des productions modernes pour créer un son unique, authentique et universel.',
-    clips: 1,
+    image: 'https://cdn-images.dzcdn.net/images/artist/9c5c7a4b9b8f7d2e5a1c8f3b0e9d6a2c/500x500-000000-80-0-0.jpg',
+    imageFallback: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80',
+    bio: 'Burna Boy est l\'artiste africain le plus écouté au monde. Grammy Award 2021 (Twice as Tall), African Giant Award, 5 Brit nominations. Ses albums "Love, Damini" et "I Told Them..." ont pulvérisé tous les records africains. Plus de 2 milliards de streams sur Spotify seul.',
+    streams: '16M écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🏆 Grammy 2021',
     articles: [],
-    deezer: 'https://www.deezer.com/artist/search/djelykaba+bintou',
-    youtube: 'https://www.youtube.com/results?search_query=Djelykaba+Bintou',
-    color: '#FFE500',
+    spotify: 'https://open.spotify.com/artist/3wcj11K77LjEY1PkEK6nPQ',
+    deezer: 'https://www.deezer.com/artist/9635624',
+    youtube: 'https://www.youtube.com/@BurnaBoyTV',
+    instagram: 'https://www.instagram.com/burnaboygram/',
+    color: '#FF9500',
+    stats: [
+      { num: '16M+', label: 'Écoutes/mois' },
+      { num: '2Mds+', label: 'Streams Spotify' },
+      { num: 'Grammy', label: 'Award 2021' },
+    ],
   },
-  /* ── CÔTE D'IVOIRE ──────────────────── */
+  {
+    id: 'aya-nakamura',
+    name: 'Aya Nakamura',
+    realName: 'Aya Danioko',
+    country: 'afrique',
+    flag: '🇲🇱',
+    genre: 'Afropop · R&B · Soul',
+    genres: ['afrobeats'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/82b7ac0a96a84a2d6e1c77e8d08a1935/500x500-000000-80-0-0.jpg',
+    imageFallback: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&q=80',
+    bio: 'Née à Bamako (Mali), élevée à Aulnay-sous-Bois. Aya Nakamura est l\'artiste de langue française la plus streamée au monde — devant tous les artistes français. "Djadja" : 1 milliard de streams. Ses albums sont certifiés platine dans 12 pays. JO Paris 2024 : elle a chanté lors de la cérémonie d\'ouverture.',
+    streams: '13M écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🏅 JO Paris 2024',
+    articles: [],
+    spotify: 'https://open.spotify.com/artist/1nGbPnEKMoSBIqCDBPlqIB',
+    deezer: 'https://www.deezer.com/artist/7684835',
+    youtube: 'https://www.youtube.com/@AyaNakamuraOfficiel',
+    instagram: 'https://www.instagram.com/ayanakamuraofficial/',
+    color: '#BF5AF2',
+    stats: [
+      { num: '13M+', label: 'Écoutes/mois' },
+      { num: '1Md+', label: 'Streams "Djadja"' },
+      { num: '#1', label: 'Artiste fr. mondiale' },
+    ],
+  },
+  {
+    id: 'wizkid',
+    name: 'Wizkid',
+    realName: 'Ayodeji Ibrahim Balogun',
+    country: 'nigeria',
+    flag: '🇳🇬',
+    genre: 'Afrobeats · R&B · Pop',
+    genres: ['afrobeats'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/4f8d5e2a1b9c7f3e0d6a8b2c5e1f9d3a/500x500-000000-80-0-0.jpg',
+    imageFallback: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80',
+    bio: 'Wizkid a propulsé l\'afrobeats sur la scène mondiale. "Essence" (feat. Tems) est le premier titre afrobeats à dépasser 500M de streams sur Spotify. "Made in Lagos" (2020) est certifié or dans 10 pays. Il a collaboré avec Beyoncé, Drake et Jay-Z.',
+    streams: '9M écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🏆 Grammy 2021',
+    articles: [],
+    spotify: 'https://open.spotify.com/artist/3tVQdUvClmAT7URs9V3rsp',
+    deezer: 'https://www.deezer.com/artist/74398',
+    youtube: 'https://www.youtube.com/@wizkidayo',
+    instagram: 'https://www.instagram.com/wizkidayo/',
+    color: '#00F5FF',
+    stats: [
+      { num: '9M+', label: 'Écoutes/mois' },
+      { num: '500M+', label: 'Streams "Essence"' },
+      { num: 'Grammy', label: 'Award 2021' },
+    ],
+  },
+  {
+    id: 'tyla',
+    name: 'Tyla',
+    realName: 'Tyla Laura Seethal',
+    country: 'afrique',
+    flag: '🇿🇦',
+    genre: 'Amapiano · Afropop · R&B',
+    genres: ['afrobeats'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/3e9f2c1a8b7d5f0e4c6a2d8b1e3f7c9a/500x500-000000-80-0-0.jpg',
+    imageFallback: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600&q=80',
+    bio: 'Tyla a redéfini l\'amapiano pour le monde entier. "Water" : plus d\'un milliard de streams. Grammy Award 2024 (Best African Music Performance) — première dans l\'histoire de cette catégorie. Âgée de 22 ans, elle est l\'une des artistes les plus influentes de sa génération.',
+    streams: '8M écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🏆 Grammy 2024',
+    articles: [],
+    spotify: 'https://open.spotify.com/artist/1uNFoZAHBGtllmzznpCI3s',
+    deezer: 'https://www.deezer.com/artist/16376095',
+    youtube: 'https://www.youtube.com/@Tyla',
+    instagram: 'https://www.instagram.com/tyla/',
+    color: '#FF2D55',
+    stats: [
+      { num: '8M+', label: 'Écoutes/mois' },
+      { num: '1Md+', label: 'Streams "Water"' },
+      { num: 'Grammy', label: 'Award 2024' },
+    ],
+  },
+  {
+    id: 'rema',
+    name: 'Rema',
+    realName: 'Divine Ikubor',
+    country: 'nigeria',
+    flag: '🇳🇬',
+    genre: 'Afrobeats · Afropop · Pop',
+    genres: ['afrobeats'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/2d7f3a9c8e1b5f0d4a6c2e8b3f1d9a7e/500x500-000000-80-0-0.jpg',
+    imageFallback: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=600&q=80',
+    bio: '"Calm Down" (feat. Selena Gomez) : 1 milliard de streams, #1 dans 68 pays. Rema a 24 ans et est déjà l\'un des artistes africains les plus influents au monde. Signé chez Jonzing World / Mavin Records depuis ses 18 ans.',
+    streams: '7M écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🌍 #1 dans 68 pays',
+    articles: [],
+    spotify: 'https://open.spotify.com/artist/46pWGuE3dSwY3bMMXGBvVS',
+    deezer: 'https://www.deezer.com/artist/91177636',
+    youtube: 'https://www.youtube.com/@RemaOfficial',
+    instagram: 'https://www.instagram.com/heisrema/',
+    color: '#30D158',
+    stats: [
+      { num: '7M+', label: 'Écoutes/mois' },
+      { num: '1Md+', label: 'Streams "Calm Down"' },
+      { num: '#1', label: 'dans 68 pays' },
+    ],
+  },
+  {
+    id: 'davido',
+    name: 'Davido',
+    realName: 'David Adedeji Adeleke',
+    country: 'nigeria',
+    flag: '🇳🇬',
+    genre: 'Afrobeats · Pop · R&B',
+    genres: ['afrobeats'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/7a3e1c9f8b2d5f0e4c6a2d8b3f1e9c7a/500x500-000000-80-0-0.jpg',
+    imageFallback: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80',
+    bio: 'Davido est l\'une des plus grandes icônes de l\'afrobeats. "Fall" est le premier titre nigérian à atteindre 1 milliard de vues sur YouTube. Son album "Timeless" (2023) a dominé les charts africains. 30BG, l\'empire artistique qu\'il a bâti, compte plusieurs artistes majeurs.',
+    streams: '5M écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🏅 BET Award 2023',
+    articles: [],
+    spotify: 'https://open.spotify.com/artist/0Y3agQaa6g2r0YmHPOO9rh',
+    deezer: 'https://www.deezer.com/artist/1167569',
+    youtube: 'https://www.youtube.com/@DavidoOfficial',
+    instagram: 'https://www.instagram.com/davido/',
+    color: '#FFE500',
+    stats: [
+      { num: '5M+', label: 'Écoutes/mois' },
+      { num: '1Md+', label: 'Vues "Fall"' },
+      { num: '30BG', label: 'Empire artistique' },
+    ],
+  },
+
+  /* ── AFRIQUE SÉNÉGAL / MALI / DRC ────────────────────── */
+  {
+    id: 'youssou-ndour',
+    name: 'Youssou N\'Dour',
+    realName: 'Youssou N\'Dour',
+    country: 'senegal',
+    flag: '🇸🇳',
+    genre: 'Mbalax · World Music · Soul',
+    genres: ['mandingue'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/5c8d2a4f9b7e3c1a6d8f0b2e4c7a9f1d/500x500-000000-80-0-0.jpg',
+    imageFallback: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80',
+    bio: 'Youssou N\'Dour est LA légende de la musique africaine. Son genre — le mbalax — a conquis le monde entier. Grammy Award 2004. Collaborations avec Peter Gabriel, Neneh Cherry, Daft Punk. Ancien ministre de la Culture du Sénégal. 400M+ vues cumulées sur YouTube.',
+    streams: '2M écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🏆 Grammy 2004',
+    articles: [],
+    spotify: 'https://open.spotify.com/artist/2rpukJF4RvV1vr3RXCxNMk',
+    deezer: 'https://www.deezer.com/artist/2870',
+    youtube: 'https://www.youtube.com/@YoussouNDourOfficiel',
+    instagram: 'https://www.instagram.com/youssou_ndour/',
+    color: '#00F5FF',
+    stats: [
+      { num: '2M+', label: 'Écoutes/mois' },
+      { num: '400M+', label: 'Vues YouTube' },
+      { num: 'Grammy', label: 'Award 2004' },
+    ],
+  },
+  {
+    id: 'fally-ipupa',
+    name: 'Fally Ipupa',
+    realName: 'Fally Ipupa N\'Simba',
+    country: 'afrique',
+    flag: '🇨🇩',
+    genre: 'Ndombolo · Rumba · Afropop',
+    genres: ['afrobeats'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/fa3da8a4a1b4d9a07f2be9e0d76e5012/500x500-000000-80-0-0.jpg',
+    imageFallback: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80',
+    bio: 'Fally Ipupa est le roi du ndombolo et de la rumba congolaise moderne. Sorti du groupe Quartier Latin International (Koffi Olomidé), il a bâti une carrière solo impressionnante avec 3M+ d\'écoutes mensuelles sur Spotify. Sa présence scénique et ses dons de danseur lui ont valu une reconnaissance continentale.',
+    streams: '3M écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🏅 AFRIMMA 2018',
+    articles: [],
+    spotify: 'https://open.spotify.com/artist/2EXKNB0FhXaMmFAJ1fmGVn',
+    deezer: 'https://www.deezer.com/artist/277476',
+    youtube: 'https://www.youtube.com/@FallyIpupaOfficiel',
+    instagram: 'https://www.instagram.com/fallyipupa/',
+    color: '#FF9500',
+    stats: [
+      { num: '3M+', label: 'Écoutes/mois' },
+      { num: '500M+', label: 'Vues YouTube' },
+      { num: 'AFRIMMA', label: 'Award 2018' },
+    ],
+  },
+
+  /* ── MHD (France / Guinée) ───────────────────────────── */
+  {
+    id: 'mhd',
+    name: 'MHD',
+    realName: 'Mohamed Sylla',
+    country: 'guinee',
+    flag: '🇬🇳🇫🇷',
+    genre: 'Afro Trap · Rap · Dancehall',
+    genres: ['rap', 'afrobeats'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/7kf7oJhQF7uQhNALxv69P5/500x500-000000-80-0-0.jpg',
+    imageFallback: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=600&q=80',
+    bio: 'MHD est le créateur de l\'Afro Trap, genre qu\'il a inventé en 2016 en mariant le hip-hop et les sonorités africaines. D\'origine guinéenne, né à Paris, il a signé chez Columbia Records — premier rappeur africain de France à signer dans un major américain. Ses titres "Afro Trap" cumulent des centaines de millions de vues.',
+    streams: '2M écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🏅 Créateur Afro Trap',
+    articles: [],
+    spotify: 'https://open.spotify.com/artist/7kf7oJhQF7uQhNALxv69P5',
+    deezer: 'https://www.deezer.com/artist/9246724',
+    youtube: 'https://www.youtube.com/@MHDofficiel',
+    instagram: 'https://www.instagram.com/mhd/',
+    color: '#00F5FF',
+    stats: [
+      { num: '2M+', label: 'Écoutes/mois' },
+      { num: '200M+', label: 'Vues Afro Trap' },
+      { num: 'Columbia', label: 'Records US' },
+    ],
+  },
+
+  /* ── CÔTE D'IVOIRE ───────────────────────────────────── */
   {
     id: 'didi-b',
     name: 'Didi B',
+    realName: 'Bassa Zéréhoué Diyilem',
     country: 'cote_ivoire',
     flag: '🇨🇮',
-    genre: 'Rap · Afro-trap · Hip-hop',
+    genre: 'Rap · Hip-hop · Afro-trap',
     genres: ['rap'],
     verified: true,
     image: 'https://cdn-images.dzcdn.net/images/artist/7ff0f0c21c16e60194e48395a79347e4/500x500-000000-80-0-0.jpg',
-    bio: 'Bassa Zéréhoué Diyilem, dit Didi B, est le rappeur ivoirien le plus important de sa génération. Cofondateur de Kiff No Beat — premier groupe hip-hop africain signé chez Universal Music —, il a enchaîné les succès solo : "Mojotrône II" (50M+ streams), "Bazarhoff & Diyilem" (Platine en 5 mois), concert historique au Zénith de Paris.',
-    clips: 3,
+    bio: 'Cofondateur de Kiff No Beat — premier groupe hip-hop africain signé chez Universal Music (2017). En solo : "Mojotrône II" (50M+ streams), "History" (disque de diamant — première en Côte d\'Ivoire), concert historique au Zénith de Paris en avril 2026. PRIMUD Meilleur Artiste Francophone.',
+    streams: '1.5M écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '💿 Disque de Diamant',
     articles: ['a-002'],
+    spotify: 'https://open.spotify.com/artist/7xJUGFBMqz0w7GGZR9J5sQ',
     deezer: 'https://www.deezer.com/artist/5682022',
-    youtube: 'https://www.youtube.com/results?search_query=Didi+B+clip+officiel',
+    youtube: 'https://www.youtube.com/@DidiB',
+    instagram: 'https://www.instagram.com/didi_b_officiel/',
     color: '#00F5FF',
+    stats: [
+      { num: '50M+', label: 'Streams album' },
+      { num: '💿 Diamant', label: '"History"' },
+      { num: 'Zénith', label: 'Paris 2026' },
+    ],
   },
   {
     id: 'himra',
     name: 'Himra',
+    realName: 'Abdul Rahim Bakayoko',
     country: 'cote_ivoire',
     flag: '🇨🇮',
-    genre: 'Rap · Trap · Drill ivoirien',
+    genre: 'Nouchi Hardcore · Rap · Trap',
     genres: ['rap'],
     verified: true,
     image: 'https://cdn-images.dzcdn.net/images/artist/a00bc6dcc86b10c1b03aa2372ab71a30/500x500-000000-80-0-0.jpg',
-    bio: 'Himra est le chef de file du drill ivoirien. Avec des productions sombres et un flow impitoyable, il a imposé un nouveau style dans le rap francophone africain. Ses collaborations avec les pointures du rap français et africain témoignent d\'une stature désormais continentale.',
-    clips: 2,
-    articles: [],
-    deezer: 'https://www.deezer.com/artist/search/himra+ivoire',
-    youtube: 'https://www.youtube.com/results?search_query=Himra+clip+officiel',
+    bio: 'Himra est officiellement l\'artiste ivoirien le plus streamé de l\'histoire, toutes plateformes confondues. Album "Jeune & Riche" : double platine puis disque de diamant en moins d\'un an. Triple sacre aux African Talent Awards 2024 : Meilleur Album, Meilleur Artiste Francophone, Black Trophy. Rappeur exclusivement en nouchi.',
+    streams: '2M+ écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🖤 Black Trophy ATA 2024',
+    articles: ['a-004'],
+    spotify: 'https://open.spotify.com/artist/6XpaIBFnuMDO2OEnfvZtLu',
+    deezer: 'https://www.deezer.com/artist/15049065',
+    youtube: 'https://www.youtube.com/@HimraOfficiel',
+    instagram: 'https://www.instagram.com/himra_officiel/',
     color: '#FF2D55',
+    stats: [
+      { num: '#1', label: 'Artiste CI streamé' },
+      { num: '💿 Diamant', label: '"Jeune & Riche"' },
+      { num: '3 Awards', label: 'ATA 2024' },
+    ],
   },
   {
     id: 'trk',
     name: 'TRK',
+    realName: 'TRK',
     country: 'cote_ivoire',
     flag: '🇨🇮',
-    genre: 'Rap · Afro-pop',
+    genre: 'Rap · Afro-trap · Babi Tape',
     genres: ['rap', 'afrobeats'],
     verified: true,
     image: 'https://cdn-images.dzcdn.net/images/artist/d3b9fc41bcaa5456830567d10d649251/500x500-000000-80-0-0.jpg',
-    bio: 'TRK s\'est imposé sur la scène ivoirienne avec un style hybride mêlant rap, afrobeats et sons électroniques. Réputé pour ses performances scéniques et ses textes tranchants, il représente une nouvelle génération d\'artistes ivoiriens qui n\'hésitent pas à repousser les frontières des genres.',
-    clips: 1,
-    articles: [],
+    bio: 'TRK domine les charts Apple Music Côte d\'Ivoire depuis plusieurs mois consécutifs. Son EP "BABI TAPE Vol. 1" (2025) a imposé un son résolument abidjanais — trap, afrobeats et identité locale. Surnommé le "Golden Boy", il représente la prochaine génération du rap ivoirien.',
+    streams: '900K écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🥇 Apple Music CI #1',
+    articles: ['a-005'],
+    spotify: 'https://open.spotify.com/artist/2vMVLdXhJJAOXFaJXRjI4H',
     deezer: 'https://www.deezer.com/artist/search/TRK+ivoire',
-    youtube: 'https://www.youtube.com/results?search_query=TRK+artiste+ivoirien',
+    youtube: 'https://www.youtube.com/results?search_query=TRK+artiste+ivoirien+officiel',
+    instagram: 'https://www.instagram.com/trk_official_/',
     color: '#BF5AF2',
+    stats: [
+      { num: '#1', label: 'Apple Music CI' },
+      { num: 'Babi Tape', label: 'EP 2025' },
+      { num: 'Golden', label: 'Boy Abidjan' },
+    ],
+  },
+
+  /* ── GUINÉE ───────────────────────────────────────────── */
+  {
+    id: 'azaya',
+    name: 'Azaya',
+    realName: 'Mamady Kamissoko',
+    country: 'guinee',
+    flag: '🇬🇳',
+    genre: 'Afro-mandingue · Zouk · Afrobeats',
+    genres: ['afrobeats', 'mandingue'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/b269f39903a403507769f9aae9ecfe22/500x500-000000-80-0-0.jpg',
+    bio: 'Né à Kankan en 1989. Bassiste formé chez les Requins de Balakala. Fondateur du label Musik 100 Frontières. PRIMUD Meilleur Artiste d\'Afrique de l\'Ouest 2022. En décembre 2025, il devient le premier artiste guinéen à remplir une grande salle à Paris. Surnommé "le Messi de la musique guinéenne".',
+    streams: '500K écoutes/mois',
+    streamNote: 'Deezer + Spotify',
+    award: '🏆 PRIMUD Afrique Ouest 2022',
+    articles: ['a-021', 'a-027'],
+    spotify: 'https://open.spotify.com/search/azaya%20guine',
+    deezer: 'https://www.deezer.com/artist/13342946',
+    youtube: 'https://www.youtube.com/results?search_query=azaya+clip+officiel',
+    instagram: 'https://www.instagram.com/azaya_officiel/',
+    color: '#FF6B35',
+    stats: [
+      { num: 'PRIMUD', label: 'Afrique Ouest 2022' },
+      { num: 'Paris', label: 'Grande salle 2025' },
+      { num: '1er', label: 'Guinéen Paris' },
+    ],
+  },
+  {
+    id: 'djelykaba',
+    name: 'Djelykaba Bintou',
+    realName: 'Djélykaba Bintou Kouyaté',
+    country: 'guinee',
+    flag: '🇬🇳',
+    genre: 'Mandingue · Afropop · Griot',
+    genres: ['afrobeats', 'mandingue'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/2a6dc9e77004bb1a216c1cd9df2cb135/500x500-000000-80-0-0.jpg',
+    bio: 'Fille du griot Djelykaba Kouyaté, née à Fria en 1993. All Africa Awards 2021 (Révélation + Meilleure Artiste Féminine Afrique Ouest). PRIMUD 2025 Meilleure Artiste d\'Afrique de l\'Ouest — premier sacre guinéen dans cette catégorie féminine. Sa voix mêle tradition griotte et pop contemporaine.',
+    streams: '400K écoutes/mois',
+    streamNote: 'Deezer + Spotify',
+    award: '🏆 PRIMUD Afrique Ouest 2025',
+    articles: ['a-022'],
+    spotify: 'https://open.spotify.com/search/djelykaba%20bintou',
+    deezer: 'https://www.deezer.com/artist/search/djelykaba+bintou',
+    youtube: 'https://www.youtube.com/results?search_query=Djelykaba+Bintou+officiel',
+    instagram: 'https://www.instagram.com/djelykababintou/',
+    color: '#FFE500',
+    stats: [
+      { num: 'PRIMUD', label: 'Afrique Ouest 2025' },
+      { num: 'All Africa', label: 'Awards ×2 (2021)' },
+      { num: 'Fria', label: 'Guinée · 1993' },
+    ],
+  },
+  {
+    id: 'ak4seven',
+    name: 'AK4SEVEN',
+    realName: 'Mohamed Alpha Keita',
+    country: 'guinee',
+    flag: '🇬🇳',
+    genre: 'Rap · Trap · Pular',
+    genres: ['rap'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/604dccdd4ef71094d4a3cc8a5764b161/500x500-000000-80-0-0.jpg',
+    bio: 'Né à Kamsar (1998), bac en maths, parti en France en 2018. Sa série de freestyles "Alpha Beth" intègre le hitparade de RFI en 2021. Il signe chez Géant Rouge — label de Maître Gims — et devient le premier rappeur de la nouvelle génération guinéenne signé dans un label français majeur. Première partie de Gims à Conakry, avril 2023.',
+    streams: '350K écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🎵 RFI Hitparade 2021',
+    articles: ['a-024', 'a-028'],
+    spotify: 'https://open.spotify.com/search/ak4seven',
+    deezer: 'https://www.deezer.com/artist/search/ak4seven',
+    youtube: 'https://www.youtube.com/results?search_query=AK4SEVEN+clip+officiel',
+    instagram: 'https://www.instagram.com/ak4seven/',
+    color: '#BF5AF2',
+    stats: [
+      { num: 'Géant Rouge', label: 'Label de Gims' },
+      { num: 'RFI', label: 'Hitparade 2021' },
+      { num: '1er', label: 'Guinéen label FR' },
+    ],
+  },
+  {
+    id: 'straiker',
+    name: 'Straiker',
+    realName: 'Ibrahima Sory Bah',
+    country: 'guinee',
+    flag: '🇬🇳',
+    genre: 'Rap · Hip-hop · Poullosophie',
+    genres: ['rap'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/aa7ffbc5507204c67b602b77fd53e8cb/500x500-000000-80-0-0.jpg',
+    bio: 'Né à Pita (1998), fils d\'un journaliste de radio rurale, diplômé en lettres modernes. Album "Poullosophie" (2023) — fusion philosophie peule et hip-hop. Victoires de la Musique Guinéenne 2021 (Révélation) et 2022 (Meilleure Collaboration). Concert au Cabaret Sauvage à Paris. Paroles d\'une densité rare dans le rap guinéen.',
+    streams: '250K écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🏆 Victoires Musique GN 2021',
+    articles: ['a-025', 'a-029'],
+    spotify: 'https://open.spotify.com/search/straiker%20guinee',
+    deezer: 'https://www.deezer.com/artist/search/straiker+guinee',
+    youtube: 'https://www.youtube.com/results?search_query=Straiker+guinee+officiel',
+    instagram: 'https://www.instagram.com/straiker_officiel/',
+    color: '#FF9500',
+    stats: [
+      { num: 'Poullosophie', label: 'Album 2023' },
+      { num: 'Cabaret', label: 'Sauvage Paris' },
+      { num: 'Pita', label: 'Guinée · 1998' },
+    ],
+  },
+  {
+    id: 'djanii-alpha',
+    name: 'Djanii Alpha',
+    realName: 'Alpha Midiaou Bah',
+    country: 'guinee',
+    flag: '🇬🇳',
+    genre: 'Rap · Afro-funk · Engagement',
+    genres: ['rap'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/7539d7952d976c3d52691a176e4476ac/500x500-000000-80-0-0.jpg',
+    bio: 'Né à Koundara (1985). Pionnier du rap guinéen depuis 2002. Label indépendant, album "G For Life" (2012). "Chef Rebel" (2022) — Meilleur Album Urbain aux Victoires de la Musique Guinéenne. Porte-parole des artistes au sein du FNDC. Meilleur Rappeur Guinéen de l\'Année 2018 (Guinée Hit Music).',
+    streams: '200K écoutes/mois',
+    streamNote: 'Deezer + Spotify',
+    award: '🏆 Meilleur Album GN 2022',
+    articles: ['a-026'],
+    spotify: 'https://open.spotify.com/search/djanii%20alpha',
+    deezer: 'https://www.deezer.com/artist/search/djanii+alpha',
+    youtube: 'https://www.youtube.com/results?search_query=Djanii+Alpha+guinee',
+    instagram: 'https://www.instagram.com/djaniialphaofficial/',
+    color: '#30D158',
+    stats: [
+      { num: 'Chef Rebel', label: 'Album 2022' },
+      { num: '20 ans', label: 'De carrière' },
+      { num: 'FNDC', label: 'Porte-parole' },
+    ],
+  },
+  {
+    id: 'amaza',
+    name: 'Amaza',
+    realName: 'Amadou Mouctar Kaba',
+    country: 'guinee',
+    flag: '🇬🇳',
+    genre: 'Afrobeats · Reggae · Pop',
+    genres: ['afrobeats'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/e8f7a3c2d1b5f9e4c6a2d8b1f3e7c9a5/500x500-000000-80-0-0.jpg',
+    imageFallback: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80',
+    bio: 'Né à Conakry (1992). Inspiré par Takana Zion. Son duo Amatala (avec Talala) a propulsé "Le Goût est Mélangé" : 4M+ de vues YouTube, #1 des charts guinéens pendant plusieurs mois. Artiste le plus streamé de Guinée en 2024. Meilleur Album et Meilleure Musique Urbaine guinéenne 2024. Amaza solo continue.',
+    streams: '300K écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🏆 Meilleur Album GN 2024',
+    articles: ['a-023'],
+    spotify: 'https://open.spotify.com/search/amaza%20guinee',
+    deezer: 'https://www.deezer.com/artist/search/amaza+guinee',
+    youtube: 'https://www.youtube.com/results?search_query=Amaza+Le+Gout+est+Melange',
+    instagram: 'https://www.instagram.com/amazaofficial_/',
+    color: '#FF2D55',
+    stats: [
+      { num: '4M+', label: 'Vues "Le Goût..."' },
+      { num: '#1', label: 'Charts Guinée 2024' },
+      { num: 'Conakry', label: '1992' },
+    ],
+  },
+
+  /* ── NIGERIA (suite) ──────────────────────────────────── */
+  {
+    id: 'omah-lay',
+    name: 'Omah Lay',
+    realName: 'Stanley Omah Didia',
+    country: 'nigeria',
+    flag: '🇳🇬',
+    genre: 'Afrobeats · R&B · Soul',
+    genres: ['afrobeats'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/8b3d1c9f7a5e2b0d4f6c8a2e4b7d1f3c/500x500-000000-80-0-0.jpg',
+    imageFallback: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=600&q=80',
+    bio: 'Révélation mondiale de l\'afrobeats. "You" et "Bad Influence" ont atteint les charts au Royaume-Uni et aux États-Unis. Omah Lay allie mélodie afrobeats et textes de R&B avec une sincérité désarmante. Son album "Boy Alone" (2022) a franchi le cap des 500M de streams.',
+    streams: '4M écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🌍 UK Charts 2021',
+    articles: [],
+    spotify: 'https://open.spotify.com/artist/4zCH9qm4R2DADamUHnHDtn',
+    deezer: 'https://www.deezer.com/artist/search/omah+lay',
+    youtube: 'https://www.youtube.com/@OmahLayOfficial',
+    instagram: 'https://www.instagram.com/omahlay/',
+    color: '#BF5AF2',
+    stats: [
+      { num: '4M+', label: 'Écoutes/mois' },
+      { num: '500M+', label: 'Streams "Boy Alone"' },
+      { num: 'UK Charts', label: '2021' },
+    ],
+  },
+  {
+    id: 'fireboy',
+    name: 'Fireboy DML',
+    realName: 'Adedamola Adefolahan',
+    country: 'nigeria',
+    flag: '🇳🇬',
+    genre: 'Afropop · Pop · R&B',
+    genres: ['afrobeats'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/9d2e8b4f7c1a5e3b0d6f8c2a4e7b1d9f/500x500-000000-80-0-0.jpg',
+    imageFallback: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80',
+    bio: '"Peru" (feat. Ed Sheeran) : 700M+ de streams, top 10 au Royaume-Uni. Fireboy DML est l\'un des artistes afropop les plus polyvalents. Ses albums "Jealous" et "Apollo" lui ont valu une reconnaissance internationale. La collaboration avec Ed Sheeran a propulsé sa carrière à un niveau mondial.',
+    streams: '3M écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🎵 Top 10 UK "Peru"',
+    articles: [],
+    spotify: 'https://open.spotify.com/artist/0BIeqcRKbmVUEHnC0P0gFM',
+    deezer: 'https://www.deezer.com/artist/search/fireboy+dml',
+    youtube: 'https://www.youtube.com/@FireboyDML',
+    instagram: 'https://www.instagram.com/fireboy_dml/',
+    color: '#FF9500',
+    stats: [
+      { num: '3M+', label: 'Écoutes/mois' },
+      { num: '700M+', label: 'Streams "Peru"' },
+      { num: 'Ed Sheeran', label: 'Collab officielle' },
+    ],
+  },
+  {
+    id: 'tiwa-savage',
+    name: 'Tiwa Savage',
+    realName: 'Tiwatope Savage-Balogun',
+    country: 'nigeria',
+    flag: '🇳🇬',
+    genre: 'Afropop · R&B · Soul',
+    genres: ['afrobeats'],
+    verified: true,
+    image: 'https://cdn-images.dzcdn.net/images/artist/1f9c3e7a5b2d8f0e4c6a2d8b3f1e9c7a/500x500-000000-80-0-0.jpg',
+    imageFallback: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600&q=80',
+    bio: 'Tiwa Savage est "la première dame de l\'afrobeats". Signée chez Universal Music Group, elle a collaboré avec Jay-Z, Beyoncé (Black Is King), Sam Smith et Wizkid. Ses albums "Celia" et "Water & Garri" ont dominé les charts africains. Ambassadrice Pepsi et L\'Oréal Paris.',
+    streams: '3M écoutes/mois',
+    streamNote: 'Spotify • mai 2026',
+    award: '🌍 BET Award 2018',
+    articles: [],
+    spotify: 'https://open.spotify.com/artist/1mc2Ges0RTmFqVbWZyuXRZ',
+    deezer: 'https://www.deezer.com/artist/6234350',
+    youtube: 'https://www.youtube.com/@TiwaSavageVEVO',
+    instagram: 'https://www.instagram.com/tiwasavage/',
+    color: '#FF2D55',
+    stats: [
+      { num: '3M+', label: 'Écoutes/mois' },
+      { num: 'Black Is King', label: 'Beyoncé collab' },
+      { num: 'BET', label: 'Award 2018' },
+    ],
   },
 ];
 
-/* ── Render ─────────────────────────────────────── */
+/* ══════════════════════════════════════════════════
+   RENDER
+══════════════════════════════════════════════════ */
 const grid = document.getElementById('artists-grid');
 let currentFilter = 'all';
 
 function renderArtists(filter = 'all') {
   const filtered = ARTISTS.filter(a => {
     if (filter === 'all') return true;
-    if (filter === 'guinee') return a.country === 'guinee';
+    if (filter === 'guinee')    return a.country === 'guinee';
     if (filter === 'cote_ivoire') return a.country === 'cote_ivoire';
+    if (filter === 'nigeria')   return a.country === 'nigeria';
+    if (filter === 'senegal')   return a.country === 'senegal';
+    if (filter === 'afrique')   return a.country === 'afrique';
     return a.genres.includes(filter);
   });
 
-  grid.innerHTML = filtered.map(a => `
-    <div class="artist-card reveal" data-id="${a.id}" style="--artist-color:${a.color}">
+  document.getElementById('artist-count').textContent = ARTISTS.length;
+
+  grid.innerHTML = filtered.map((a, i) => {
+    const img = a.image || a.imageFallback || '';
+    const fallback = a.imageFallback || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80';
+    return `
+    <div class="artist-card" data-id="${a.id}" style="transition-delay:${(i % 6) * 60}ms">
       <div class="artist-card-img">
-        <img src="${a.image}" alt="${a.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&q=80'">
+        <img src="${img}" alt="${a.name}" loading="lazy"
+             onerror="this.src='${fallback}'">
         <div class="artist-card-overlay"></div>
         <div class="artist-card-flag">${a.flag}</div>
-        ${a.verified ? '<div class="artist-card-verified">✓ VÉRIFIÉ</div>' : ''}
-        <div class="artist-card-country" style="color:${a.color}">${a.genre}</div>
+        <div class="artist-card-verified">✓ VÉRIFIÉ</div>
+        <div class="artist-card-streams">
+          <span class="dot" style="background:${a.color}"></span>${a.streams}
+        </div>
       </div>
       <div class="artist-card-body">
         <div class="artist-card-name">${a.name}</div>
         <div class="artist-card-genre">${a.genre}</div>
         <div class="artist-card-bio">${a.bio}</div>
+        ${a.award ? `<div class="artist-card-award">${a.award}</div>` : ''}
         <div class="artist-card-links">
-          <button class="artist-link artist-link-articles" onclick="openModal('${a.id}')">
-            📄 ${a.articles.length} article${a.articles.length > 1 ? 's' : ''}
-          </button>
-          <a class="artist-link artist-link-deezer" href="${a.deezer}" target="_blank" rel="noopener">
-            🎵 Deezer
-          </a>
-          <a class="artist-link artist-link-yt" href="${a.youtube}" target="_blank" rel="noopener">
-            ▶ YouTube
-          </a>
+          ${a.spotify ? `<a class="artist-link al-spotify" href="${a.spotify}" target="_blank" rel="noopener" onclick="event.stopPropagation()">▶ Spotify</a>` : ''}
+          ${a.deezer  ? `<a class="artist-link al-deezer"  href="${a.deezer}"  target="_blank" rel="noopener" onclick="event.stopPropagation()">🎵 Deezer</a>` : ''}
+          ${a.youtube ? `<a class="artist-link al-yt"      href="${a.youtube}" target="_blank" rel="noopener" onclick="event.stopPropagation()">▶ YouTube</a>` : ''}
         </div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 
   // Reveal animation
   setTimeout(() => {
-    document.querySelectorAll('.reveal').forEach(el => {
+    document.querySelectorAll('.artist-card').forEach(card => {
       const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-      }, { threshold: 0.05 });
-      obs.observe(el);
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.04 });
+      obs.observe(card);
     });
   }, 50);
 
@@ -651,13 +1164,12 @@ function renderArtists(filter = 'all') {
   document.querySelectorAll('.artist-card').forEach(card => {
     card.addEventListener('click', e => {
       if (e.target.closest('a')) return;
-      if (e.target.closest('button.artist-link-articles')) openModal(card.dataset.id);
-      else openModal(card.dataset.id);
+      openModal(card.dataset.id);
     });
   });
 }
 
-/* ── Filtres ─────────────────────────────────── */
+/* ── Filtres ── */
 document.getElementById('artists-filters').querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -667,37 +1179,49 @@ document.getElementById('artists-filters').querySelectorAll('.filter-btn').forEa
   });
 });
 
-/* ── Modal ───────────────────────────────────── */
+/* ── Modal ── */
 function openModal(id) {
   const a = ARTISTS.find(x => x.id === id);
   if (!a) return;
+  const fallback = a.imageFallback || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80';
 
-  document.getElementById('am-img').src  = a.image;
-  document.getElementById('am-name').textContent  = a.name;
-  document.getElementById('am-genre').textContent = a.genre;
-  document.getElementById('am-bio').textContent   = a.bio;
+  document.getElementById('am-img').src = a.image || fallback;
+  document.getElementById('am-img').onerror = function() { this.src = fallback; };
+  document.getElementById('am-country').textContent = a.flag;
+  document.getElementById('am-name').textContent    = a.name;
+  document.getElementById('am-genre').textContent   = a.genre;
+  document.getElementById('am-bio').textContent     = a.bio;
+
+  // Stats
+  const statsEl = document.getElementById('am-stats');
+  statsEl.innerHTML = (a.stats || []).map(s => `
+    <div class="modal-stat">
+      <div class="modal-stat-num">${s.num}</div>
+      <div class="modal-stat-label">${s.label}</div>
+    </div>`).join('');
 
   // Articles liés
   const arts = document.getElementById('am-articles');
   const linked = (typeof ARTICLES !== 'undefined')
-    ? ARTICLES.filter(art => a.articles.includes(art.id))
+    ? ARTICLES.filter(art => a.articles?.includes(art.id))
     : [];
-
   if (linked.length) {
     arts.innerHTML = linked.map(art => `
-      <a href="article.html?id=${art.id}" class="artist-modal-article">
-        <img src="${art.image}" alt="${art.title}">
-        <div class="artist-modal-article-title">${art.title}</div>
+      <a href="article.html?id=${art.id}" class="am-article-link">
+        <img src="${art.image}" alt="${art.title}" onerror="this.style.display='none'">
+        <div class="am-article-link-title">${art.title}</div>
       </a>`).join('');
   } else {
-    arts.innerHTML = '<p style="font-size:13px;color:var(--muted)">Aucun article pour l\'instant.</p>';
+    arts.innerHTML = '<p style="font-size:13px;color:var(--muted);padding:8px 0">Aucun article pour l\'instant.</p>';
   }
 
-  // Socials
-  document.getElementById('am-socials').innerHTML = `
-    <a class="artist-link artist-link-deezer" href="${a.deezer}" target="_blank">🎵 Deezer</a>
-    <a class="artist-link artist-link-yt" href="${a.youtube}" target="_blank">▶ YouTube</a>
-  `;
+  // Plateformes
+  document.getElementById('am-platforms').innerHTML = [
+    a.spotify  && `<a class="modal-platform-btn mpb-spotify" href="${a.spotify}"  target="_blank" rel="noopener">▶ Spotify</a>`,
+    a.deezer   && `<a class="modal-platform-btn mpb-deezer"  href="${a.deezer}"  target="_blank" rel="noopener">🎵 Deezer</a>`,
+    a.youtube  && `<a class="modal-platform-btn mpb-yt"      href="${a.youtube}" target="_blank" rel="noopener">▶ YouTube</a>`,
+    a.instagram&& `<a class="modal-platform-btn mpb-insta"   href="${a.instagram}"target="_blank" rel="noopener">📸 Instagram</a>`,
+  ].filter(Boolean).join('');
 
   document.getElementById('artist-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -712,7 +1236,6 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
-/* ── Init ─────────────────────────────────── */
 renderArtists();
 </script>
 

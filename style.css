@@ -47,7 +47,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden; /* bloque le scroll horizontal au niveau racine */
+  overflow-x: clip; /* clip = pas de scroll bar, pas de nouveau BFC */
 }
 body {
   background: var(--bg);
@@ -58,7 +58,7 @@ body {
   -webkit-font-smoothing: antialiased;
   cursor: none;
   position: relative;
-  /* PAS de overflow-x:hidden ici — ça couperait les éléments décoratifs */
+  overflow-x: clip;
 }
 a { color: inherit; text-decoration: none; }
 img { display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -1413,17 +1413,7 @@ button:hover ~ .cursor { width: 14px; height: 14px; }
   margin: 0 auto;
 }
 .cat-hero-num {
-  font-family: var(--font-display);
-  font-size: 160px;
-  position: absolute;
-  right: var(--gutter);
-  bottom: -20px;
-  line-height: 1;
-  letter-spacing: -4px;
-  opacity: .04;
-  color: var(--ink);
-  pointer-events: none;
-  user-select: none;
+  display: none; /* supprimé — causait un débordement horizontal */
 }
 .cat-hero-label {
   font-size: 10px;
