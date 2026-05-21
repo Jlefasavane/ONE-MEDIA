@@ -282,7 +282,93 @@ async function generate() {
   console.log(`✅ ${allArticles.length} articles générés → articles.json`);
   console.log('━'.repeat(50) + '\n');
 
+  // Envoi newsletter automatique
+  await sendNewsletter(allArticles);
+
   return allArticles;
+}
+
+/* ── Newsletter automatique ──────────────────────────────── */
+async function sendNewsletter(articles) {
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  const SUBSCRIBERS_FILE = path.join(__dirname, 'subscribers.json');
+
+  if (!RESEND_API_KEY) {
+    console.log('📧 Newsletter : RESEND_API_KEY non configurée (skip)');
+    return;
+  }
+  if (!fs.existsSync(SUBSCRIBERS_FILE)) {
+    console.log('📧 Newsletter : 0 abonné');
+    return;
+  }
+
+  const { subscribers } = JSON.parse(fs.readFileSync(SUBSCRIBERS_FILE, 'utf8'));
+  if (!subscribers?.length) { console.log('📧 Newsletter : 0 abonné'); return; }
+
+  const top5 = articles.slice(0, 5);
+  const CAT_COLORS = { musique:'#00F5FF', cinema:'#FF2D55', mode:'#FFE500', art:'#BF5AF2', lifestyle:'#30D158', interview:'#FF9500' };
+  const SITE_URL = 'https://one-media-delta.vercel.app';
+
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body{margin:0;padding:0;background:#0a0a0a;font-family:'Helvetica Neue',Arial,sans-serif;color:#eee}
+  .wrap{max-width:600px;margin:0 auto;padding:40px 20px}
+  .logo{font-size:28px;font-weight:900;letter-spacing:-1px;margin-bottom:4px}
+  .logo span{color:#FF2D55}
+  .tag{font-size:11px;color:#666;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px}
+  .headline{font-size:22px;font-weight:800;margin-bottom:8px}
+  .sub{font-size:14px;color:#888;margin-bottom:32px;line-height:1.5}
+  .article{border:1px solid #222;border-radius:12px;overflow:hidden;margin-bottom:16px}
+  .article img{width:100%;height:180px;object-fit:cover;display:block}
+  .article-body{padding:16px}
+  .cat{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+  .art-title{font-size:17px;font-weight:700;margin-bottom:8px;line-height:1.3}
+  .excerpt{font-size:13px;color:#888;line-height:1.5;margin-bottom:12px}
+  .read-btn{display:inline-block;background:#00F5FF;color:#000;font-weight:700;font-size:12px;padding:8px 16px;border-radius:6px;text-decoration:none}
+  .footer{margin-top:40px;padding-top:24px;border-top:1px solid #222;text-align:center;color:#444;font-size:12px}
+  .footer a{color:#666}
+</style></head>
+<body><div class="wrap">
+  <div class="logo">ONE<span>.</span>MEDIA</div>
+  <div class="tag">📡 Le signal du jour</div>
+  <div class="headline">Nouveaux articles · ${new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })}</div>
+  <div class="sub">Voici ce qui vaut la peine d'être lu aujourd'hui.</div>
+  ${top5.map(a => `
+  <div class="article">
+    ${a.image ? `<img src="${a.image}" alt="${a.title}">` : ''}
+    <div class="article-body">
+      <div class="cat" style="color:${CAT_COLORS[a.category]||'#00F5FF'}">${a.category.toUpperCase()}</div>
+      <div class="art-title">${a.title}</div>
+      <div class="excerpt">${a.excerpt?.slice(0, 120)}…</div>
+      <a href="${SITE_URL}/article.html?id=${a.id}" class="read-btn">Lire l'article →</a>
+    </div>
+  </div>`).join('')}
+  <div class="footer">
+    <p>ONE MEDIA — Culture sans frontières</p>
+    <p style="margin-top:8px"><a href="${SITE_URL}">Visiter le site</a> · <a href="${SITE_URL}/unsubscribe.html">Se désabonner</a></p>
+  </div>
+</div></body></html>`;
+
+  let sent = 0;
+  for (const email of subscribers) {
+    try {
+      await axios.post('https://api.resend.com/emails', {
+        from:    process.env.NEWSLETTER_FROM || 'ONE MEDIA <newsletter@one-media.fr>',
+        to:      [email],
+        subject: `📡 ONE MEDIA — ${top5[0]?.title?.slice(0, 50) || 'Nouveaux articles du jour'}`,
+        html,
+      }, {
+        headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+        timeout: 10000,
+      });
+      sent++;
+      await new Promise(r => setTimeout(r, 200));
+    } catch (err) {
+      console.warn(`  ⚠ Email error for ${email}:`, err.message);
+    }
+  }
+  console.log(`📧 Newsletter envoyée à ${sent}/${subscribers.length} abonnés`);
 }
 
 module.exports = { generate };

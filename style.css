@@ -1564,3 +1564,321 @@ button:hover ~ .cursor { width: 14px; height: 14px; }
   .search-overlay { padding-top: 80px; }
   #search-input { font-size: 22px; }
 }
+
+/* ═══════════════════════════════════════════════════
+   CLIPS YOUTUBE
+═══════════════════════════════════════════════════ */
+.clips-section { padding: 60px 0; }
+
+.clips-badge {
+  display: inline-block;
+  background: #FF6B3522;
+  color: #FF6B35;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.clips-scroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 12px var(--gutter) 20px;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.clips-scroll::-webkit-scrollbar { display: none; }
+
+.clip-card {
+  flex: 0 0 280px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: transform 0.25s, box-shadow 0.25s;
+  position: relative;
+}
+.clip-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px #0008; }
+
+.clip-thumb {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: #111;
+}
+.clip-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.clip-card:hover .clip-thumb img { transform: scale(1.05); }
+
+.clip-play-btn {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0006;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.clip-card:hover .clip-play-btn { opacity: 1; }
+
+.clip-play-circle {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: #FF6B35;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px #FF6B3566;
+}
+.clip-play-circle svg { margin-left: 3px; }
+
+.clip-country-flag {
+  position: absolute;
+  top: 8px; left: 8px;
+  background: #000a;
+  border-radius: 4px;
+  padding: 3px 7px;
+  font-size: 12px;
+}
+
+.clip-duration {
+  position: absolute;
+  bottom: 8px; right: 8px;
+  background: #000c;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.clip-info {
+  padding: 14px 16px;
+}
+.clip-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.clip-artist {
+  font-size: 12px;
+  color: var(--muted);
+}
+.clip-new-badge {
+  display: inline-block;
+  background: #FF6B35;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.clips-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px var(--gutter);
+  color: var(--muted);
+  text-align: center;
+}
+.clips-empty-icon { font-size: 48px; }
+.clips-empty-text { font-size: 15px; }
+.clips-empty-btn {
+  background: #FF6B35;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ── YouTube Modal ── */
+.yt-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+}
+.yt-modal.open { display: flex; }
+
+.yt-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: #000c;
+  backdrop-filter: blur(8px);
+}
+
+.yt-modal-inner {
+  position: relative;
+  width: min(92vw, 900px);
+  background: #111;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #333;
+  box-shadow: 0 40px 100px #000a;
+}
+
+.yt-modal-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  background: #fff2;
+  border: none;
+  color: #fff;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s;
+}
+.yt-modal-close:hover { background: #FF6B35; }
+
+.yt-embed-wrap {
+  position: relative;
+  aspect-ratio: 16/9;
+}
+.yt-embed-wrap iframe {
+  width: 100%; height: 100%;
+  border: none;
+  display: block;
+}
+
+.yt-modal-info {
+  padding: 16px 20px 20px;
+}
+.yt-modal-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.yt-modal-artist { font-size: 13px; color: var(--muted); }
+
+/* ── Submit Modal ── */
+.submit-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+}
+.submit-modal.open { display: flex; }
+
+.submit-modal-inner {
+  position: relative;
+  width: min(92vw, 480px);
+  background: #111;
+  border-radius: 16px;
+  padding: 36px 32px 32px;
+  border: 1px solid #333;
+}
+
+.submit-modal-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #FF6B35;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.submit-modal-title {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.submit-modal-sub {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.submit-form { display: flex; flex-direction: column; gap: 12px; }
+.submit-form input {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #eee;
+  font-size: 14px;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.submit-form input:focus { border-color: #FF6B35; }
+.submit-btn {
+  background: #FF6B35;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  padding: 13px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.submit-btn:hover { opacity: 0.85; }
+.submit-success { color: #30D158; font-weight: 600; font-size: 15px; text-align: center; padding: 20px 0; }
+
+/* ── PWA Install Banner ── */
+.pwa-banner {
+  position: fixed;
+  bottom: 90px;
+  left: 16px;
+  right: 16px;
+  max-width: 400px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 9000;
+  box-shadow: 0 8px 40px #000a;
+  transform: translateY(200px);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.pwa-banner.show { transform: translateY(0); }
+.pwa-icon { font-size: 32px; flex-shrink: 0; }
+.pwa-text { flex: 1; }
+.pwa-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.pwa-sub { font-size: 12px; color: var(--muted); }
+.pwa-btn {
+  background: var(--accent);
+  color: #000;
+  font-weight: 700;
+  font-size: 12px;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.pwa-dismiss {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+}

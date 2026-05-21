@@ -10,6 +10,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="design.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0a">
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');</script>
 </head>
 <body>
 
@@ -56,6 +59,7 @@
       <a href="category.html?cat=art"       class="nav-link" data-cat="art">Art</a>
       <a href="category.html?cat=lifestyle" class="nav-link" data-cat="lifestyle">Lifestyle</a>
       <a href="category.html?cat=interview" class="nav-link" data-cat="interview" style="color:var(--c-interview)">🎙 Interviews</a>
+      <a href="#section-clips" class="nav-link" style="color:#FF6B35">🎬 Clips</a>
       <a href="about.html" class="nav-link">À propos</a>
     </nav>
     <div class="header-actions">
@@ -83,6 +87,7 @@
     <a href="category.html?cat=art">Art</a>
     <a href="category.html?cat=lifestyle">Lifestyle</a>
     <a href="category.html?cat=interview" style="color:var(--c-interview)">🎙 Interviews</a>
+    <a href="#section-clips" style="color:#FF6B35">🎬 Clips</a>
     <a href="about.html">À propos</a>
   </nav>
 </aside>
@@ -210,6 +215,57 @@
   </div>
   <div class="interview-grid" id="grid-interview">
     <!-- filled by JS -->
+  </div>
+</section>
+
+<!-- SECTION CLIPS YOUTUBE -->
+<section class="section clips-section" id="section-clips">
+  <div class="section-header">
+    <div class="section-label" style="--cat-color:#FF6B35">
+      <span class="cat-bar"></span>
+      🎬 Nouveaux clips
+      <span class="clips-badge">GUINÉE · AFRIQUE</span>
+    </div>
+    <a href="#" class="see-all" id="clips-submit-btn">Soumettre un clip →</a>
+  </div>
+  <div class="clips-scroll" id="clips-scroll">
+    <!-- filled by JS -->
+  </div>
+  <!-- Modal YouTube -->
+  <div class="yt-modal" id="yt-modal">
+    <div class="yt-modal-backdrop" id="yt-modal-backdrop"></div>
+    <div class="yt-modal-inner">
+      <button class="yt-modal-close" id="yt-modal-close">✕</button>
+      <div class="yt-embed-wrap">
+        <iframe id="yt-iframe" src="" allowfullscreen
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+        </iframe>
+      </div>
+      <div class="yt-modal-info">
+        <div class="yt-modal-title" id="yt-modal-title"></div>
+        <div class="yt-modal-artist" id="yt-modal-artist"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal Soumettre -->
+  <div class="submit-modal" id="submit-modal">
+    <div class="yt-modal-backdrop" id="submit-modal-backdrop"></div>
+    <div class="submit-modal-inner">
+      <button class="yt-modal-close" id="submit-modal-close">✕</button>
+      <div class="submit-modal-tag">🎬 Soumettre un clip</div>
+      <h3 class="submit-modal-title">Tu as sorti un clip ?<br>On le met en avant.</h3>
+      <p class="submit-modal-sub">Partage le lien YouTube de ton clip. Si le son est bon, ONE MEDIA le met en avant gratuitement.</p>
+      <form class="submit-form" id="submit-form">
+        <input type="text" placeholder="Lien YouTube (youtube.com/...)" id="submit-url" required>
+        <input type="text" placeholder="Nom de l'artiste" id="submit-artist" required>
+        <input type="text" placeholder="Titre du clip" id="submit-title" required>
+        <input type="email" placeholder="Ton email (pour te recontacter)" id="submit-email">
+        <button type="submit" class="submit-btn">Envoyer →</button>
+      </form>
+      <div class="submit-success" id="submit-success" style="display:none">
+        ✅ Reçu ! On écoute et on te revient.
+      </div>
+    </div>
   </div>
 </section>
 

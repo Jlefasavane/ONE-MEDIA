@@ -1,0 +1,26 @@
+{
+  "name": "ONE MEDIA",
+  "short_name": "ONE MEDIA",
+  "description": "Culture sans frontières — Musique, Cinéma, Mode, Art, Lifestyle africain",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192/0a0a0a/FF2D55?text=OM",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512/0a0a0a/FF2D55?text=OM",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["news", "entertainment", "music"],
+  "lang": "fr"
+}

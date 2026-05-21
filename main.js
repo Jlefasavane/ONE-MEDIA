@@ -403,3 +403,197 @@ function renderArticleCard(a, opts = {}) {
     });
   }, 50);
 })();
+
+/* ═══════════════════════════════════════════════════
+   CLIPS YOUTUBE
+═══════════════════════════════════════════════════ */
+(function initClips() {
+  const scroll  = document.getElementById('clips-scroll');
+  const modal   = document.getElementById('yt-modal');
+  const iframe  = document.getElementById('yt-iframe');
+  const mTitle  = document.getElementById('yt-modal-title');
+  const mArtist = document.getElementById('yt-modal-artist');
+  const mClose  = document.getElementById('yt-modal-close');
+  const mBdrop  = document.getElementById('yt-modal-backdrop');
+  if (!scroll) return;
+
+  const COUNTRY_FLAGS = { guinee: '🇬🇳', cote_ivoire: '🇨🇮', senegal: '🇸🇳', nigeria: '🇳🇬', afrique: '🌍', mali: '🇲🇱', cameroun: '🇨🇲' };
+
+  function openModal(clip) {
+    iframe.src = `https://www.youtube.com/embed/${clip.videoId}?autoplay=1&rel=0&modestbranding=1`;
+    mTitle.textContent  = clip.title;
+    mArtist.textContent = clip.artist;
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    iframe.src = '';
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (mClose)  mClose.addEventListener('click', closeModal);
+  if (mBdrop)  mBdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  function renderClips(clips) {
+    if (!clips.length) {
+      scroll.innerHTML = `
+        <div class="clips-empty">
+          <div class="clips-empty-icon">🎬</div>
+          <div class="clips-empty-text">Les premiers clips arrivent bientôt.<br>Tu es artiste ? Soumets le tien !</div>
+          <button class="clips-empty-btn" onclick="document.getElementById('clips-submit-btn').click()">Soumettre mon clip</button>
+        </div>`;
+      return;
+    }
+    scroll.innerHTML = clips.map(clip => {
+      const thumb = `https://img.youtube.com/vi/${clip.videoId}/mqdefault.jpg`;
+      const flag  = COUNTRY_FLAGS[clip.country] || '🌍';
+      const isNew = clip.addedAt && (Date.now() - new Date(clip.addedAt).getTime()) < 7 * 24 * 3600 * 1000;
+      return `
+        <div class="clip-card" data-video="${clip.videoId}" data-title="${clip.title}" data-artist="${clip.artist}">
+          <div class="clip-thumb">
+            <img src="${thumb}" alt="${clip.title}" loading="lazy">
+            <div class="clip-play-btn">
+              <div class="clip-play-circle">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <div class="clip-country-flag">${flag}</div>
+          </div>
+          <div class="clip-info">
+            <div class="clip-title">${clip.title}${isNew ? '<span class="clip-new-badge">NEW</span>' : ''}</div>
+            <div class="clip-artist">${clip.artist}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    scroll.querySelectorAll('.clip-card').forEach(card => {
+      card.addEventListener('click', () => openModal({
+        videoId: card.dataset.video,
+        title:   card.dataset.title,
+        artist:  card.dataset.artist,
+      }));
+    });
+  }
+
+  // Charger depuis Railway
+  fetch(`${typeof API_BASE !== 'undefined' ? API_BASE : ''}/api/clips`)
+    .then(r => r.ok ? r.json() : { clips: [] })
+    .then(d => renderClips(d.clips || []))
+    .catch(() => renderClips([]));
+})();
+
+/* ═══════════════════════════════════════════════════
+   MODAL SOUMETTRE UN CLIP
+═══════════════════════════════════════════════════ */
+(function initSubmitModal() {
+  const submitBtn    = document.getElementById('clips-submit-btn');
+  const modal        = document.getElementById('submit-modal');
+  const closeBtn     = document.getElementById('submit-modal-close');
+  const backdrop     = document.getElementById('submit-modal-backdrop');
+  const form         = document.getElementById('submit-form');
+  const successEl    = document.getElementById('submit-success');
+  if (!modal) return;
+
+  function open()  { modal.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function close() { modal.classList.remove('open'); document.body.style.overflow = ''; }
+
+  if (submitBtn) submitBtn.addEventListener('click', e => { e.preventDefault(); open(); });
+  if (closeBtn)  closeBtn.addEventListener('click', close);
+  if (backdrop)  backdrop.addEventListener('click', close);
+
+  if (form) {
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = {
+        url:    document.getElementById('submit-url').value,
+        artist: document.getElementById('submit-artist').value,
+        title:  document.getElementById('submit-title').value,
+        email:  document.getElementById('submit-email').value,
+      };
+      try {
+        await fetch(`${typeof API_BASE !== 'undefined' ? API_BASE : ''}/api/clips/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+      } catch {}
+      form.style.display = 'none';
+      successEl.style.display = 'block';
+      setTimeout(close, 3000);
+    });
+  }
+})();
+
+/* ═══════════════════════════════════════════════════
+   NEWSLETTER
+═══════════════════════════════════════════════════ */
+(function initNewsletter() {
+  const form    = document.getElementById('signal-form');
+  const success = document.getElementById('signal-success');
+  const emailEl = document.getElementById('signal-email');
+  if (!form) return;
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = emailEl.value.trim();
+    if (!email) return;
+    try {
+      await fetch(`${typeof API_BASE !== 'undefined' ? API_BASE : ''}/api/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+    } catch {}
+    form.style.display = 'none';
+    success.style.display = 'block';
+    localStorage.setItem('om_subscribed', '1');
+  });
+
+  // Masquer si déjà abonné
+  if (localStorage.getItem('om_subscribed')) {
+    form.style.display = 'none';
+    if (success) { success.style.display = 'block'; success.textContent = '✓ Tu es déjà sur le signal.'; }
+  }
+})();
+
+/* ═══════════════════════════════════════════════════
+   PWA — Bannière d'installation
+═══════════════════════════════════════════════════ */
+(function initPWA() {
+  let deferredPrompt = null;
+  if (localStorage.getItem('pwa_dismissed')) return;
+
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    setTimeout(showBanner, 5000);
+  });
+
+  function showBanner() {
+    const banner = document.createElement('div');
+    banner.className = 'pwa-banner';
+    banner.innerHTML = `
+      <div class="pwa-icon">📱</div>
+      <div class="pwa-text">
+        <div class="pwa-title">Installer ONE MEDIA</div>
+        <div class="pwa-sub">Accès direct depuis ton téléphone</div>
+      </div>
+      <button class="pwa-btn" id="pwa-install">Installer</button>
+      <button class="pwa-dismiss" id="pwa-dismiss">✕</button>`;
+    document.body.appendChild(banner);
+    setTimeout(() => banner.classList.add('show'), 100);
+
+    document.getElementById('pwa-install').addEventListener('click', () => {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => { banner.remove(); });
+    });
+    document.getElementById('pwa-dismiss').addEventListener('click', () => {
+      banner.classList.remove('show');
+      setTimeout(() => banner.remove(), 400);
+      localStorage.setItem('pwa_dismissed', '1');
+    });
+  }
+})();

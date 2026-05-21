@@ -369,6 +369,44 @@
     </div>
   </div>
 
+  <!-- Clips management -->
+  <p class="section-title">🎬 Gestion des clips YouTube</p>
+  <div class="action-card">
+    <h3>Ajouter un clip</h3>
+    <p>Colle l'ID YouTube (ex: <code style="color:var(--accent)">dQw4w9WgXcQ</code> depuis youtube.com/watch?v=<b>ID</b>)</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px" id="clip-add-form">
+      <input id="clip-videoId" placeholder="ID YouTube" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
+      <input id="clip-artist" placeholder="Artiste" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
+      <input id="clip-title" placeholder="Titre du clip" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
+      <select id="clip-country" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
+        <option value="guinee">🇬🇳 Guinée</option>
+        <option value="cote_ivoire">🇨🇮 Côte d'Ivoire</option>
+        <option value="senegal">🇸🇳 Sénégal</option>
+        <option value="nigeria">🇳🇬 Nigeria</option>
+        <option value="mali">🇲🇱 Mali</option>
+        <option value="cameroun">🇨🇲 Cameroun</option>
+        <option value="afrique">🌍 Afrique (autre)</option>
+      </select>
+    </div>
+    <div style="margin-top:12px;display:flex;align-items:center;gap:12px">
+      <button class="btn btn-sm" id="clip-add-btn">Ajouter le clip</button>
+      <span id="clip-add-msg" style="font-size:13px;color:var(--green);display:none">✅ Clip ajouté !</span>
+    </div>
+    <div style="margin-top:20px" id="clips-list-admin">
+      <p style="color:var(--muted);font-size:13px">Chargement…</p>
+    </div>
+    <!-- Soumissions en attente -->
+    <div style="margin-top:20px" id="pending-section"></div>
+  </div>
+
+  <!-- Abonnés newsletter -->
+  <p class="section-title">📧 Abonnés newsletter</p>
+  <div class="action-card">
+    <div id="subscribers-info">
+      <p style="color:var(--muted);font-size:13px">Chargement…</p>
+    </div>
+  </div>
+
   <!-- Articles list -->
   <p class="section-title">Articles actuels</p>
   <div class="action-card">
@@ -447,6 +485,8 @@
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
     await loadStatus();
+    await loadClips();
+    await loadSubscribers();
     await loadArticles();
   }
 
@@ -532,6 +572,93 @@
       msg.style.display = 'none';
     }
   });
+
+  /* ── CLIPS ── */
+  async function loadClips() {
+    const res  = await fetch(`${API}/api/clips`).then(r => r.json()).catch(() => ({ clips: [], pending: [] }));
+    const clips = res.clips || [];
+    const pending = res.pending || [];
+    const el = document.getElementById('clips-list-admin');
+
+    if (!clips.length) {
+      el.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucun clip pour l\'instant.</p>';
+    } else {
+      el.innerHTML = `<div style="margin-top:12px">${clips.map(c => `
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #1a1a1a">
+          <img src="https://img.youtube.com/vi/${c.videoId}/default.jpg" style="width:60px;height:45px;border-radius:4px;object-fit:cover">
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600">${c.title}</div>
+            <div style="font-size:11px;color:var(--muted)">${c.artist} · ${c.country}</div>
+          </div>
+          <button onclick="deleteClip('${c.id}')" style="background:#ff2d5520;color:#ff2d55;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer">Suppr.</button>
+        </div>`).join('')}</div>`;
+    }
+
+    const pendingEl = document.getElementById('pending-section');
+    if (pending.length) {
+      pendingEl.innerHTML = `<h3 style="font-size:14px;margin-bottom:10px;color:var(--yellow)">⏳ Soumissions en attente (${pending.length})</h3>
+        ${pending.map((p, i) => `
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #1a1a1a">
+            <img src="https://img.youtube.com/vi/${p.videoId}/default.jpg" style="width:60px;height:45px;border-radius:4px;object-fit:cover">
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:600">${p.title} — ${p.artist}</div>
+              <div style="font-size:11px;color:var(--muted)">${p.email || 'sans email'}</div>
+            </div>
+            <button onclick="approvePending(${i})" style="background:#30d15820;color:#30d158;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;margin-right:6px">✅ Publier</button>
+          </div>`).join('')}`;
+    }
+  }
+
+  document.getElementById('clip-add-btn').addEventListener('click', async () => {
+    const videoId = document.getElementById('clip-videoId').value.trim();
+    const artist  = document.getElementById('clip-artist').value.trim();
+    const title   = document.getElementById('clip-title').value.trim();
+    const country = document.getElementById('clip-country').value;
+    if (!videoId || !artist || !title) return;
+    await fetch(`${API}/api/clips/add`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+      body: JSON.stringify({ videoId, artist, title, country }),
+    });
+    ['clip-videoId','clip-artist','clip-title'].forEach(id => document.getElementById(id).value = '');
+    const msg = document.getElementById('clip-add-msg');
+    msg.style.display = 'inline';
+    setTimeout(() => { msg.style.display = 'none'; }, 2000);
+    await loadClips();
+  });
+
+  window.deleteClip = async (id) => {
+    if (!confirm('Supprimer ce clip ?')) return;
+    await fetch(`${API}/api/clips/${id}`, { method: 'DELETE', headers: { 'x-admin-token': token } });
+    await loadClips();
+  };
+
+  window.approvePending = async (idx) => {
+    const res = await fetch(`${API}/api/clips`).then(r => r.json());
+    const p = res.pending?.[idx];
+    if (!p) return;
+    await fetch(`${API}/api/clips/add`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+      body: JSON.stringify({ videoId: p.videoId, title: p.title, artist: p.artist, country: 'afrique' }),
+    });
+    showToast('✅ Clip publié !');
+    await loadClips();
+  };
+
+  /* ── ABONNÉS ── */
+  async function loadSubscribers() {
+    try {
+      const d = await fetch(`${API}/api/subscribers`, { headers: { 'x-admin-token': token } }).then(r => r.json());
+      const count = d.subscribers?.length || 0;
+      document.getElementById('subscribers-info').innerHTML = `
+        <div style="font-size:32px;font-weight:900;color:var(--accent)">${count}</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px">abonné${count > 1 ? 's' : ''} à la newsletter</div>
+        ${count ? `<div style="margin-top:12px;font-size:12px;color:var(--muted)">${d.subscribers.slice(0,5).join('<br>')}</div>` : ''}`;
+    } catch {
+      document.getElementById('subscribers-info').innerHTML = '<p style="color:var(--muted);font-size:13px">Erreur de chargement</p>';
+    }
+  }
 
   /* ── AUTO-LOGIN si token existant ── */
   if (token) {

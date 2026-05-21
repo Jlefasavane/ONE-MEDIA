@@ -13,8 +13,19 @@ const { generate } = require('./generator');
 const app  = express();
 const PORT = process.env.PORT || 3002;
 
-const ARTICLES_FILE  = path.join(__dirname, 'articles.json');
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'onemedia2026!';
+const ARTICLES_FILE    = path.join(__dirname, 'articles.json');
+const CLIPS_FILE       = path.join(__dirname, 'clips.json');
+const SUBSCRIBERS_FILE = path.join(__dirname, 'subscribers.json');
+const ADMIN_PASSWORD   = process.env.ADMIN_PASSWORD || 'onemedia2026!';
+
+/* ── Helpers fichiers ─────────────────────────────────────── */
+function readJSON(file, def) {
+  try { return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : def; }
+  catch { return def; }
+}
+function writeJSON(file, data) {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf8');
+}
 
 /* ── Middleware ──────────────────────────────────────────── */
 app.use(express.json());
@@ -106,6 +117,67 @@ app.post('/api/refresh', adminAuth, async (req, res) => {
 // GET /api/refresh/status — état de la génération
 app.get('/api/refresh/status', (req, res) => {
   res.json({ generating: isGenerating });
+});
+
+/* ── API Clips ───────────────────────────────────────────── */
+
+// GET /api/clips
+app.get('/api/clips', (req, res) => {
+  const data = readJSON(CLIPS_FILE, { clips: [], updatedAt: null });
+  res.json(data);
+});
+
+// POST /api/clips/add — ajouter un clip validé (admin)
+app.post('/api/clips/add', adminAuth, (req, res) => {
+  const { videoId, title, artist, country } = req.body;
+  if (!videoId || !title || !artist) return res.status(400).json({ error: 'Champs manquants' });
+  const data = readJSON(CLIPS_FILE, { clips: [] });
+  const clip = { id: `clip_${Date.now()}`, videoId, title, artist, country: country || 'afrique', addedAt: new Date().toISOString(), verified: true };
+  data.clips.unshift(clip);
+  data.updatedAt = new Date().toISOString();
+  writeJSON(CLIPS_FILE, data);
+  res.json({ success: true, clip });
+});
+
+// DELETE /api/clips/:id — supprimer un clip (admin)
+app.delete('/api/clips/:id', adminAuth, (req, res) => {
+  const data = readJSON(CLIPS_FILE, { clips: [] });
+  data.clips = data.clips.filter(c => c.id !== req.params.id);
+  writeJSON(CLIPS_FILE, data);
+  res.json({ success: true });
+});
+
+// POST /api/clips/submit — soumission artiste (public, va en pending)
+app.post('/api/clips/submit', (req, res) => {
+  const { url, artist, title, email } = req.body;
+  const data = readJSON(CLIPS_FILE, { clips: [], pending: [] });
+  if (!data.pending) data.pending = [];
+  // Extraire l'ID YouTube de l'URL
+  const match = url?.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+  const videoId = match?.[1] || url;
+  data.pending.push({ videoId, title, artist, email, submittedAt: new Date().toISOString() });
+  writeJSON(CLIPS_FILE, data);
+  res.json({ success: true, message: 'Soumission reçue !' });
+});
+
+/* ── Newsletter ──────────────────────────────────────────── */
+
+// POST /api/subscribe
+app.post('/api/subscribe', (req, res) => {
+  const { email } = req.body;
+  if (!email || !email.includes('@')) return res.status(400).json({ error: 'Email invalide' });
+  const data = readJSON(SUBSCRIBERS_FILE, { subscribers: [] });
+  if (!data.subscribers.includes(email)) {
+    data.subscribers.push(email);
+    writeJSON(SUBSCRIBERS_FILE, data);
+  }
+  res.json({ success: true, total: data.subscribers.length });
+});
+
+// GET /api/subscribers — liste (admin)
+app.get('/api/subscribers', adminAuth, (req, res) => {
+  const data = readJSON(SUBSCRIBERS_FILE, { subscribers: [] });
+  res.json(data);
 });
 
 /* ── Fichiers statiques ──────────────────────────────────── */
