@@ -4,31 +4,31 @@
 
 /* ── TOKENS ─────────────────────────────────────────────── */
 :root {
-  --bg:         #090910;
-  --surface:    #0f0f1a;
-  --surface2:   #14141f;
-  --ink:        #f0f0f0;
-  --ink-soft:   #a0a0b0;
+  --bg:         #000000;
+  --surface:    #0d0d14;
+  --surface2:   #121220;
+  --ink:        #ffffff;
+  --ink-soft:   #c0c0cc;
   --ink-mute:   #505062;
   --line:       rgba(255,255,255,.07);
   --line-soft:  rgba(255,255,255,.04);
 
   /* Signal colors */
-  --signal:     #00f5ff;
-  --signal-dim: rgba(0,245,255,.12);
-  --signal-glow:rgba(0,245,255,.25);
+  --signal:     #FFEF4D;
+  --signal-dim: rgba(255,239,77,.12);
+  --signal-glow:rgba(255,239,77,.25);
   --hot:        #ff2d55;
   --hot-dim:    rgba(255,45,85,.12);
   --gold:       #ffe500;
-  --purple:     #bf5af2;
-  --green:      #30d158;
+  --purple:     #7D39EB;
+  --green:      #C6FF33;
 
   /* Cats */
-  --c-musique:   #00f5ff;
+  --c-musique:   #FFEF4D;
   --c-cinema:    #ff2d55;
   --c-mode:      #ffe500;
-  --c-art:       #bf5af2;
-  --c-lifestyle:  #30d158;
+  --c-art:       #7D39EB;
+  --c-lifestyle:  #C6FF33;
   --c-interview:  #ff9500;
 
   /* Type */
@@ -2274,8 +2274,8 @@ img[loading="lazy"][data-loaded] {
 
 /* ── SELECTION COLOR ─────────────────────────────────────── */
 ::selection {
-  background: rgba(0,245,255,.25);
-  color: #fff;
+  background: rgba(255,239,77,.35);
+  color: #000000;
 }
 
 /* ── SCROLLBAR GLOBAL (dark) ─────────────────────────────── */
