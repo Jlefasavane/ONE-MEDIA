@@ -10,14 +10,14 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0a0a0a;
-      --card: #111;
+      --bg: #000000;
+      --card: #0d0d14;
       --border: #222;
-      --accent: #00f5ff;
+      --accent: #FFEF4D;
       --red: #ff2d55;
-      --green: #30d158;
+      --green: #C6FF33;
       --yellow: #ffe500;
-      --text: #eee;
+      --text: #ffffff;
       --muted: #666;
     }
 
@@ -989,7 +989,7 @@
               <div style="font-size:13px;font-weight:600">${p.title} — ${p.artist}</div>
               <div style="font-size:11px;color:var(--muted)">${p.email || 'sans email'}</div>
             </div>
-            <button onclick="approvePending(${i})" style="background:#30d15820;color:#30d158;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;margin-right:6px">✅ Publier</button>
+            <button onclick="approvePending(${i})" style="background:#C6FF3320;color:#C6FF33;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;margin-right:6px">✅ Publier</button>
           </div>`).join('')}`;
     }
   }

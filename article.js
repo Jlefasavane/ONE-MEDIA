@@ -236,7 +236,7 @@ function renderArticlePage() {
   // Copy link
   document.getElementById('ss-copy')?.addEventListener('click', function() {
     navigator.clipboard?.writeText(location.href).then(() => {
-      this.style.color = '#00f5ff';
+      this.style.color = '#FFEF4D';
       setTimeout(() => this.style.color = '', 1500);
     });
   });
