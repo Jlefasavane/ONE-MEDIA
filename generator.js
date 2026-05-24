@@ -8,7 +8,6 @@ require('dotenv').config();
 const axios    = require('axios');
 const fs       = require('fs');
 const path     = require('path');
-const nodemailer = require('nodemailer');
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const OUTPUT_FILE  = path.join(__dirname, 'articles.json');
@@ -435,37 +434,13 @@ async function debugAPIs() {
   return result;
 }
 
-/* ── Newsletter ─────────────────────────────────────────── */
+/* ── Newsletter auto après génération ───────────────────────
+   Note : l'envoi manuel passe par Resend dans server.js
+   Ici on fait juste un log — pas d'envoi automatique
+   pour éviter les doublons et les erreurs SMTP sur Railway.
+   ─────────────────────────────────────────────────────────── */
 async function sendNewsletter(articles) {
-  const GMAIL_USER = process.env.GMAIL_USER;
-  const GMAIL_PASS = process.env.GMAIL_APP_PASSWORD;
-  const SUB_FILE   = path.join(__dirname, 'subscribers.json');
-
-  if (!GMAIL_USER || !GMAIL_PASS) { console.log('📧 Newsletter : GMAIL non configuré (skip)'); return; }
-  if (!fs.existsSync(SUB_FILE))   { console.log('📧 Newsletter : 0 abonné'); return; }
-
-  const { subscribers } = JSON.parse(fs.readFileSync(SUB_FILE, 'utf8'));
-  if (!subscribers?.length) { console.log('📧 Newsletter : 0 abonné'); return; }
-
-  const top5 = articles.slice(0, 5);
-  const CAT_COLORS = { musique:'#00F5FF', cinema:'#FF2D55', mode:'#FFE500', art:'#BF5AF2', lifestyle:'#30D158' };
-  const SITE_URL   = 'https://one-media-delta.vercel.app';
-
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{margin:0;padding:0;background:#0a0a0a;font-family:'Helvetica Neue',Arial,sans-serif;color:#eee}.wrap{max-width:600px;margin:0 auto;padding:40px 20px}.logo{font-size:28px;font-weight:900}.logo span{color:#FF2D55}.article{border:1px solid #222;border-radius:12px;overflow:hidden;margin-bottom:16px}.article img{width:100%;height:160px;object-fit:cover}.article-body{padding:14px}.cat{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}.art-title{font-size:16px;font-weight:700;margin-bottom:8px}.read-btn{display:inline-block;background:#00F5FF;color:#000;font-weight:700;font-size:12px;padding:8px 16px;border-radius:6px;text-decoration:none}.footer{margin-top:32px;text-align:center;color:#444;font-size:12px}</style></head>
-<body><div class="wrap"><div class="logo">ONE<span>.</span>MEDIA</div><p style="color:#666;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin:4px 0 28px">📡 Le signal du jour</p>
-${top5.map(a => `<div class="article">${a.image ? `<img src="${a.image}" alt="${a.title}">` : ''}<div class="article-body"><div class="cat" style="color:${CAT_COLORS[a.category]||'#00F5FF'}">${a.category.toUpperCase()}</div><div class="art-title">${a.title}</div><a href="${SITE_URL}/article.html?id=${a.id}" class="read-btn">Lire →</a></div></div>`).join('')}
-<div class="footer"><p>ONE MEDIA — Culture sans frontières</p><p><a href="${SITE_URL}" style="color:#666">Visiter le site</a></p></div></div></body></html>`;
-
-  const transporter = nodemailer.createTransport({ service: 'gmail', auth: { user: GMAIL_USER, pass: GMAIL_PASS } });
-  let sent = 0;
-  for (const email of subscribers) {
-    try {
-      await transporter.sendMail({ from: `"ONE MEDIA" <${GMAIL_USER}>`, to: email, subject: `📡 ONE MEDIA — ${top5[0]?.title?.slice(0,50)||'Nouveaux articles'}`, html });
-      sent++;
-      await new Promise(r => setTimeout(r, 300));
-    } catch (err) { console.warn(`  ⚠ Email error: ${err.message}`); }
-  }
-  console.log(`📧 Newsletter → ${sent}/${subscribers.length} abonnés`);
+  console.log(`📧 ${articles.length} articles générés — newsletter disponible depuis l'admin (Resend)`);
 }
 
 module.exports = { generate, debugAPIs };

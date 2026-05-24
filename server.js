@@ -135,11 +135,21 @@ app.delete('/api/articles/:id', adminAuth, (req, res) => {
   res.json({ success: true, deleted: before - data.articles.length });
 });
 
+// GET /health — healthcheck Railway (répond toujours 200)
+app.get('/health', (req, res) => res.json({ ok: true, uptime: process.uptime() }));
+
 // GET /api/status
 app.get('/api/status', (req, res) => {
   if (!fs.existsSync(ARTICLES_FILE)) return res.json({ status: 'no_articles', message: 'Aucun article.' });
-  const data = JSON.parse(fs.readFileSync(ARTICLES_FILE, 'utf8'));
-  res.json({ status: 'ok', count: data.count, generatedAt: data.generatedAt, nextRefresh: 'Toutes les 6 heures (cron)' });
+  try {
+    const data = JSON.parse(fs.readFileSync(ARTICLES_FILE, 'utf8'));
+    res.json({ status: 'ok', count: data.count, generatedAt: data.generatedAt, nextRefresh: 'Toutes les 6 heures (cron)' });
+  } catch { res.json({ status: 'error', message: 'Lecture articles.json impossible' }); }
+});
+
+// GET /og-cover.jpg — image OG par défaut (redirect vers image Unsplash)
+app.get('/og-cover.jpg', (req, res) => {
+  res.redirect(301, 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&h=630&fit=crop&q=80');
 });
 
 // POST /api/refresh (admin)
