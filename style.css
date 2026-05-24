@@ -13,23 +13,35 @@
   --line:       rgba(255,255,255,.07);
   --line-soft:  rgba(255,255,255,.04);
 
-  /* Signal colors */
-  --signal:     #FFEF4D;
-  --signal-dim: rgba(255,239,77,.12);
-  --signal-glow:rgba(255,239,77,.25);
-  --hot:        #ff2d55;
-  --hot-dim:    rgba(255,45,85,.12);
-  --gold:       #ffe500;
-  --purple:     #7D39EB;
-  --green:      #C6FF33;
+  /* ── PALETTE OFFICIELLE ONE MEDIA ──
+     Sandy Yellow  #FFEF4D  → accent primaire
+     Ebony Clay    #2A428C  → surfaces featured, sections
+     Violet        #7D39EB  → accent secondaire (cinéma, art)
+     Lime          #C6FF33  → accent tertiaire (mode, lifestyle, succès)
+     Black         #000000  → background
+     White         #FFFFFF  → texte
+  ───────────────────────────────── */
+  --signal:      #FFEF4D;
+  --signal-dim:  rgba(255,239,77,.12);
+  --signal-glow: rgba(255,239,77,.25);
+  --ebony:       #2A428C;
+  --ebony-dim:   rgba(42,66,140,.2);
+  --ebony-glow:  rgba(42,66,140,.4);
+  --hot:         #7D39EB;
+  --hot-dim:     rgba(125,57,235,.15);
+  --gold:        #FFEF4D;
+  --purple:      #7D39EB;
+  --purple-dim:  rgba(125,57,235,.15);
+  --green:       #C6FF33;
+  --green-dim:   rgba(198,255,51,.12);
 
-  /* Cats */
-  --c-musique:   #FFEF4D;
-  --c-cinema:    #ff2d55;
-  --c-mode:      #ffe500;
-  --c-art:       #7D39EB;
-  --c-lifestyle:  #C6FF33;
-  --c-interview:  #ff9500;
+  /* Cats — palette stricte */
+  --c-musique:   #FFEF4D;   /* Sandy Yellow  */
+  --c-cinema:    #7D39EB;   /* Violet        */
+  --c-mode:      #C6FF33;   /* Lime          */
+  --c-art:       #7D39EB;   /* Violet        */
+  --c-lifestyle: #C6FF33;   /* Lime          */
+  --c-interview: #ffffff;   /* White         */
 
   /* Type */
   --font-display: 'Bebas Neue', sans-serif;
@@ -85,7 +97,7 @@ button { font-family: var(--font-body); cursor: none; }
   position: fixed;
   width: 32px;
   height: 32px;
-  border: 1px solid rgba(0,245,255,.4);
+  border: 1px solid rgba(125,57,235,.5);
   border-radius: 50%;
   pointer-events: none;
   z-index: 99998;
@@ -859,9 +871,9 @@ button:hover ~ .cursor { width: 14px; height: 14px; }
 
 /* ── SIGNAL BANNER ───────────────────────────────────────── */
 .signal-banner {
-  background: var(--surface);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  background: linear-gradient(135deg, var(--ebony) 0%, #1a1a3a 100%);
+  border-top: 1px solid rgba(125,57,235,.2);
+  border-bottom: 1px solid rgba(125,57,235,.2);
   overflow: hidden;
   position: relative;
 }
@@ -1635,8 +1647,8 @@ button:hover ~ .cursor { width: 14px; height: 14px; }
 }
 .event-card:hover { border-color: rgba(255,255,255,.18); transform: translateY(-3px); }
 .event-card.is-live {
-  border-color: #ff2d55;
-  box-shadow: 0 0 0 1px #ff2d55, 0 8px 32px rgba(255,45,85,.25);
+  border-color: #7D39EB;
+  box-shadow: 0 0 0 1px #7D39EB, 0 8px 32px rgba(125,57,235,.25);
 }
 
 /* Badge LIVE */
@@ -1658,8 +1670,8 @@ button:hover ~ .cursor { width: 14px; height: 14px; }
   animation: live-pulse-badge 1.4s ease-in-out infinite;
 }
 @keyframes live-pulse-badge {
-  0%,100% { box-shadow: 0 0 0 0 rgba(255,45,85,.6); }
-  50%      { box-shadow: 0 0 0 6px rgba(255,45,85,0); }
+  0%,100% { box-shadow: 0 0 0 0 rgba(125,57,235,.7); }
+  50%      { box-shadow: 0 0 0 8px rgba(125,57,235,0); }
 }
 .event-live-badge::before {
   content: '';
@@ -1843,7 +1855,7 @@ button:hover ~ .cursor { width: 14px; height: 14px; }
   border: 1px solid var(--hot);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 0 60px rgba(255,45,85,.3);
+  box-shadow: 0 0 60px rgba(125,57,235,.35);
 }
 .live-modal-close {
   position: absolute;
@@ -2198,7 +2210,7 @@ button:hover ~ .cursor { width: 14px; height: 14px; }
   transition: opacity 0.2s;
 }
 .submit-btn:hover { opacity: 0.85; }
-.submit-success { color: #30D158; font-weight: 600; font-size: 15px; text-align: center; padding: 20px 0; }
+.submit-success { color: #C6FF33; font-weight: 600; font-size: 15px; text-align: center; padding: 20px 0; }
 
 /* ── PWA Install Banner ── */
 .pwa-banner {

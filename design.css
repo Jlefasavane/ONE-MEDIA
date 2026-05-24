@@ -164,12 +164,12 @@ body.light .theme-btn { color: var(--ink-soft); }
 .article-card {
   border-radius: 0;
 }
-/* Couleur accent au hover selon catégorie */
-.article-card[data-cat="musique"]:hover   { border-color: rgba(255,239,77,.25); }
-.article-card[data-cat="cinema"]:hover    { border-color: rgba(255,45,85,.25); }
-.article-card[data-cat="mode"]:hover      { border-color: rgba(255,229,0,.25); }
-.article-card[data-cat="art"]:hover       { border-color: rgba(191,90,242,.25); }
-.article-card[data-cat="lifestyle"]:hover { border-color: rgba(48,209,88,.25); }
+/* Couleur accent au hover selon catégorie — palette officielle */
+.article-card[data-cat="musique"]:hover   { border-color: rgba(255,239,77,.3); }
+.article-card[data-cat="cinema"]:hover    { border-color: rgba(125,57,235,.3); }
+.article-card[data-cat="mode"]:hover      { border-color: rgba(198,255,51,.3); }
+.article-card[data-cat="art"]:hover       { border-color: rgba(125,57,235,.3); }
+.article-card[data-cat="lifestyle"]:hover { border-color: rgba(198,255,51,.3); }
 
 /* Overlay de lecture rapide */
 .article-card-read-overlay {
@@ -954,7 +954,7 @@ body.light .theme-btn { color: var(--ink-soft); }
 }
 .cat-intro--mode .ci-slice {
   flex: 1;
-  background: #ffe500;
+  background: #C6FF33;
   transform: skewX(-8deg) scaleX(1);
   transform-origin: right center;
   transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
@@ -1009,11 +1009,11 @@ body.light .theme-btn { color: var(--ink-soft); }
   transition: opacity 0.55s ease;
 }
 .cat-intro--lifestyle.exiting { opacity: 0; }
-.cat-intro--lifestyle .ci-label { color: #30d158; }
+.cat-intro--lifestyle .ci-label { color: #C6FF33; }
 .cat-intro--lifestyle .ci-ring {
   position: absolute;
   border-radius: 50%;
-  border: 1px solid #30d158;
+  border: 1px solid #C6FF33;
   aspect-ratio: 1;
   width: calc(12vmax + var(--i, 0) * 16vmax);
   transform: scale(0);
@@ -1022,7 +1022,7 @@ body.light .theme-btn { color: var(--ink-soft); }
     transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
     opacity   0.4s ease;
   transition-delay: calc(var(--i, 0) * 0.1s);
-  box-shadow: 0 0 8px rgba(48, 209, 88, 0.3);
+  box-shadow: 0 0 8px rgba(198, 255, 51, 0.3);
 }
 .cat-intro--lifestyle.playing .ci-ring {
   transform: scale(1);
