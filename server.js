@@ -35,7 +35,7 @@ function writeJSON(file, data) {
 app.use(compression({ level: 6, threshold: 1024 }));
 
 /* ── Middleware ──────────────────────────────────────────── */
-app.use(express.json({ limit: '2mb' }));
+app.use(express.json({ limit: '20mb' })); // élevé pour base64 images/videos
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
@@ -43,6 +43,10 @@ app.use((req, res, next) => {
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
+
+/* ── Dossier uploads ─────────────────────────────────────── */
+const UPLOADS_DIR = path.join(__dirname, 'uploads');
+if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 /* ── Cache-Control pour assets statiques ─────────────────── */
 app.use(express.static(__dirname, {
@@ -172,6 +176,76 @@ app.delete('/api/articles/:id', adminAuth, (req, res) => {
   data.count     = data.articles.length;
   writeJSON(ARTICLES_FILE, data);
   res.json({ success: true, deleted: before - data.articles.length });
+});
+
+/* ══ UPLOAD FICHIERS ══════════════════════════════════════ */
+
+// POST /api/upload — uploader une image ou vidéo depuis l'appareil
+app.post('/api/upload', adminAuth, (req, res) => {
+  const { filename, data, mimeType } = req.body;
+  if (!filename || !data) return res.status(400).json({ error: 'filename et data requis' });
+
+  try {
+    const ext      = path.extname(filename).toLowerCase() || '.jpg';
+    const allowed  = ['.jpg','.jpeg','.png','.gif','.webp','.svg','.mp4','.mov','.webm','.mp3'];
+    if (!allowed.includes(ext)) return res.status(400).json({ error: 'Type de fichier non autorisé' });
+
+    const safeName = `${Date.now()}-${path.basename(filename, ext)
+      .replace(/[^a-z0-9]/gi, '-').toLowerCase().slice(0, 40)}${ext}`;
+    const filePath = path.join(UPLOADS_DIR, safeName);
+
+    fs.writeFileSync(filePath, Buffer.from(data, 'base64'));
+
+    const base = process.env.RAILWAY_PUBLIC_DOMAIN
+      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
+      : 'https://one-media-production.up.railway.app';
+    const url  = `${base}/uploads/${safeName}`;
+
+    console.log(`📎 Upload : ${safeName} (${Math.round(Buffer.byteLength(data,'base64') * 3/4 / 1024)} KB)`);
+    res.json({ success: true, url, filename: safeName });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/uploads — lister les fichiers uploadés (admin)
+app.get('/api/uploads', adminAuth, (req, res) => {
+  try {
+    if (!fs.existsSync(UPLOADS_DIR)) return res.json({ files: [] });
+    const files = fs.readdirSync(UPLOADS_DIR)
+      .filter(f => !f.startsWith('.'))
+      .map(f => {
+        const stat = fs.statSync(path.join(UPLOADS_DIR, f));
+        const ext  = path.extname(f).toLowerCase();
+        const isVideo = ['.mp4','.mov','.webm'].includes(ext);
+        const base = process.env.RAILWAY_PUBLIC_DOMAIN
+          ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
+          : 'https://one-media-production.up.railway.app';
+        return {
+          filename: f,
+          url: `${base}/uploads/${f}`,
+          size: stat.size,
+          date: stat.mtime.toISOString(),
+          type: isVideo ? 'video' : 'image',
+        };
+      })
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+    res.json({ files });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE /api/uploads/:filename — supprimer un fichier uploadé (admin)
+app.delete('/api/uploads/:filename', adminAuth, (req, res) => {
+  try {
+    const safe = path.basename(req.params.filename);
+    const fp   = path.join(UPLOADS_DIR, safe);
+    if (fs.existsSync(fp)) fs.unlinkSync(fp);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // GET /health — healthcheck Railway (répond toujours 200)

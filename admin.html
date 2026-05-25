@@ -213,6 +213,56 @@
     ::-webkit-scrollbar-track { background:transparent; }
     ::-webkit-scrollbar-thumb { background:#333; border-radius:3px; }
 
+    /* Upload group */
+    .upload-group { display:flex; gap:6px; align-items:flex-start; }
+    .upload-group input[type="url"], .upload-group input[type="text"] { flex:1; }
+    .upload-btn {
+      display:inline-flex; align-items:center; gap:5px;
+      background:var(--card2); border:1px solid var(--border);
+      color:var(--muted2); font-size:11px; font-weight:700; letter-spacing:.5px;
+      text-transform:uppercase; border-radius:8px; padding:10px 11px;
+      cursor:pointer; white-space:nowrap; transition:all .2s; flex-shrink:0;
+      line-height:1;
+    }
+    .upload-btn:hover { border-color:var(--accent); color:var(--accent); }
+    .upload-progress {
+      height:3px; background:var(--border); border-radius:2px;
+      margin-top:6px; overflow:hidden; display:none;
+    }
+    .upload-progress .bar {
+      height:100%; background:var(--accent); width:0%;
+      transition:width .3s; border-radius:2px;
+    }
+    .upload-progress.show { display:block; }
+
+    /* Médiathèque grid */
+    .media-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; }
+    .media-item {
+      background:var(--card2); border:1px solid var(--border); border-radius:10px;
+      overflow:hidden; cursor:pointer; transition:border-color .2s, transform .15s;
+      position:relative; group:true;
+    }
+    .media-item:hover { border-color:var(--accent); transform:scale(1.02); }
+    .media-item img, .media-item video {
+      width:100%; height:90px; object-fit:cover; display:block; background:var(--border);
+    }
+    .media-item-info { padding:7px 8px; }
+    .media-item-name { font-size:10px; color:var(--muted2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .media-item-size { font-size:9px; color:var(--muted); margin-top:2px; }
+    .media-item-del {
+      position:absolute; top:5px; right:5px;
+      background:rgba(0,0,0,.7); border:1px solid #ff2d5560; color:var(--red);
+      border-radius:5px; padding:2px 5px; font-size:10px; cursor:pointer;
+      opacity:0; transition:opacity .15s;
+    }
+    .media-item:hover .media-item-del { opacity:1; }
+    .media-copy-badge {
+      position:absolute; bottom:0; left:0; right:0;
+      background:rgba(255,239,77,.95); color:#000; font-size:10px; font-weight:700;
+      text-align:center; padding:3px; display:none;
+    }
+    .media-item:hover .media-copy-badge { display:block; }
+
     /* Mobile sidebar toggle */
     .mob-toggle { display:none; }
     @media(max-width:700px) {
@@ -254,6 +304,7 @@
       <div class="sb-section">Contenu</div>
       <div class="sb-item active" data-panel="dashboard"><span class="icon">📊</span>Tableau de bord</div>
       <div class="sb-item" data-panel="articles"><span class="icon">📰</span>Articles <span class="sb-badge" id="sb-art-count" style="display:none">0</span></div>
+      <div class="sb-item" data-panel="media"><span class="icon">🖼️</span>Médiathèque</div>
       <div class="sb-item" data-panel="clips"><span class="icon">🎬</span>Clips</div>
       <div class="sb-item" data-panel="events"><span class="icon">📅</span>Événements</div>
       <div class="sb-item" data-panel="artists"><span class="icon">🎤</span>Artistes</div>
@@ -437,8 +488,14 @@
             <option value="afrique">🌍 Afrique (autre)</option>
           </select>
         </div>
-        <div class="field col-span-2"><label>Image URL (optionnel)</label>
-          <input id="evt-image" placeholder="https://…" oninput="previewImg(this,'evt-img-prev')">
+        <div class="field col-span-2"><label>Image (URL ou fichier depuis l'appareil)</label>
+          <div class="upload-group">
+            <input id="evt-image" placeholder="https://… ou choisir un fichier →" oninput="previewImg(this,'evt-img-prev')">
+            <label class="upload-btn" for="evt-image-file">📁 Fichier</label>
+            <input type="file" id="evt-image-file" accept="image/*" style="display:none"
+              onchange="uploadFile(this,'evt-image','evt-img-prev','evt-upload-bar')">
+          </div>
+          <div class="upload-progress" id="evt-upload-bar"><div class="bar"></div></div>
           <img id="evt-img-prev" class="img-preview">
         </div>
         <div class="field col-span-2"><label>Lien billetterie (optionnel)</label><input id="evt-ticket" placeholder="https://…"></div>
@@ -497,8 +554,14 @@
         <div class="field"><label>Écoutes / mois</label><input type="text" id="af-streams" placeholder="500K écoutes/mois"></div>
         <div class="field"><label>Prix / Récompense</label><input type="text" id="af-award" placeholder="🏆 PRIMUD 2025"></div>
         <div class="field"><label>Couleur accent</label><input type="text" id="af-color" placeholder="#FF6B35"></div>
-        <div class="field col-span-2"><label>Photo URL</label>
-          <input type="url" id="af-image" placeholder="https://..." oninput="previewImg(this,'af-img-prev')">
+        <div class="field col-span-2"><label>Photo (URL ou fichier depuis l'appareil)</label>
+          <div class="upload-group">
+            <input type="url" id="af-image" placeholder="https://… ou choisir un fichier →" oninput="previewImg(this,'af-img-prev')">
+            <label class="upload-btn" for="af-image-file">📁 Fichier</label>
+            <input type="file" id="af-image-file" accept="image/*" style="display:none"
+              onchange="uploadFile(this,'af-image','af-img-prev','af-upload-bar')">
+          </div>
+          <div class="upload-progress" id="af-upload-bar"><div class="bar"></div></div>
           <img id="af-img-prev" class="img-preview">
         </div>
         <div class="field col-span-2"><label>Bio</label><textarea id="af-bio" rows="3" placeholder="Présentation de l'artiste…"></textarea></div>
@@ -571,6 +634,50 @@
     </div>
   </div>
 
+  <!-- ── MÉDIATHÈQUE ──────────────────────────────────────────── -->
+  <div class="panel" id="panel-media">
+    <div class="panel-title">Médiathèque</div>
+    <div class="panel-sub">Toutes les images et vidéos uploadées depuis ton appareil</div>
+
+    <div class="section-header" style="margin-bottom:16px">
+      <div class="section-label" style="margin:0">Uploader un fichier</div>
+      <button class="btn btn-ghost btn-sm" onclick="loadMediaLibrary()">🔄 Actualiser</button>
+    </div>
+
+    <!-- Zone de drop -->
+    <div id="media-drop-zone" style="
+      border:2px dashed var(--border); border-radius:12px;
+      padding:40px 20px; text-align:center; margin-bottom:20px;
+      transition:border-color .2s, background .2s; cursor:pointer;
+    " onclick="document.getElementById('media-file-bulk').click()"
+      ondragover="event.preventDefault();this.style.borderColor='var(--accent)';this.style.background='#FFEF4D08'"
+      ondragleave="this.style.borderColor='var(--border)';this.style.background=''"
+      ondrop="handleDrop(event)">
+      <div style="font-size:36px;margin-bottom:12px">🖼️</div>
+      <p style="font-size:14px;font-weight:600;margin-bottom:6px">Glisse &amp; dépose ou clique pour choisir</p>
+      <p style="font-size:12px;color:var(--muted2)">Images : JPG, PNG, GIF, WebP, SVG &nbsp;·&nbsp; Vidéos : MP4, MOV, WebM</p>
+      <input type="file" id="media-file-bulk" accept="image/*,video/*" multiple style="display:none"
+        onchange="uploadMultiple(this)">
+    </div>
+
+    <!-- Statut d'upload -->
+    <div id="media-upload-status" style="display:none;margin-bottom:16px;padding:12px 16px;background:var(--card);border-radius:8px;border:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="spinner"></span>
+        <span id="media-upload-text" style="font-size:13px">Upload en cours…</span>
+      </div>
+      <div class="upload-progress show" style="margin-top:8px"><div class="bar" id="media-bar"></div></div>
+    </div>
+
+    <!-- Grille de médias -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="section-label" style="margin:0">Fichiers uploadés <span id="media-count" style="color:var(--muted2);font-weight:normal">(chargement…)</span></div>
+    </div>
+    <div id="media-grid" class="media-grid">
+      <p style="color:var(--muted2);font-size:13px;grid-column:1/-1">Cliquez sur Actualiser pour charger les fichiers.</p>
+    </div>
+  </div>
+
   <!-- ── PARAMÈTRES ─────────────────────────────────────────── -->
   <div class="panel" id="panel-settings">
     <div class="panel-title">Paramètres</div>
@@ -622,8 +729,14 @@
       <label>Image principale</label>
       <div style="display:flex;gap:8px;align-items:flex-start">
         <div style="flex:1">
-          <input type="url" id="am-image" placeholder="https://images.unsplash.com/… ou autre URL image" oninput="previewImg(this,'am-img-prev')">
-          <p style="font-size:11px;color:var(--muted2);margin-top:5px">Colle l'URL d'une image depuis Unsplash, une source officielle, etc.</p>
+          <div class="upload-group">
+            <input type="url" id="am-image" placeholder="https://… ou uploader depuis l'appareil ci-contre" oninput="previewImg(this,'am-img-prev')">
+            <label class="upload-btn" for="am-image-file">📁 Fichier</label>
+            <input type="file" id="am-image-file" accept="image/*,video/*" style="display:none"
+              onchange="uploadFile(this,'am-image','am-img-prev','am-upload-bar')">
+          </div>
+          <div class="upload-progress" id="am-upload-bar"><div class="bar"></div></div>
+          <p style="font-size:11px;color:var(--muted2);margin-top:5px">URL d'image <em>ou</em> choisir un fichier depuis ton appareil (jpg, png, gif, webp, mp4…)</p>
         </div>
         <img id="am-img-prev" class="img-preview" style="width:140px;height:90px;flex-shrink:0;margin:0">
       </div>
@@ -737,6 +850,189 @@ function fmtDate(d) {
   catch { return d; }
 }
 
+function fmtSize(bytes) {
+  if (!bytes) return '';
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(0) + ' KB';
+  return (bytes/1024/1024).toFixed(1) + ' MB';
+}
+
+/* ══ UPLOAD DEPUIS L'APPAREIL ════════════════════════════ */
+
+// Lit un fichier en base64 (retourne une Promise)
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload  = e => resolve(e.target.result.split(',')[1]); // strip data:mime;base64,
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// Upload un seul fichier → remplit un champ URL + aperçu
+async function uploadFile(input, urlFieldId, previewId, progressBarId) {
+  const file = input.files[0];
+  if (!file) return;
+
+  // Vérification taille côté client (≤ 15 Mo)
+  if (file.size > 15 * 1024 * 1024) {
+    showToast('❌ Fichier trop grand (max 15 Mo)', 'var(--red)'); return;
+  }
+
+  const progressWrap = progressBarId ? document.getElementById(progressBarId) : null;
+  const progressBar  = progressWrap?.querySelector('.bar');
+  if (progressWrap) { progressWrap.classList.add('show'); }
+  if (progressBar)  { progressBar.style.width = '30%'; }
+
+  try {
+    const base64 = await fileToBase64(file);
+    if (progressBar) progressBar.style.width = '60%';
+
+    const r = await fetch(`${API}/api/upload`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+      body: JSON.stringify({ filename: file.name, data: base64, mimeType: file.type }),
+    });
+    const d = await r.json();
+
+    if (progressBar) progressBar.style.width = '100%';
+
+    if (d.url) {
+      const urlField = document.getElementById(urlFieldId);
+      if (urlField) { urlField.value = d.url; previewImg(d.url, previewId); }
+      showToast('✅ Fichier uploadé !');
+      setTimeout(() => {
+        if (progressWrap) { progressWrap.classList.remove('show'); if (progressBar) progressBar.style.width = '0%'; }
+      }, 1000);
+    } else {
+      showToast('❌ ' + (d.error || 'Erreur upload'), 'var(--red)');
+      if (progressWrap) progressWrap.classList.remove('show');
+    }
+  } catch (err) {
+    showToast('❌ ' + err.message, 'var(--red)');
+    if (progressWrap) progressWrap.classList.remove('show');
+  }
+
+  // reset input file pour pouvoir re-sélectionner le même fichier
+  input.value = '';
+}
+
+// Upload multiple fichiers (médiathèque)
+async function uploadMultiple(input) {
+  const files = Array.from(input.files);
+  if (!files.length) return;
+
+  const statusEl  = document.getElementById('media-upload-status');
+  const textEl    = document.getElementById('media-upload-text');
+  const barEl     = document.getElementById('media-bar');
+  statusEl.style.display = 'block';
+
+  let done = 0;
+  const errors = [];
+
+  for (const file of files) {
+    textEl.textContent = `Upload ${done + 1}/${files.length} : ${file.name}`;
+    barEl.style.width  = ((done / files.length) * 100) + '%';
+
+    if (file.size > 15 * 1024 * 1024) {
+      errors.push(`${file.name} : trop grand (max 15 Mo)`); done++; continue;
+    }
+
+    try {
+      const base64 = await fileToBase64(file);
+      const r = await fetch(`${API}/api/upload`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+        body: JSON.stringify({ filename: file.name, data: base64, mimeType: file.type }),
+      });
+      const d = await r.json();
+      if (!d.url) errors.push(`${file.name} : ${d.error || 'erreur'}`);
+    } catch (e) { errors.push(`${file.name} : ${e.message}`); }
+
+    done++;
+  }
+
+  barEl.style.width = '100%';
+  textEl.textContent = errors.length
+    ? `✅ ${done - errors.length} ok · ❌ ${errors.length} erreur(s) : ${errors.join(', ')}`
+    : `✅ ${done} fichier(s) uploadé(s) !`;
+
+  setTimeout(() => { statusEl.style.display = 'none'; barEl.style.width = '0%'; }, 3500);
+
+  input.value = '';
+  loadMediaLibrary();
+}
+
+// Drag & drop médiathèque
+async function handleDrop(event) {
+  event.preventDefault();
+  const zone = document.getElementById('media-drop-zone');
+  zone.style.borderColor = 'var(--border)';
+  zone.style.background  = '';
+
+  const dt = event.dataTransfer;
+  if (!dt || !dt.files.length) return;
+
+  // Simule input.files pour uploadMultiple
+  const fakeInput = { files: dt.files };
+  await uploadMultiple(fakeInput);
+}
+
+/* ══ MÉDIATHÈQUE ══════════════════════════════════════════ */
+async function loadMediaLibrary() {
+  const gridEl   = document.getElementById('media-grid');
+  const countEl  = document.getElementById('media-count');
+  if (!gridEl) return;
+  gridEl.innerHTML = '<p style="color:var(--muted2);font-size:13px;grid-column:1/-1">Chargement…</p>';
+
+  try {
+    const d = await fetch(`${API}/api/uploads`, { headers:{'x-admin-token':token} }).then(r => r.json());
+    const files = d.files || [];
+    countEl.textContent = `(${files.length} fichier${files.length > 1 ? 's' : ''})`;
+
+    if (!files.length) {
+      gridEl.innerHTML = '<p style="color:var(--muted2);font-size:13px;grid-column:1/-1">Aucun fichier uploadé pour l\'instant.</p>';
+      return;
+    }
+
+    gridEl.innerHTML = files.map(f => `
+      <div class="media-item" id="mi-${f.filename}">
+        ${f.type === 'video'
+          ? `<video src="${f.url}" muted style="width:100%;height:90px;object-fit:cover;display:block"></video>`
+          : `<img src="${f.url}" alt="${f.filename}" onerror="this.style.background='#1a1a2e';this.src=''">`
+        }
+        <button class="media-item-del" onclick="deleteMedia('${f.filename}')">✕</button>
+        <div class="media-copy-badge">📋 Copier l'URL</div>
+        <div class="media-item-info">
+          <div class="media-item-name">${f.filename}</div>
+          <div class="media-item-size">${fmtSize(f.size)}</div>
+        </div>
+      </div>
+    `).join('');
+
+    // Clic sur un item → copier l'URL
+    document.querySelectorAll('.media-item').forEach((el, i) => {
+      el.addEventListener('click', (e) => {
+        if (e.target.classList.contains('media-item-del')) return;
+        navigator.clipboard.writeText(files[i].url).then(() => showToast('📋 URL copiée !'));
+      });
+    });
+  } catch (e) {
+    gridEl.innerHTML = `<p style="color:var(--red);font-size:13px;grid-column:1/-1">Erreur : ${e.message}</p>`;
+  }
+}
+
+window.deleteMedia = async (filename) => {
+  if (!confirm(`Supprimer "${filename}" ?`)) return;
+  try {
+    await fetch(`${API}/api/uploads/${encodeURIComponent(filename)}`, { method:'DELETE', headers:{'x-admin-token':token} });
+    document.getElementById('mi-' + filename)?.remove();
+    showToast('🗑 Fichier supprimé');
+    const count = document.querySelectorAll('.media-item').length;
+    document.getElementById('media-count').textContent = `(${count} fichier${count > 1 ? 's' : ''})`;
+  } catch { showToast('❌ Erreur suppression', 'var(--red)'); }
+};
+
 /* ── Navigation ──────────────────────────────────────────── */
 function switchPanel(name) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -746,6 +1042,7 @@ function switchPanel(name) {
   document.getElementById('sidebar')?.classList.remove('open');
   if (name === 'articles') loadArticles();
   if (name === 'newsletter') loadSubscribers();
+  if (name === 'media') loadMediaLibrary();
 }
 
 document.querySelectorAll('.sb-item').forEach(item => {
