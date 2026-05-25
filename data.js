@@ -5,9 +5,9 @@
    =========================================================== */
 
 // Chargement dynamique des articles IA
-const API_BASE = window.location.hostname === 'localhost'
-  ? ''
-  : 'https://one-media-production.up.railway.app';
+// Toujours pointer vers Railway (même en local avec npx serve)
+// Si tu lances node server.js en local sur le port 3002, change en ''
+const API_BASE = 'https://one-media-production.up.railway.app';
 
 (function loadAIArticles() {
   fetch(`${API_BASE}/api/articles`)
@@ -28,12 +28,12 @@ const API_BASE = window.location.hostname === 'localhost'
 })();
 
 const CATEGORIES = [
-  { id: 'musique',   label: 'Musique',    color: '#00F5FF' },
-  { id: 'cinema',    label: 'Cinéma',     color: '#FF2D55' },
-  { id: 'mode',      label: 'Mode',       color: '#FFE500' },
-  { id: 'art',       label: 'Art',        color: '#BF5AF2' },
-  { id: 'lifestyle', label: 'Lifestyle',  color: '#30D158' },
-  { id: 'interview', label: 'Interviews', color: '#FF9500' },
+  { id: 'musique',   label: 'Musique',    color: '#FFEF4D' },
+  { id: 'cinema',    label: 'Cinéma',     color: '#7D39EB' },
+  { id: 'mode',      label: 'Mode',       color: '#C6FF33' },
+  { id: 'art',       label: 'Art',        color: '#7D39EB' },
+  { id: 'lifestyle', label: 'Lifestyle',  color: '#C6FF33' },
+  { id: 'interview', label: 'Interviews', color: '#ffffff' },
 ];
 
 const ARTICLES = [

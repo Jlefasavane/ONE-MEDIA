@@ -29,13 +29,13 @@
       cursor.style.width   = '14px';
       cursor.style.height  = '14px';
       follower.style.transform = 'translate(-50%,-50%) scale(1.6)';
-      follower.style.borderColor = 'rgba(0,245,255,.7)';
+      follower.style.borderColor = 'rgba(125,57,235,.8)';
     });
     el.addEventListener('mouseleave', () => {
       cursor.style.width   = '8px';
       cursor.style.height  = '8px';
       follower.style.transform = 'translate(-50%,-50%) scale(1)';
-      follower.style.borderColor = 'rgba(0,245,255,.4)';
+      follower.style.borderColor = 'rgba(125,57,235,.5)';
     });
   });
 
@@ -315,6 +315,7 @@ function renderArticleCard(a, opts = {}) {
   const heroGrid = document.getElementById('hero-grid');
   if (!heroGrid) return;
 
+  function renderHome() {
   /* HERO — sélection aléatoire à chaque visite */
   const allForHero = (window.ARTICLES || []).filter(a => a.title && a.image && a.excerpt);
   // Mélange Fisher-Yates (déterministe par session via seed basé sur la minute)
@@ -426,6 +427,10 @@ function renderArticleCard(a, opts = {}) {
       obs.observe(el);
     });
   }, 50);
+  } // end renderHome
+
+  renderHome();
+  window.addEventListener('articles-updated', renderHome);
 })();
 
 /* ═══════════════════════════════════════════════════
