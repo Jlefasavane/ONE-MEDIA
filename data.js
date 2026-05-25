@@ -19,10 +19,8 @@ const API_BASE = 'https://one-media-production.up.railway.app';
       const staticFallback = ARTICLES.filter(a => !aiIds.has(a.id));
       ARTICLES.length = 0;
       ARTICLES.push(...data.articles, ...staticFallback);
-      // Re-render si la page est déjà chargée
-      if (document.readyState === 'complete') {
-        window.dispatchEvent(new CustomEvent('articles-updated'));
-      }
+      // Re-render — toujours dispatcher, renderHome vérifie si le DOM est prêt
+      window.dispatchEvent(new CustomEvent('articles-updated'));
     })
     .catch(() => { /* Pas de serveur = articles statiques */ });
 })();

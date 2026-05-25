@@ -317,7 +317,7 @@ function renderArticleCard(a, opts = {}) {
 
   function renderHome() {
   /* HERO — sélection aléatoire à chaque visite */
-  const allForHero = (window.ARTICLES || []).filter(a => a.title && a.image && a.excerpt);
+  const allForHero = (ARTICLES || []).filter(a => a.title && a.image && a.excerpt);
   // Mélange Fisher-Yates (déterministe par session via seed basé sur la minute)
   const seed = Math.floor(Date.now() / 60000); // change chaque minute
   const rng  = (i) => ((seed * 1103515245 + i * 12345 + 7) >>> 0) / 0xFFFFFFFF;
