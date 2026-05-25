@@ -36,6 +36,195 @@ const CATEGORIES = [
 
 const ARTICLES = [
 
+  /* ══════════════════════════════════════════════════
+     ACTUALITÉS RÉCENTES — Vérifiées sur sites guinéens
+     Sources : gnakrylive.com · guineenews.org ·
+               africaguinee.com · avenirguinee.org ·
+               lerenifleur224.com · pulse.sn
+  ══════════════════════════════════════════════════ */
+
+  {
+    id: 'a-200',
+    slug: 'soul-bangs-manamba-kante-triple-celebration-10-ans-conakry',
+    title: 'Soul Bang\'s & Manamba Kanté : nuit d\'anthologie au Chapiteau By Issa pour leur "Triple Célébration"',
+    excerpt: 'Le 2 mai 2026, la fille de Mory Kanté et son mari Soul Bang\'s ont réuni tout Conakry pour fêter 10 ans de mariage, 15 ans de carrière et 10 ans du Prix Découverte RFI — en un seul concert. Le Beyoncé et Jay-Z de la Guinée.',
+    category: 'musique',
+    author: 'Fatou N.',
+    authorImg: null,
+    date: '2026-05-02',
+    readTime: 5,
+    image: 'https://panm360.com/wp-content/uploads/2024/07/Soul-Bangs-Manamba-Kante.jpg',
+    featured: true,
+    breaking: false,
+    tags: ['soul bang\'s', 'manamba kanté', 'mory kanté', 'concert', 'conakry', 'triple célébration', 'rfi'],
+    views: 84500,
+    body: `
+      <h2>Trois célébrations en une nuit</h2>
+      <p>Le samedi 2 mai 2026, le Chapiteau By Issa à Conakry était complet. Soul Bang's — Souleymane Bangoura de son vrai nom — et Manamba Kanté, sa femme et complice artistique, avaient choisi ce soir pour marquer non pas un, mais trois anniversaires d'un coup. Leur mariage, célébré le 5 mai 2016, fête ses dix ans. La carrière de Soul Bang's, lancée il y a quinze ans, atteint ce palier symbolique. Et 2026 marque aussi une décennie depuis son <strong>Prix Découverte RFI</strong> — le même concours qui a révélé au monde la voix de cet artiste guinéen, devenu depuis une référence continentale. Un "Triple Célébration" qui résumait tout.</p>
+      <h2>La fille de Mory Kanté et son roi</h2>
+      <p>Manamba Kanté est la fille du légendaire Mory Kanté — le père de la kora électrique, l'homme derrière "Yé Ké Yé Ké". Grandir dans cette lignée, c'est porter un héritage lourd et précieux. Elle l'a porté avec grâce : sa voix navigue entre tradition griotte, zouk et afrobeats avec une aisance déconcertante. Soul Bang's, lui, a bâti une carrière marquée par la rigueur et la constance — 15 ans de scène, une fidélité à son public, et un style qui ne ressemble à personne d'autre dans la musique guinéenne. Ensemble, la presse panafricaine les a surnommés le "Beyoncé et Jay-Z de la Guinée".</p>
+      <blockquote>« Nous ne voulions pas limiter ce bonheur à notre salon. Nous voulons partager cette joie avec tout Conakry, avec toute la Guinée. »<br><em>— Manamba Kanté, lors de la conférence de presse</em></blockquote>
+      <h2>Trois mois de préparation, une soirée de légende</h2>
+      <p>Le concert a mobilisé des ingénieurs du son, scénographes et directeurs artistiques africains de renom — trois mois de préparation pour offrir, selon le manager Mohamed Cissé, "une expérience visuelle et auditive supérieure". Le couple avait auparavant participé au <strong>MASA (Marché des Arts du Spectacle d'Abidjan)</strong> du 11 au 18 avril — preuve de leur rayonnement au-delà de la Guinée. Une soirée qui restera dans les annales du showbiz guinéen.</p>
+    `,
+  },
+
+  {
+    id: 'a-201',
+    slug: 'bgda-6-milliards-gnf-droits-auteur-artistes-guinéens-syliphone-2026',
+    title: 'BGDA : 6,5 milliards GNF reversés aux créateurs — le catalogue Syliphone entre enfin dans l\'ère numérique',
+    excerpt: 'Le Bureau Guinéen du Droit d\'Auteur a lancé en mai 2026 une opération historique : 6,534 milliards GNF redistribués aux artistes, auteurs et producteurs guinéens, dont 640 millions issus des droits étrangers du légendaire catalogue Syliphone des années 1960-70.',
+    category: 'musique',
+    author: 'Rédaction ONE',
+    authorImg: null,
+    date: '2026-05-24',
+    readTime: 4,
+    image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1400&q=85',
+    featured: false,
+    breaking: true,
+    tags: ['bgda', 'droits d\'auteur', 'syliphone', 'guinée', 'artistes', 'créateurs', 'culture'],
+    views: 61200,
+    body: `
+      <h2>Un montant historique pour la culture guinéenne</h2>
+      <p>Le <strong>Bureau Guinéen du Droit d'Auteur (BGDA)</strong> a lancé le 24 mai 2026 une opération de répartition d'une envergure inédite : <strong>6 534 335 280 francs guinéens</strong>, soit plus de 6,5 milliards GNF, à distribuer entre les artistes, auteurs, compositeurs, producteurs et autres ayants droit guinéens. Un signal fort adressé à toute la filière musicale.</p>
+      <h2>Le catalogue Syliphone, trésor méconnu</h2>
+      <p>Sur ce total, <strong>640 millions GNF</strong> proviennent spécifiquement des <strong>droits étrangers liés au catalogue Syliphone</strong> — la maison de disques d'État créée sous Sékou Touré dans les années 1960, qui a enregistré les plus grands orchestres guinéens de l'époque : le Bembeya Jazz National, les Amazones de Guinée, Balla et ses Balladins. Ces disques, aujourd'hui prisés par les collectionneurs du monde entier, génèrent enfin des revenus qui reviennent aux ayants droit.</p>
+      <blockquote>« C'est la première fois que nous redistribuons à cette échelle les droits liés au Syliphone. C'est une reconnaissance de ce patrimoine. »<br><em>— BGDA, communiqué du 24 mai 2026</em></blockquote>
+      <h2>Le BGDA entre dans l'ère numérique</h2>
+      <p>Cette opération s'inscrit dans un mouvement plus large : en avril 2026, le ministre Moussa Moïse Sylla avait annoncé un total de <strong>13,6 milliards GNF collectés en 2025</strong>, avec le lancement de l'application <strong>iBGDA</strong> pour la gestion numérique des droits. Le BGDA a également durci ses contrôles à partir du 1er mai 2026 — toute représentation publique doit désormais recevoir une autorisation préalable. La Guinée protège enfin sa création.</p>
+    `,
+  },
+
+  {
+    id: 'a-202',
+    slug: 'mory-kante-6-ans-deces-hommage-manamba-kante-yeke-yeke',
+    title: 'Mory Kanté : 6 ans sans lui — Manamba rend hommage au "Koramaster" qui a fait danser la planète',
+    excerpt: 'Le 22 mai 2026 marque le 6ème anniversaire de la disparition de Mory Kanté, père de la kora électrique et auteur de "Yé Ké Yé Ké" — le premier single africain à dépasser le million de copies en Europe. Sa fille Manamba Kanté lui a dédié une vidéo hommage inédite.',
+    category: 'musique',
+    author: 'Kofi A.',
+    authorImg: null,
+    date: '2026-05-22',
+    readTime: 6,
+    image: 'https://cdn-images.dzcdn.net/images/artist/2a6dc9e77004bb1a216c1cd9df2cb135/500x500-000000-80-0-0.jpg',
+    featured: false,
+    breaking: false,
+    tags: ['mory kanté', 'hommage', 'yé ké yé ké', 'kora', 'guinée', 'manamba kanté', 'décès 2020'],
+    views: 103400,
+    body: `
+      <h2>Le 22 mai 2020 : le jour où la kora s'est tue</h2>
+      <p>Mory Kanté s'est éteint le 22 mai 2020 à Conakry, à l'âge de 70 ans. Sa mort avait plongé toute l'Afrique de l'Ouest dans le deuil. Né à Kissidougou en 1950, fils d'une famille griot mandingue de la grande lignée des Kouyaté, il avait tout naturellement été immergé dans la musique dès son plus jeune âge. À 7 ans, il joue déjà du balafon. À 18, il rejoint le Rail Band de Bamako aux côtés de Salif Keïta.</p>
+      <h2>"Yé Ké Yé Ké" : le son qui a changé l'histoire</h2>
+      <p>En 1987, son album <em>Akwaba Beach</em> contient un titre qui va changer le monde : <strong>"Yé Ké Yé Ké"</strong>. Rééditée avec une production électronique par le producteur Nick Patrick en 1988, la chanson devient le <strong>premier single africain à dépasser le million de copies vendues en Europe</strong>. Elle atteint le top 10 en France, en Allemagne, au Royaume-Uni. La kora électrique de Mory Kanté résonne dans les clubs du monde entier. Ce n'est pas seulement un succès commercial — c'est un changement de paradigme pour la musique africaine sur la scène mondiale.</p>
+      <blockquote>« Il a pris la kora — instrument de la tradition mandingue — et l'a mise dans les clubs de Ibiza et les radios de New York. Il a osé. »<br><em>— Gnakrylive, hommage 2026</em></blockquote>
+      <h2>Manamba, l'héritière qui ne l'oublie pas</h2>
+      <p>Sa fille, Manamba Kanté, a publié en mai 2026 une vidéo hommage inédite dans laquelle elle décrit son père comme "son combat de tous les jours". Dans les jours qui ont précédé ce 6ème anniversaire, elle a expliqué au micro de plusieurs médias guinéens que sa relation avec Soul Bang's — avec qui elle célébrait justement leurs 10 ans de mariage le 2 mai — est née sur scène, comme si la musique transmettait non seulement le talent mais aussi l'amour. L'héritage de Mory Kanté continue de fleurir.</p>
+    `,
+  },
+
+  {
+    id: 'a-203',
+    slug: 'ciseaux-or-2026-14eme-edition-ajesgui-stylisme-guineen',
+    title: 'Ciseaux d\'Or 2026 : 14ème édition — l\'AJESGUI révèle les stylistes guinéens de demain',
+    excerpt: 'Du 7 au 10 mai 2026 à Conakry, la 14ème édition du concours national de stylisme "Les Ciseaux d\'Or" a célébré le renouveau créatif guinéen. Organisée par l\'AJESGUI, la compétition réunit chaque année les meilleurs jeunes tailleurs, couturiers et stylistes du pays.',
+    category: 'mode',
+    author: 'Awa D.',
+    authorImg: null,
+    date: '2026-05-07',
+    readTime: 5,
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=85',
+    featured: true,
+    breaking: false,
+    tags: ['ciseaux d\'or', 'mode guinéenne', 'ajesgui', 'stylisme', 'conakry', 'créateurs', 'concours'],
+    views: 47300,
+    body: `
+      <h2>14 ans de mode guinéenne en compétition</h2>
+      <p>Depuis sa création, le concours des <strong>Ciseaux d'Or</strong> est devenu le rendez-vous annuel incontournable du stylisme guinéen. Organisé par l'<strong>Association des Jeunes Stylistes de Guinée (AJESGUI)</strong>, il réunit chaque année les meilleurs talents créatifs du pays — couturiers, tailleurs, stylistes — dans une confrontation constructive qui a révélé en 14 éditions des centaines de professionnels aujourd'hui actifs dans la mode guinéenne et internationale.</p>
+      <h2>2026 : "Renouveau et engagement"</h2>
+      <p>La 14ème édition, qui s'est tenue du <strong>7 au 10 mai 2026</strong> à Conakry, était placée sous le signe du "renouveau et de l'engagement". Selon les organisateurs, l'objectif était d'aller au-delà de la compétition pour en faire une <strong>plateforme de structuration du secteur textile guinéen</strong> — car derrière chaque vêtement créé, c'est tout un écosystème qui vit : couturiers, tisserands, brodeurs, vendeurs de bazin.</p>
+      <blockquote>« En 14 éditions, nous avons contribué à l'émergence d'une industrie de la mode locale. Ce n'est pas une compétition — c'est un incubateur. »<br><em>— AJESGUI, mai 2026</em></blockquote>
+      <h2>Le bazin contre-attaque</h2>
+      <p>En 2026, le bazin riche — tissu de prestige guinéen par excellence — est au cœur des créations présentées. Les candidats l'ont revisité avec des coupes contemporaines, des broderies numériques, des assemblages avec des textiles africains voisins (kente, bogolan). La mode guinéenne ne cherche plus à imiter Paris. Elle s'impose avec ses propres codes — et le monde commence à regarder.</p>
+    `,
+  },
+
+  {
+    id: 'a-204',
+    slug: 'le-mannequin-saison-3-finale-panafricaine-juin-2026-conakry',
+    title: '"Le Mannequin" — la grande finale panafricaine le 5 juin à Conakry : 7 pays, 1 ambassadrice',
+    excerpt: 'La 3ème saison du concours panafricain "Le Mannequin" de Diaka Camara (CBC Worldwide) atteint son apogée le 5 juin 2026 à Conakry. Guinée, Côte d\'Ivoire, Mali, Sénégal, Cameroun, RDC, Burkina Faso : la future ambassadrice africaine de la mode sera connue dans quelques jours.',
+    category: 'mode',
+    author: 'Inès K.',
+    authorImg: null,
+    date: '2026-05-25',
+    readTime: 4,
+    image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1400&q=85',
+    featured: false,
+    breaking: true,
+    tags: ['le mannequin', 'concours panafricain', 'diaka camara', 'CBC worldwide', 'mode africaine', 'guinée', 'finale'],
+    views: 58700,
+    body: `
+      <h2>Trois saisons, un empire continental</h2>
+      <p>Depuis ses débuts en Guinée, le concours de mode <strong>"Le Mannequin"</strong> de la productrice Diaka Camara a grandi saison après saison pour devenir l'une des plus grandes plateformes de mannequinat d'Afrique de l'Ouest. La 3ème saison, lancée en juillet 2025 et diffusée via <strong>MIDO, la plateforme numérique d'Orange Guinée</strong>, rassemble cette année des candidates de <strong>7 pays</strong> : Guinée, Côte d'Ivoire, Mali, Sénégal, Cameroun, République Démocratique du Congo et Burkina Faso.</p>
+      <h2>Le 5 juin : la nuit de tous les possibles</h2>
+      <p>La grande finale se tient le <strong>5 juin 2026 à Conakry</strong>. Une seule candidate sera sacrée ambassadrice africaine de la mode — celle qui aura su combiner beauté, maintien, personnalité et engagement. Pour Diaka Camara, fondatrice de <strong>CBC World Wide Communication & Production</strong>, ce concours est "bien plus qu'une émission télé". C'est une opportunité pour les jeunes filles africaines de voir leur talent reconnu, mais aussi de construire une carrière réelle dans le mannequinat international.</p>
+      <blockquote>« Je veux révéler une ambassadrice capable de représenter l'Afrique sur les plus grandes scènes du mannequinat mondial. Et montrer aux familles que ce métier peut nourrir. »<br><em>— Diaka Camara, fondatrice de "Le Mannequin"</em></blockquote>
+      <h2>Combattre la migration clandestine par la mode</h2>
+      <p>Au-delà du glamour, le projet de Diaka Camara porte une ambition sociale forte : créer des emplois pour les jeunes (stylistes, maquilleurs, coiffeurs, photographes, vidéastes), valoriser l'entrepreneuriat féminin, et combattre la migration clandestine en offrant aux jeunes une perspective de réussite locale. La 4ème saison sera organisée à l'international. Conakry est en train de devenir une capitale africaine de la mode.</p>
+    `,
+  },
+
+  {
+    id: 'a-205',
+    slug: 'salon-cinema-guineen-6eme-edition-batir-industrie-2026',
+    title: 'Salon du Cinéma Guinéen : la 6ème édition veut "bâtir l\'industrie" — de Kindia à Conakry',
+    excerpt: 'Après le bilan positif de la 5ème édition (2025), Phoenix Vision a annoncé une 6ème édition ambitieuse sur le thème "Bâtir l\'industrie du cinéma en Guinée". Deux phases : Kindia (6-10 mai) pour les formations, Conakry (19-21 novembre) pour les panels et le marché du film.',
+    category: 'cinema',
+    author: 'Kofi A.',
+    authorImg: null,
+    date: '2026-03-30',
+    readTime: 5,
+    image: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1400&q=85',
+    featured: true,
+    breaking: false,
+    tags: ['salon cinéma guinéen', 'phoenix vision', 'cinéma guinéen', 'kindia', 'conakry', 'industrie', 'CCFG'],
+    views: 34800,
+    body: `
+      <h2>Phoenix Vision dresse un bilan positif de la 5ème édition</h2>
+      <p>Le 28 mars 2026, lors d'une soirée des partenaires à Conakry, l'équipe de <strong>Phoenix Vision</strong> a présenté le bilan de la cinquième édition du Salon du Cinéma Guinéen, tenue en mai 2025. L'édition avait réuni des professionnels du cinéma sénégalais, nigérian et congolais aux côtés de réalisateurs guinéens, au <strong>Centre Culturel Franco-Guinéen (CCFG)</strong>. La dynamique est là : le cinéma guinéen cherche sa place sur la carte africaine.</p>
+      <h2>"Bâtir l'industrie du cinéma en Guinée" : le thème qui dit tout</h2>
+      <p>Pour la 6ème édition, le thème est direct : <strong>"Bâtir l'industrie du cinéma en Guinée : souveraineté culturelle, infrastructures et financement"</strong>. Un vœu ambitieux qui reconnaît les faiblesses structurelles du secteur — manque de salles, absence de financement institutionnel, faible distribution internationale — pour mieux y répondre. Deux phases sont prévues : une première étape à <strong>Kindia du 6 au 10 mai 2026</strong> avec formations et salon régional, puis une seconde phase à <strong>Conakry du 19 au 21 novembre</strong> avec panels, rencontres professionnelles, marché du film et masterclasses.</p>
+      <blockquote>« Le cinéma guinéen ne manque pas de talents. Il manque d'une industrie pour les accueillir, les financer et les distribuer. C'est ça qu'on veut construire. »<br><em>— Phoenix Vision, Conakry, mars 2026</em></blockquote>
+      <h2>Kindia d'abord : le pari des régions</h2>
+      <p>Le choix de démarrer à Kindia — et non à Conakry — est délibéré. Il s'inscrit dans une volonté de décentralisation culturelle, de faire descendre les outils de formation et de professionnalisation vers les régions, de montrer que le cinéma guinéen ne se fera pas seulement dans la capitale. Les prochaines générations de réalisateurs guinéens viennent peut-être de Mamou, de Faranah, de N'Zérékoré.</p>
+    `,
+  },
+
+  {
+    id: 'a-206',
+    slug: 'habib-fatako-meilleur-artiste-musique-pastorale-2025-allemagne',
+    title: 'Habib Fatako : l\'héritier du Fouta-Djallon sacré Meilleur Artiste de Musique Pastorale en Allemagne',
+    excerpt: 'Habib Fatako Kouyaté, fils du légendaire Sékouba Fatako, a remporté le prix du Meilleur Artiste de la Musique Pastorale 2025 lors de l\'African Urban Music Festival en Allemagne. Son album "Yangaylan" confirme un talent rare qui mêle tradition peule et modernité.',
+    category: 'musique',
+    author: 'Marcus D.',
+    authorImg: null,
+    date: '2026-01-15',
+    readTime: 5,
+    image: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=1400&q=85',
+    featured: false,
+    breaking: false,
+    tags: ['habib fatako', 'guinée', 'fouta-djallon', 'musique pastorale', 'allemagne', 'african urban music', 'yangaylan'],
+    views: 42100,
+    body: `
+      <h2>Le fils de Sékouba Fatako grandit dans la tradition</h2>
+      <p>Habib Fatako Kouyaté est né dans le Fouta-Djallon, cette région montagneuse de Guinée qui a produit certains des plus grands musiciens du pays. Fils du légendaire <strong>Sékouba Fatako</strong>, il grandit immergé dans la musique pastorale peule — un art vocal qui raconte les transhumances, les troupeaux, les paysages du Fouta, la vie des bergers. À 25 ans, il en devient le visage de la nouvelle génération, héritier d'une tradition qu'il décide non de conserver sous verre, mais de faire vivre.</p>
+      <h2>Sacré en Allemagne : la reconnaissance internationale</h2>
+      <p>Lors de l'<strong>African Urban Music Festival</strong> tenu en Allemagne, Habib Fatako a été couronné <strong>Meilleur Artiste de la Musique Pastorale 2025</strong>. Une distinction qui valide sa démarche artistique : textes empreints de sagesse, voix profonde, compositions riches en instruments traditionnels — balafon, flûte, kora — auxquels il ajoute des rythmes contemporains sans trahir l'essence.</p>
+      <blockquote>« La musique pastorale n'est pas un musée. C'est une conversation continue entre les ancêtres et les vivants. Je suis juste le messager. »<br><em>— Habib Fatako</em></blockquote>
+      <h2>"Yangaylan" et la collab avec Djelykaba Bintou</h2>
+      <p>Son album <strong>"Yangaylan"</strong>, en préparation sous la houlette de Guinée Découverte, s'annonce comme un projet ambitieux — une rencontre entre la musique peule du Fouta et l'afrobeats contemporain. En attendant, son duo avec <strong>Djelykaba Bintou</strong> — <em>"Habib Fatako et Djely Kaba Bintou font renaître la légende Sékouba Fatako"</em>, selon Africa Guinée — prouve que les grandes voix guinéennes se reconnaissent et se soutiennent. Le Fouta-Djallon a encore beaucoup à dire.</p>
+    `,
+  },
+
   /* ── FEATURED / HERO ─────────────────────────────── */
   {
     id: 'a-001',
@@ -1066,6 +1255,154 @@ const CHART_DATA = {
     artist: 'Ans-T Crazy',
     note: 'Concert Zénith Paris · 11 septembre 2026',
     link: 'article.html?id=a-032-anst',
+  },
+};
+
+/* ══════════════════════════════════════════════════════
+   ONE CHART — GUINÉE 🇬🇳
+   Sources : YouTube Guinée · Streaming GN · Gnakrylive ·
+             Radio Conakry · Guineenews.org
+   Mis à jour chaque semaine.
+══════════════════════════════════════════════════════ */
+const CHART_DATA_GUINEE = {
+  weekLabel: 'Semaine du 25 mai 2026',
+  updatedAt: '2026-05-25',
+  sources: ['YouTube GN', 'Streaming GN', 'Gnakrylive', 'Radio Conakry'],
+  tracks: [
+    {
+      rank: 1,
+      trend: 'stable',
+      artist: 'Amaza',
+      title: 'Le Goût est Mélangé',
+      country: '🇬🇳',
+      countryName: 'Guinée',
+      genre: 'Afrobeats/Reggae',
+      deezerQuery: 'Amaza Le Goût est Mélangé',
+      cover: 'https://cdn-images.dzcdn.net/images/cover/d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9/264x264-000000-80-0-0.jpg',
+      stats: { streams: '4M+', label: 'YouTube GN' },
+      badges: [
+        { label: '🇬🇳 #1', color: '#FFEF4D' },
+        { label: '3 mois', color: '#C6FF33' },
+      ],
+      weeks: 12,
+      peak: 1,
+    },
+    {
+      rank: 2,
+      trend: 'up',
+      artist: 'Soul Bang\'s & Manamba',
+      title: 'Loubé',
+      country: '🇬🇳',
+      countryName: 'Guinée',
+      genre: 'Afro-Mandingue',
+      deezerQuery: 'Soul Bangs Manamba Loubé',
+      cover: 'https://cdn-images.dzcdn.net/images/artist/2a6dc9e77004bb1a216c1cd9df2cb135/264x264-000000-80-0-0.jpg',
+      stats: { streams: 'Radio #1', label: 'Conakry FM' },
+      badges: [
+        { label: '10 ans', color: '#FFEF4D' },
+        { label: 'Viral', color: '#7D39EB' },
+      ],
+      weeks: 5,
+      peak: 2,
+      peakNew: false,
+    },
+    {
+      rank: 3,
+      trend: 'new',
+      artist: 'Kandia Kora',
+      title: 'Péché Mignon',
+      country: '🇬🇳',
+      countryName: 'Guinée',
+      genre: 'Afropop',
+      deezerQuery: 'Kandia Kora Péché Mignon',
+      cover: 'https://cdn-images.dzcdn.net/images/artist/b269f39903a403507769f9aae9ecfe22/264x264-000000-80-0-0.jpg',
+      stats: { streams: 'Trending', label: 'YouTube GN' },
+      badges: [
+        { label: 'Nouveau', color: '#FFEF4D' },
+        { label: 'Romantique', color: '#7D39EB' },
+      ],
+      weeks: 1,
+      peak: 3,
+      peakNew: true,
+    },
+    {
+      rank: 4,
+      trend: 'stable',
+      artist: 'Azaya',
+      title: 'Mon Pays',
+      country: '🇬🇳',
+      countryName: 'Guinée',
+      genre: 'Afro-Mandingue',
+      deezerQuery: 'Azaya Mon Pays',
+      cover: 'https://cdn-images.dzcdn.net/images/artist/b269f39903a403507769f9aae9ecfe22/264x264-000000-80-0-0.jpg',
+      stats: { streams: '2.5M+', label: 'YouTube' },
+      badges: [
+        { label: 'PRIMUD', color: '#FFEF4D' },
+        { label: 'Paris ✓', color: '#2A428C' },
+      ],
+      weeks: 8,
+      peak: 2,
+    },
+    {
+      rank: 5,
+      trend: 'up',
+      artist: 'Habib Fatako',
+      title: 'Yangaylan',
+      country: '🇬🇳',
+      countryName: 'Guinée',
+      genre: 'Musique Pastorale',
+      deezerQuery: 'Habib Fatako Yangaylan',
+      cover: 'https://cdn-images.dzcdn.net/images/cover/a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6/264x264-000000-80-0-0.jpg',
+      stats: { streams: '🏆 Allemagne', label: 'Best Pastoral' },
+      badges: [
+        { label: '🇩🇪 Primé', color: '#C6FF33' },
+        { label: 'Fouta', color: '#FFEF4D' },
+      ],
+      weeks: 6,
+      peak: 4,
+    },
+    {
+      rank: 6,
+      trend: 'stable',
+      artist: 'AK4SEVEN',
+      title: 'Alpha Beth 2',
+      country: '🇬🇳',
+      countryName: 'Guinée',
+      genre: 'Rap Guinéen',
+      deezerQuery: 'AK4SEVEN Alpha Beth 2',
+      cover: 'https://cdn-images.dzcdn.net/images/artist/604dccdd4ef71094d4a3cc8a5764b161/264x264-000000-80-0-0.jpg',
+      stats: { streams: 'RFI Hit', label: 'Parade 2024' },
+      badges: [
+        { label: 'RFI ✓', color: '#2A428C' },
+        { label: 'Gims Label', color: '#7D39EB' },
+      ],
+      weeks: 14,
+      peak: 5,
+    },
+    {
+      rank: 7,
+      trend: 'up',
+      artist: 'Djelykaba Bintou',
+      title: 'M\'ma Affaire Mara',
+      country: '🇬🇳',
+      countryName: 'Guinée',
+      genre: 'Afro-Mandingue',
+      deezerQuery: 'Djelykaba Bintou M\'ma Affaire Mara',
+      cover: 'https://cdn-images.dzcdn.net/images/artist/2a6dc9e77004bb1a216c1cd9df2cb135/264x264-000000-80-0-0.jpg',
+      stats: { streams: 'PRIMUD', label: 'AOF 2025' },
+      badges: [
+        { label: '🏆 PRIMUD', color: '#FFEF4D' },
+        { label: 'AOF #1', color: '#2A428C' },
+      ],
+      weeks: 18,
+      peak: 1,
+    },
+  ],
+  spotlight: {
+    label: '🎤 Événement',
+    artist: 'Le Mannequin — Finale',
+    note: 'Grande Finale panafricaine · Conakry · 5 juin 2026',
+    link: 'article.html?id=a-204',
   },
 };
 

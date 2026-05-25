@@ -2366,7 +2366,12 @@ img[loading="lazy"][data-loaded] {
   align-items: flex-end;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .chart-header { align-items: flex-start; flex-direction: column; }
+  .chart-tabs-bar { width: 100%; }
+  .chart-tab { flex: 1; text-align: center; font-size: 11px; padding: 7px 10px; }
 }
 .chart-title-block { display: flex; flex-direction: column; gap: 6px; }
 .chart-title-block h2 {
@@ -2503,6 +2508,37 @@ img[loading="lazy"][data-loaded] {
   background: var(--signal);
   color: #000;
   border-color: var(--signal);
+}
+
+/* ── CHART — tabs bar ───────────────────────────────────── */
+.chart-tabs-bar {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+.chart-tab {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink-mute);
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s;
+  white-space: nowrap;
+}
+.chart-tab:hover {
+  border-color: var(--ebony);
+  color: var(--ink);
+}
+.chart-tab.active {
+  background: var(--ebony);
+  border-color: var(--ebony);
+  color: var(--signal);
 }
 
 /* ── CHART — new sub-elements ───────────────────────────── */

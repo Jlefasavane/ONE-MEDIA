@@ -439,85 +439,107 @@ function renderArticleCard(a, opts = {}) {
              Spotify · Billboard Hot 100
 ═══════════════════════════════════════════════════ */
 (function initChart() {
-  const list  = document.getElementById('chart-list');
-  const label = document.getElementById('chart-week-label');
+  const list   = document.getElementById('chart-list');
+  const label  = document.getElementById('chart-week-label');
+  const srcEl  = document.getElementById('chart-sources');
+  const tabs   = document.querySelectorAll('.chart-tab');
   if (!list || typeof CHART_DATA === 'undefined') return;
 
-  if (label) label.textContent = CHART_DATA.weekLabel;
+  const CHARTS = {
+    afrique: CHART_DATA,
+    guinee:  (typeof CHART_DATA_GUINEE !== 'undefined') ? CHART_DATA_GUINEE : null,
+  };
 
   const TREND_ICON  = { up: '↑', down: '↓', stable: '—', new: 'NEW' };
   const TREND_CLASS = { up: 'trend-up', down: 'trend-down', stable: 'trend-stable', new: 'trend-new' };
+  const FALLBACK_IMG = 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=56&h=56&fit=crop&q=60';
 
-  // Source pills header
-  const srcEl = document.getElementById('chart-sources');
-  if (srcEl && CHART_DATA.sources) {
-    srcEl.innerHTML = CHART_DATA.sources.map(s =>
-      `<span class="chart-source-pill">${s}</span>`
-    ).join('');
-  }
+  function renderChart(data) {
+    if (!data) return;
 
-  list.innerHTML = CHART_DATA.tracks.map(t => {
-    const badges = (t.badges || []).map(b =>
-      `<span class="chart-badge" style="--badge-color:${b.color}">${b.label}</span>`
-    ).join('');
-    const peakMark = t.peakNew
-      ? `<span class="chart-peak chart-peak--new">▲ Nouveau</span>`
-      : (t.peak === t.rank ? `<span class="chart-peak chart-peak--top">◆ Peak</span>` : '');
+    if (label) label.textContent = data.weekLabel;
 
-    return `
-    <div class="chart-item" data-query="${encodeURIComponent(t.deezerQuery)}" data-rank="${t.rank}">
-      <div class="chart-rank-block">
-        <div class="chart-rank">${String(t.rank).padStart(2, '0')}</div>
-        <div class="chart-trend ${TREND_CLASS[t.trend]}">${TREND_ICON[t.trend]}</div>
-      </div>
-      <div class="chart-cover">
-        <img src="${t.cover}" alt="${t.artist}" loading="lazy"
-             onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=56&h=56&fit=crop&q=60'">
-      </div>
-      <div class="chart-info">
-        <div class="chart-artist-row">
-          <span class="chart-artist">${t.artist}</span>
-          <span class="chart-country-flag" title="${t.countryName||''}">${t.country}</span>
+    if (srcEl && data.sources) {
+      srcEl.innerHTML = data.sources.map(s =>
+        `<span class="chart-source-pill">${s}</span>`
+      ).join('');
+    }
+
+    list.innerHTML = data.tracks.map(t => {
+      const badges = (t.badges || []).map(b =>
+        `<span class="chart-badge" style="--badge-color:${b.color}">${b.label}</span>`
+      ).join('');
+      const peakMark = t.peakNew
+        ? `<span class="chart-peak chart-peak--new">▲ Nouveau</span>`
+        : (t.peak === t.rank ? `<span class="chart-peak chart-peak--top">◆ Peak</span>` : '');
+
+      return `
+      <div class="chart-item" data-query="${encodeURIComponent(t.deezerQuery)}" data-rank="${t.rank}">
+        <div class="chart-rank-block">
+          <div class="chart-rank">${String(t.rank).padStart(2, '0')}</div>
+          <div class="chart-trend ${TREND_CLASS[t.trend]}">${TREND_ICON[t.trend]}</div>
         </div>
-        <div class="chart-track">${t.title}</div>
-        <div class="chart-badges-row">${badges}${peakMark}</div>
-      </div>
-      <div class="chart-stats">
-        <div class="chart-stat-number">${t.stats?.streams || ''}</div>
-        <div class="chart-stat-label">${t.stats?.label || ''}</div>
-        <div class="chart-weeks">${t.weeks} sem.</div>
-      </div>
-      <button class="chart-play-btn" aria-label="Écouter ${t.title} de ${t.artist}">
-        <svg width="12" height="14" viewBox="0 0 12 14" fill="currentColor"><path d="M0 0l12 7-12 7z"/></svg>
-      </button>
-    </div>`;
-  }).join('');
+        <div class="chart-cover">
+          <img src="${t.cover}" alt="${t.artist}" loading="lazy"
+               onerror="this.src='${FALLBACK_IMG}'">
+        </div>
+        <div class="chart-info">
+          <div class="chart-artist-row">
+            <span class="chart-artist">${t.artist}</span>
+            <span class="chart-country-flag" title="${t.countryName||''}">${t.country}</span>
+          </div>
+          <div class="chart-track">${t.title}</div>
+          <div class="chart-badges-row">${badges}${peakMark}</div>
+        </div>
+        <div class="chart-stats">
+          <div class="chart-stat-number">${t.stats?.streams || ''}</div>
+          <div class="chart-stat-label">${t.stats?.label || ''}</div>
+          <div class="chart-weeks">${t.weeks} sem.</div>
+        </div>
+        <button class="chart-play-btn" aria-label="Écouter ${t.title} de ${t.artist}">
+          <svg width="12" height="14" viewBox="0 0 12 14" fill="currentColor"><path d="M0 0l12 7-12 7z"/></svg>
+        </button>
+      </div>`;
+    }).join('');
 
-  // Spotlight Guinée
-  if (CHART_DATA.spotlight) {
-    const sp = CHART_DATA.spotlight;
-    const spEl = document.createElement('div');
-    spEl.className = 'chart-spotlight';
-    spEl.innerHTML = `
-      <span class="chart-spotlight-label">${sp.label}</span>
-      <span class="chart-spotlight-artist">${sp.artist}</span>
-      <span class="chart-spotlight-note">${sp.note}</span>
-    `;
-    list.appendChild(spEl);
+    // Spotlight
+    if (data.spotlight) {
+      const sp = data.spotlight;
+      const spEl = document.createElement('div');
+      spEl.className = 'chart-spotlight';
+      spEl.innerHTML = `
+        <span class="chart-spotlight-label">${sp.label}</span>
+        <span class="chart-spotlight-artist">${sp.artist}</span>
+        <span class="chart-spotlight-note">${sp.note}</span>
+      `;
+      if (sp.link) spEl.style.cursor = 'pointer';
+      spEl.addEventListener('click', () => { if (sp.link) window.location.href = sp.link; });
+      list.appendChild(spEl);
+    }
+
+    // Click → Deezer player
+    list.querySelectorAll('.chart-item').forEach(item => {
+      const fire = () => {
+        const query = decodeURIComponent(item.dataset.query);
+        window.dispatchEvent(new CustomEvent('deezer-search', { detail: { query } }));
+      };
+      item.addEventListener('click', fire);
+      item.querySelector('.chart-play-btn')?.addEventListener('click', e => { e.stopPropagation(); fire(); });
+    });
   }
 
-  // Click → recherche Deezer dans le player
-  list.querySelectorAll('.chart-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const query = decodeURIComponent(item.dataset.query);
-      window.dispatchEvent(new CustomEvent('deezer-search', { detail: { query } }));
-    });
-    item.querySelector('.chart-play-btn')?.addEventListener('click', e => {
-      e.stopPropagation();
-      const query = decodeURIComponent(item.dataset.query);
-      window.dispatchEvent(new CustomEvent('deezer-search', { detail: { query } }));
+  // Tab switching
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const key = tab.dataset.tab; // 'afrique' | 'guinee'
+      renderChart(CHARTS[key] || CHARTS.afrique);
     });
   });
+
+  // Initial render
+  renderChart(CHARTS.afrique);
 })();
 
 /* ═══════════════════════════════════════════════════
