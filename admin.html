@@ -707,7 +707,41 @@
         <div style="background:var(--input-bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:monospace;font-size:12px">
           <span style="color:var(--accent)">RESEND_API_KEY</span> = re_… <span style="color:var(--muted2)">(newsletter)</span>
         </div>
+        <div style="background:var(--input-bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:monospace;font-size:12px">
+          <span style="color:var(--accent)">DATA_DIR</span> = /data <span style="color:var(--muted2)">(Volume Railway → persistance données)</span>
+        </div>
       </div>
+    </div>
+
+    <div class="section-label">📡 Flux RSS &amp; SEO</div>
+    <div class="card">
+      <h3>Flux RSS &amp; Sitemap générés automatiquement</h3>
+      <p style="margin:8px 0 16px">Soumets ces URLs à Google Search Console et Google News pour indexer ONE MEDIA.</p>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:12px;color:var(--muted2);width:80px;flex-shrink:0">RSS Feed</span>
+          <code style="flex:1;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--green)">https://one-media-production.up.railway.app/rss.xml</code>
+          <a href="https://one-media-production.up.railway.app/rss.xml" target="_blank" class="btn btn-ghost btn-sm">↗ Tester</a>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:12px;color:var(--muted2);width:80px;flex-shrink:0">Sitemap</span>
+          <code style="flex:1;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--blue)">https://one-media-production.up.railway.app/sitemap.xml</code>
+          <a href="https://one-media-production.up.railway.app/sitemap.xml" target="_blank" class="btn btn-ghost btn-sm">↗ Tester</a>
+        </div>
+      </div>
+      <p style="margin-top:14px;font-size:12px;color:var(--muted2)">💡 Google Search Console : Sitemaps → colle l'URL du sitemap → Soumettre.</p>
+    </div>
+
+    <div class="section-label">💾 Persistance données (Railway Volume)</div>
+    <div class="card">
+      <h3>Rendre les données permanentes</h3>
+      <p style="margin:8px 0 14px;font-size:13px;color:var(--muted2)">Sans volume, articles et médias sont effacés à chaque redéploiement.</p>
+      <ol style="font-size:13px;color:var(--muted2);line-height:2;padding-left:20px">
+        <li>Railway Dashboard → ton service → <strong style="color:var(--text)">Volumes</strong> → New Volume</li>
+        <li>Mount Path : <code style="background:var(--input-bg);padding:2px 6px;border-radius:4px;color:var(--accent)">/data</code></li>
+        <li>Variables → Ajouter : <code style="background:var(--input-bg);padding:2px 6px;border-radius:4px;color:var(--accent)">DATA_DIR=/data</code></li>
+        <li>Redéployer → tout est maintenant permanent ✅</li>
+      </ol>
     </div>
   </div>
 
@@ -739,6 +773,23 @@
           <p style="font-size:11px;color:var(--muted2);margin-top:5px">URL d'image <em>ou</em> choisir un fichier depuis ton appareil (jpg, png, gif, webp, mp4…)</p>
         </div>
         <img id="am-img-prev" class="img-preview" style="width:140px;height:90px;flex-shrink:0;margin:0">
+      </div>
+    </div>
+
+    <!-- 🤖 AI Writer -->
+    <div style="background:linear-gradient(135deg,#1a0a2e,#0d1a2e);border:1px solid #7D39EB40;border-radius:10px;padding:14px 16px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span style="font-size:13px;font-weight:700;color:#c084fc">🤖 Générer avec l'IA</span>
+        <input type="text" id="ai-topic" placeholder="Sujet à rédiger… ex: Azaya signe chez un grand label international"
+          style="flex:1;min-width:200px;background:#ffffff0d;border:1px solid #7D39EB50;border-radius:8px;color:var(--text);font-size:13px;padding:9px 12px;outline:none">
+        <button id="ai-write-btn" style="background:#7D39EB;color:#fff;font-weight:700;font-size:12px;letter-spacing:.5px;border:none;border-radius:8px;padding:9px 16px;cursor:pointer;white-space:nowrap;transition:opacity .2s"
+          onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+          ✨ Écrire
+        </button>
+      </div>
+      <div id="ai-write-status" style="display:none;margin-top:10px;font-size:12px;color:#c084fc;display:none;align-items:center;gap:8px">
+        <span class="spinner" style="border-color:#c084fc;border-top-color:transparent"></span>
+        <span>Rédaction en cours… (10-30 sec)</span>
       </div>
     </div>
 
@@ -1032,6 +1083,54 @@ window.deleteMedia = async (filename) => {
     document.getElementById('media-count').textContent = `(${count} fichier${count > 1 ? 's' : ''})`;
   } catch { showToast('❌ Erreur suppression', 'var(--red)'); }
 };
+
+/* ══ AI WRITER ════════════════════════════════════════════ */
+document.getElementById('ai-write-btn')?.addEventListener('click', async () => {
+  const topic   = document.getElementById('ai-topic').value.trim();
+  if (!topic) { showToast('❌ Entre un sujet à rédiger', 'var(--red)'); return; }
+
+  const btn     = document.getElementById('ai-write-btn');
+  const statusEl = document.getElementById('ai-write-status');
+  btn.disabled  = true;
+  btn.textContent = '⏳';
+  statusEl.style.display = 'flex';
+
+  try {
+    const cat = document.getElementById('am-category')?.value || 'musique';
+    const r   = await fetch(`${API}/api/admin/ai-write`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+      body:    JSON.stringify({ topic, category: cat }),
+    });
+    const d = await r.json();
+
+    if (d.success && d.article) {
+      const a = d.article;
+      if (a.title)    document.getElementById('am-title').value    = a.title;
+      if (a.excerpt)  document.getElementById('am-excerpt').value  = a.excerpt;
+      if (a.body)     document.getElementById('am-body').value     = a.body;
+      if (a.tags)     document.getElementById('am-tags').value     = (Array.isArray(a.tags) ? a.tags : [a.tags]).join(', ');
+      if (a.category) document.getElementById('am-category').value = a.category;
+      if (a.readTime) document.getElementById('am-readtime').value = a.readTime;
+
+      document.getElementById('ai-topic').value = '';
+      showToast('✨ Article généré ! Complète l\'image et publie.');
+    } else {
+      showToast('❌ ' + (d.error || 'Erreur IA'), 'var(--red)');
+    }
+  } catch (err) {
+    showToast('❌ ' + err.message, 'var(--red)');
+  }
+
+  btn.disabled = false;
+  btn.textContent = '✨ Écrire';
+  statusEl.style.display = 'none';
+});
+
+// Raccourci Enter dans le champ sujet
+document.getElementById('ai-topic')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('ai-write-btn').click();
+});
 
 /* ── Navigation ──────────────────────────────────────────── */
 function switchPanel(name) {

@@ -15,12 +15,36 @@ const { generate, debugAPIs } = require('./generator');
 const app  = express();
 const PORT = process.env.PORT || 3002;
 
-const ARTICLES_FILE    = path.join(__dirname, 'articles.json');
-const CLIPS_FILE       = path.join(__dirname, 'clips.json');
-const SUBSCRIBERS_FILE = path.join(__dirname, 'subscribers.json');
-const EVENTS_FILE      = path.join(__dirname, 'events.json');
-const CHANNEL_CACHE_FILE = path.join(__dirname, 'channel_ids.json');
-const ADMIN_PASSWORD   = process.env.ADMIN_PASSWORD || 'onemedia2026!';
+/* ── Stockage persistant (Railway Volume) ─────────────────────
+   Définis DATA_DIR=/data dans Railway → Variables, puis monte
+   un Volume sur /data dans ton service.
+   Sans ça, DATA_DIR = __dirname (comportement actuel).
+─────────────────────────────────────────────────────────────── */
+const DATA_DIR = process.env.DATA_DIR || __dirname;
+if (DATA_DIR !== __dirname && !fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+const ARTICLES_FILE      = path.join(DATA_DIR, 'articles.json');
+const CLIPS_FILE         = path.join(DATA_DIR, 'clips.json');
+const SUBSCRIBERS_FILE   = path.join(DATA_DIR, 'subscribers.json');
+const EVENTS_FILE        = path.join(DATA_DIR, 'events.json');
+const CHANNEL_CACHE_FILE = path.join(DATA_DIR, 'channel_ids.json');
+const ADMIN_PASSWORD     = process.env.ADMIN_PASSWORD || 'onemedia2026!';
+
+/* ── Migration automatique __dirname → DATA_DIR ──────────────
+   Au 1er démarrage avec un volume vide, copie les JSON existants.
+─────────────────────────────────────────────────────────────── */
+if (DATA_DIR !== __dirname) {
+  ['articles.json','clips.json','subscribers.json','events.json','channel_ids.json','artists.json'].forEach(f => {
+    const src  = path.join(__dirname, f);
+    const dest = path.join(DATA_DIR, f);
+    if (fs.existsSync(src) && !fs.existsSync(dest)) {
+      try { fs.copyFileSync(src, dest); console.log(`📦 Migré : ${f} → ${DATA_DIR}`); }
+      catch {}
+    }
+  });
+}
 
 /* ── Helpers fichiers ─────────────────────────────────────── */
 function readJSON(file, def) {
@@ -45,8 +69,14 @@ app.use((req, res, next) => {
 });
 
 /* ── Dossier uploads ─────────────────────────────────────── */
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
+const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+
+/* ── Serve uploads (persistent) ─────────────────────────── */
+app.use('/uploads', express.static(UPLOADS_DIR, {
+  maxAge: '7d',
+  setHeaders(res) { res.setHeader('Cache-Control', 'public, max-age=604800'); }
+}));
 
 /* ── Cache-Control pour assets statiques ─────────────────── */
 app.use(express.static(__dirname, {
@@ -246,6 +276,159 @@ app.delete('/api/uploads/:filename', adminAuth, (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+/* ══ AI WRITER (admin) ════════════════════════════════════ */
+// POST /api/admin/ai-write — génère un article complet depuis un sujet
+app.post('/api/admin/ai-write', adminAuth, async (req, res) => {
+  const { topic, category, lang } = req.body;
+  if (!topic) return res.status(400).json({ error: 'topic requis' });
+
+  const GROQ_API_KEY = process.env.GROQ_API_KEY;
+  if (!GROQ_API_KEY) return res.status(503).json({ error: 'GROQ_API_KEY manquante — configure-la dans Railway.' });
+
+  const cat = category || 'musique';
+
+  const systemPrompt = `Tu es le journaliste vedette de ONE MEDIA, le média culturel africain de référence.
+Tu écris des articles engagés, vivants et percutants sur la culture guinéenne et africaine : musique, cinéma, mode, art, lifestyle, interviews.
+Style : dynamique, informé, avec une vraie voix éditoriale. Langue : français. Aucun plagiat.`;
+
+  const userPrompt = `Écris un article de presse complet sur ce sujet : "${topic}"
+Catégorie : ${cat}
+
+Réponds UNIQUEMENT en JSON valide (sans markdown, sans code block) :
+{
+  "title": "Titre accrocheur et percutant (max 90 caractères)",
+  "excerpt": "Résumé d'accroche de 2-3 phrases qui donne envie de lire (max 200 caractères)",
+  "body": "Corps HTML de l'article. Utilise <h2>, <p>, <blockquote>, <strong>, <em>. Minimum 500 mots. Structure claire avec introduction, développement, conclusion.",
+  "tags": ["tag1", "tag2", "tag3"],
+  "category": "${cat}",
+  "readTime": 6
+}`;
+
+  try {
+    const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
+      model:       'llama-3.3-70b-versatile',
+      temperature: 0.8,
+      max_tokens:  2000,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user',   content: userPrompt   },
+      ],
+    }, {
+      headers: {
+        'Authorization': `Bearer ${GROQ_API_KEY}`,
+        'Content-Type':  'application/json',
+      },
+      timeout: 45000,
+    });
+
+    const raw     = response.data.choices[0].message.content.trim();
+    const cleaned = raw.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
+    const article = JSON.parse(cleaned);
+
+    console.log(`🤖 AI Writer : "${(article.title||'').slice(0,60)}"`);
+    res.json({ success: true, article });
+  } catch (err) {
+    console.error('❌ AI Writer:', err.response?.data || err.message);
+    res.status(500).json({ error: err.response?.data?.error?.message || err.message });
+  }
+});
+
+/* ══ RSS FEED ═════════════════════════════════════════════ */
+// GET /rss.xml — flux RSS 2.0 des articles Railway (Google News compatible)
+app.get('/rss.xml', (req, res) => {
+  const data     = readJSON(ARTICLES_FILE, { articles: [] });
+  const articles = (data.articles || [])
+    .filter(a => a.title && a.excerpt)
+    .slice(0, 30);
+
+  const BASE_URL = 'https://one-media-delta.vercel.app';
+  const now      = new Date().toUTCString();
+
+  const escXml = s => String(s||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+
+  const items = articles.map(a => {
+    const link = `${BASE_URL}/article.html?id=${encodeURIComponent(a.id)}`;
+    const date = a.date ? new Date(a.date).toUTCString() : now;
+    const img  = a.image ? `<enclosure url="${escXml(a.image)}" type="image/jpeg"/>` : '';
+    return `  <item>
+    <title>${escXml(a.title)}</title>
+    <link>${link}</link>
+    <description>${escXml(a.excerpt)}</description>
+    <pubDate>${date}</pubDate>
+    <guid isPermaLink="false">${escXml(a.id)}</guid>
+    <category>${escXml(a.category)}</category>
+    <author>contact@onemedia.com (${escXml(a.author||'Rédaction ONE')})</author>
+    ${img}
+  </item>`;
+  }).join('\n');
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:media="http://search.yahoo.com/mrss/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel>
+  <title>ONE MEDIA — Culture sans frontières</title>
+  <link>${BASE_URL}</link>
+  <description>Le média culturel africain de référence. Musique, Cinéma, Mode, Art, Lifestyle.</description>
+  <language>fr</language>
+  <lastBuildDate>${now}</lastBuildDate>
+  <atom:link href="https://one-media-production.up.railway.app/rss.xml" rel="self" type="application/rss+xml"/>
+  <image>
+    <url>https://one-media-delta.vercel.app/og-cover.jpg</url>
+    <title>ONE MEDIA</title>
+    <link>${BASE_URL}</link>
+  </image>
+${items}
+</channel>
+</rss>`;
+
+  res.setHeader('Content-Type', 'application/rss+xml; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=900'); // 15 min
+  res.send(xml);
+});
+
+/* ══ SITEMAP XML ══════════════════════════════════════════ */
+// GET /sitemap.xml — sitemap SEO pour Google/Bing
+app.get('/sitemap.xml', (req, res) => {
+  const data     = readJSON(ARTICLES_FILE, { articles: [] });
+  const articles = (data.articles || []).filter(a => a.id);
+  const BASE_URL = 'https://one-media-delta.vercel.app';
+  const today    = new Date().toISOString().slice(0, 10);
+
+  const staticPages = [
+    { url: '/',            priority: '1.0', changefreq: 'daily'   },
+    { url: '/artists.html',priority: '0.7', changefreq: 'weekly'  },
+    { url: '/about.html',  priority: '0.5', changefreq: 'monthly' },
+    { url: '/contact.html',priority: '0.5', changefreq: 'monthly' },
+  ];
+
+  const artUrls = articles.map(a => ({
+    url:        `/article.html?id=${encodeURIComponent(a.id)}`,
+    priority:   a.featured ? '0.9' : '0.7',
+    changefreq: 'weekly',
+    lastmod:    (a.editedAt || a.createdAt || a.date || today).slice(0,10),
+  }));
+
+  const allUrls = [...staticPages, ...artUrls];
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${allUrls.map(u => `  <url>
+    <loc>${BASE_URL}${u.url}</loc>
+    <lastmod>${u.lastmod || today}</lastmod>
+    <changefreq>${u.changefreq}</changefreq>
+    <priority>${u.priority}</priority>
+  </url>`).join('\n')}
+</urlset>`;
+
+  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=3600'); // 1h
+  res.send(xml);
 });
 
 // GET /health — healthcheck Railway (répond toujours 200)
@@ -611,7 +794,7 @@ app.get('/api/music/search', async (req, res) => {
 });
 
 /* ── Artists CRUD ────────────────────────────────────────── */
-const ARTISTS_FILE = path.join(__dirname, 'artists.json');
+const ARTISTS_FILE = path.join(DATA_DIR, 'artists.json');
 
 // GET public — retourne les artistes custom ajoutés via admin
 app.get('/api/artists', (req, res) => {
