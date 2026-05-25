@@ -810,6 +810,56 @@ const ARTICLES = [
 
   /* ── NOUVELLES REAL NEWS ──────────────────────────── */
   {
+    id: 'a-032-boncana',
+    slug: 'boncana-maiga-deces-maestro-africain-fevrier-2026',
+    title: 'Le Maestro Boncana Maïga n\'est plus : l\'Afrique perd un géant de la musique',
+    excerpt: 'Boncana Maïga, flûtiste, arrangeur et animateur légendaire de "Stars Parade", est décédé le 28 février 2026 à 77 ans à Bamako. L\'homme qui a marié le Mali et La Havane, dirigé l\'orchestre de la RTI et fondé Africando. Une perte immense pour toute l\'Afrique.',
+    category: 'musique',
+    author: 'Rédaction ONE',
+    authorImg: null,
+    date: '2026-02-28',
+    readTime: 5,
+    image: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=1400&q=85',
+    featured: false,
+    breaking: true,
+    tags: ['boncana maïga', 'guinée', 'mali', 'africando', 'stars parade', 'hommage', 'décès'],
+    views: 98400,
+    body: `
+      <h2>Un titan de la musique africaine s'éteint</h2>
+      <p>Le maestro Boncana Maïga est décédé le samedi 28 février 2026 à la clinique Pasteur de Bamako, au Mali, à l'âge de 77 ans. La nouvelle a traversé le continent comme une onde de choc. Musicien, flûtiste de génie, arrangeur hors pair — Boncana Maïga était une institution vivante, l'un des rares artistes africains dont l'influence traverse toutes les frontières géographiques et musicales.</p>
+      <h2>De Gao à La Havane : une vie entre deux mondes</h2>
+      <p>Originaire de Gao, dans le nord du Mali, Boncana Maïga a construit une carrière unique en fusionnant les traditions musicales mandingues avec la salsa cubaine. Il a dirigé l'orchestre de la Radio Télévision Ivoirienne (RTI) et fondé <strong>Africando</strong>, le groupe qui a popularisé la musique afro-cubaine sur tout le continent. Il a arrangé des albums pour des artistes de légende : Alpha Blondy, Aïcha Koné, Abdoulaye Diabaté. Il a composé des bandes originales pour des films des cinéastes Ousmane Sembène et Henri Duparc.</p>
+      <blockquote>« Boncana Maïga avait compris quelque chose que beaucoup mettent des décennies à saisir : la musique africaine n'a pas de frontières. Elle a des racines. »<br><em>— Doura Barry, artiste guinéen</em></blockquote>
+      <h2>"Stars Parade" : la voix de toute une génération</h2>
+      <p>Au-delà de ses compositions, c'est son émission radio <em>Stars Parade</em> qui a marqué des générations entières d'auditeurs africains. Une plateforme de découverte musicale, une école d'écoute, un rendez-vous sacré. En 1997, il reçoit le <strong>Kora Award</strong> de l'arrangeur — une consécration internationale. Il avait épousé Aicha Kamaldine Conté et arrangé des albums pour plusieurs voix guinéennes tout au long de sa carrière prolixe. L'Afrique perd l'un de ses plus grands bâtisseurs sonores.</p>
+    `,
+  },
+  {
+    id: 'a-032-anst',
+    slug: 'anst-crazy-zenith-paris-11-septembre-2026-guinee',
+    title: 'Ans-T Crazy au Zénith de Paris le 11 septembre : la Guinée vise le sommet',
+    excerpt: 'Le roi de la "Guida" annonce un concert historique au Zénith Paris - La Villette pour le 11 septembre 2026. Pour Ans-T Crazy, ce n\'est pas juste une date — c\'est un projet national. Après Azaya, la Guinée urbaine s\'installe sur les plus grandes scènes parisiennes.',
+    category: 'musique',
+    author: 'Mamadou B.',
+    authorImg: null,
+    date: '2026-04-23',
+    readTime: 4,
+    image: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=1400&q=85',
+    featured: true,
+    breaking: false,
+    tags: ['ans-t crazy', 'zénith paris', 'guinée', 'concert', 'guida', 'diaspora'],
+    views: 74300,
+    body: `
+      <h2>Le Zénith, scène nationale guinéenne</h2>
+      <p>Le 11 septembre 2026 au soir, le Zénith Paris - La Villette s'habillera aux couleurs rouge, jaune, vert. Ans-T Crazy, l'artiste guinéen connu pour son style "Guida" — une fusion entre les sonorités guinéennes et la musique urbaine — a officellement annoncé son concert à la célèbre salle parisienne lors d'une conférence de presse tenue le 23 avril au Jardin du 2 Octobre à Conakry.</p>
+      <h2>"Ce concert est pour la Guinée"</h2>
+      <p>L'artiste a été clair lors de sa prise de parole : <em>"Ce concert est pour la Guinée. Nous devons exporter nos talents."</em> Il a lancé un appel aux médias guinéens, aux influenceurs et à toute la diaspora pour se mobiliser derrière l'événement — le présentant comme une affaire nationale, pas une promotion personnelle. Il a également rendu hommage à Azaya (Mohamed Kamissoko), reconnaissant le rôle de son aîné dans l'ouverture de cette voie.</p>
+      <blockquote>« Le Zénith, c'est la consécration d'un parcours. Mais c'est surtout la preuve que la musique guinéenne peut aller partout. »<br><em>— Ans-T Crazy, conférence de presse, Conakry, 23 avril 2026</em></blockquote>
+      <h2>La Guinée à Paris, une dynamique qui s'installe</h2>
+      <p>Après les concerts d'Azaya en France et les tournées de Takana Zion en Europe, le mouvement prend de l'ampleur. Les artistes guinéens de la diaspora comme Grain de Caf', MHD ou Black M ont ouvert la voie. Ans-T Crazy franchit une nouvelle étape : une salle de 6 000 places, une des plus emblématiques de Paris. Les billets sont disponibles. Le 11 septembre, la Guinée sera à Paris.</p>
+    `,
+  },
+  {
     id: 'a-030',
     slug: 'takana-zion-patoranking-african-soldier-hommage-2026',
     title: 'Patoranking rend hommage à Takana Zion dans "African Soldier" — la Guinée au cœur de l\'Afrobeats',
@@ -864,64 +914,159 @@ const ARTICLES = [
 
 /* ══════════════════════════════════════════════════════
    ONE CHART — Le Classement du Continent
-   Mis à jour chaque lundi. Basé sur les écoutes
-   cumulées (Deezer, Spotify, YouTube) en Afrique de l'Ouest.
+   Sources : Apple Music CI · UK Official Afrobeats Chart ·
+             Spotify Global Streams · Billboard Hot 100
+   Mis à jour chaque lundi.
 ══════════════════════════════════════════════════════ */
 const CHART_DATA = {
-  weekLabel: 'Semaine du 19 mai 2026',
-  updatedAt: '2026-05-19',
+  weekLabel: 'Semaine du 25 mai 2026',
+  updatedAt: '2026-05-25',
+  sources: ['Apple Music CI', 'UK Afrobeats', 'Spotify', 'Billboard'],
   tracks: [
     {
       rank: 1,
-      trend: 'up',        // 'up' | 'down' | 'stable' | 'new'
-      artist: 'Theodora',
-      title: 'Fashion Designa',
-      country: '🇫🇷🇨🇩',
-      genre: 'Afropop',
-      deezerQuery: 'Theodora Fashion Designa',
-      cover: 'https://cdn-images.dzcdn.net/images/cover/d7d0d22e0cdf05ae3c5c20ca27affe55/264x264-000000-80-0-0.jpg',
+      trend: 'new',
+      artist: 'Himra',
+      title: 'BARA BARA',
+      album: 'DACHIBA KOUMGBA TCHAIBA : DALSHIM',
+      country: '🇨🇮',
+      countryName: 'Côte d\'Ivoire',
+      genre: 'Nouchi/Rap',
+      deezerQuery: 'Himra Bara Bara',
+      cover: 'https://cdn-images.dzcdn.net/images/artist/a00bc6dcc86b10c1b03aa2372ab71a30/264x264-000000-80-0-0.jpg',
+      stats: { streams: '233M', label: 'Spotify cumulé' },
+      badges: [
+        { label: '🇨🇮 #1', color: '#FFEF4D' },
+        { label: 'Shazam CI', color: '#2A428C' },
+        { label: '+5 pays', color: '#C6FF33' },
+      ],
+      weeks: 3,
+      peak: 1,
+      peakNew: true,
     },
     {
       rank: 2,
       trend: 'stable',
-      artist: 'Hamza',
-      title: 'Kyky2Bondy',
-      country: '🇧🇪',
-      genre: 'R&B/Rap',
-      deezerQuery: 'Hamza Kyky2Bondy',
-      cover: 'https://cdn-images.dzcdn.net/images/cover/6c3b4af58a57ad91d38c38ad0a2db705/264x264-000000-80-0-0.jpg',
+      artist: 'Tyla & Zara Larsson',
+      title: 'She Did It Again',
+      album: 'A*Pop',
+      country: '🇿🇦',
+      countryName: 'Afrique du Sud',
+      genre: 'Amapop',
+      deezerQuery: 'Tyla She Did It Again Zara Larsson',
+      cover: 'https://cdn-images.dzcdn.net/images/artist/e3f8fad9e8d7c6b5a4f3e2d1c0b9a8f7/264x264-000000-80-0-0.jpg',
+      stats: { streams: 'Hot 100 #59', label: 'Billboard' },
+      badges: [
+        { label: 'UK #1', color: '#FFEF4D' },
+        { label: '5 semaines', color: '#7D39EB' },
+        { label: 'Hot 100', color: '#2A428C' },
+      ],
+      weeks: 5,
+      peak: 1,
     },
     {
       rank: 3,
       trend: 'up',
-      artist: 'Himra',
-      title: 'Jeune & Riche',
-      country: '🇨🇮',
-      genre: 'Nouchi/Rap',
-      deezerQuery: 'Himra Jeune Riche',
-      cover: 'https://cdn-images.dzcdn.net/images/artist/a00bc6dcc86b10c1b03aa2372ab71a30/264x264-000000-80-0-0.jpg',
+      artist: 'Wizkid & Asake',
+      title: 'Turbulence',
+      album: 'Single',
+      country: '🇳🇬',
+      countryName: 'Nigéria',
+      genre: 'Afrobeats',
+      deezerQuery: 'Wizkid Asake Turbulence',
+      cover: 'https://cdn-images.dzcdn.net/images/artist/c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8/264x264-000000-80-0-0.jpg',
+      stats: { streams: '20M+', label: 'Spotify' },
+      badges: [
+        { label: 'Vevo Global', color: '#FFEF4D' },
+        { label: 'Top Afrobeats', color: '#C6FF33' },
+      ],
+      weeks: 6,
+      peak: 2,
     },
     {
       rank: 4,
-      trend: 'new',
-      artist: 'Werenoi',
-      title: 'Diamant Noir',
-      country: '🇫🇷',
-      genre: 'Rap',
-      deezerQuery: 'Werenoi Diamant Noir',
-      cover: 'https://cdn-images.dzcdn.net/images/cover/4fb42b87e3abb8dae9ad9f34c49bf1e2/264x264-000000-80-0-0.jpg',
+      trend: 'up',
+      artist: 'Ayra Starr & Rema',
+      title: 'Who\'s Dat Girl',
+      album: 'Single',
+      country: '🇳🇬',
+      countryName: 'Nigéria',
+      genre: 'Afropop',
+      deezerQuery: 'Ayra Starr Rema Who\'s Dat Girl',
+      cover: 'https://cdn-images.dzcdn.net/images/artist/d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9/264x264-000000-80-0-0.jpg',
+      stats: { streams: '30M+', label: 'Spotify' },
+      badges: [
+        { label: 'UK #4', color: '#2A428C' },
+        { label: 'Global', color: '#7D39EB' },
+      ],
+      weeks: 8,
+      peak: 3,
     },
     {
       rank: 5,
+      trend: 'new',
+      artist: 'Didi B & Fally Ipupa',
+      title: 'Cherie Coco',
+      album: 'Bazarhoff & Diyilem',
+      country: '🇨🇮🇨🇩',
+      countryName: 'CI × Congo',
+      genre: 'Afropop',
+      deezerQuery: 'Didi B Fally Ipupa Cherie Coco',
+      cover: 'https://cdn-images.dzcdn.net/images/artist/7ff0f0c21c16e60194e48395a79347e4/264x264-000000-80-0-0.jpg',
+      stats: { streams: 'Apple CI', label: '#8' },
+      badges: [
+        { label: '🇨🇮 Top 10', color: '#FFEF4D' },
+        { label: 'Collab', color: '#C6FF33' },
+      ],
+      weeks: 2,
+      peak: 5,
+      peakNew: true,
+    },
+    {
+      rank: 6,
       trend: 'stable',
-      artist: 'Takana Zion',
-      title: 'Love Yu Any How',
-      country: '🇬🇳',
-      genre: 'Reggae/Afrobeat',
-      deezerQuery: 'Takana Zion Love Yu Any How',
-      cover: 'https://cdn-images.dzcdn.net/images/artist/7c5c9e0b3f8c1a2b4d6e8f0a2c4e6f8a/264x264-000000-80-0-0.jpg',
+      artist: 'Asake',
+      title: 'Forgiveness',
+      album: 'Single',
+      country: '🇳🇬',
+      countryName: 'Nigéria',
+      genre: 'Afrobeats',
+      deezerQuery: 'Asake Forgiveness',
+      cover: 'https://cdn-images.dzcdn.net/images/artist/e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0/264x264-000000-80-0-0.jpg',
+      stats: { streams: 'UK #3', label: 'Official Chart' },
+      badges: [
+        { label: 'UK #3', color: '#2A428C' },
+        { label: '3 semaines', color: '#7D39EB' },
+      ],
+      weeks: 3,
+      peak: 3,
+    },
+    {
+      rank: 7,
+      trend: 'up',
+      artist: 'Ameka Zrai',
+      title: 'Adriano',
+      album: 'Single',
+      country: '🇨🇮',
+      countryName: 'Côte d\'Ivoire',
+      genre: 'Afro-Urbain',
+      deezerQuery: 'Ameka Zrai Adriano',
+      cover: 'https://cdn-images.dzcdn.net/images/artist/f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1/264x264-000000-80-0-0.jpg',
+      stats: { streams: 'Apple CI', label: '#2' },
+      badges: [
+        { label: '🇨🇮 #2', color: '#FFEF4D' },
+        { label: 'Buzz', color: '#C6FF33' },
+      ],
+      weeks: 4,
+      peak: 2,
     },
   ],
+  spotlight: {
+    label: '🇬🇳 Guinée à l\'honneur',
+    artist: 'Ans-T Crazy',
+    note: 'Concert Zénith Paris · 11 septembre 2026',
+    link: 'article.html?id=a-032-anst',
+  },
 };
 
 /* ── Helpers ─────────────────────────────────────────── */

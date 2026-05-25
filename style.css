@@ -2393,9 +2393,9 @@ img[loading="lazy"][data-loaded] {
 }
 .chart-item {
   display: grid;
-  grid-template-columns: 52px 28px 72px 1fr auto auto;
+  grid-template-columns: 64px 60px 1fr 88px 44px;
   align-items: center;
-  gap: 20px;
+  gap: 18px;
   padding: 16px 20px;
   border-radius: 10px;
   background: var(--surface);
@@ -2505,11 +2505,163 @@ img[loading="lazy"][data-loaded] {
   border-color: var(--signal);
 }
 
+/* ── CHART — new sub-elements ───────────────────────────── */
+
+/* Rank block: rank number + trend stacked */
+.chart-rank-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Artist row: name + country flag side by side */
+.chart-artist-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+.chart-country-flag {
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* Badges row */
+.chart-badges-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 5px;
+  align-items: center;
+}
+.chart-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--badge-color, var(--ebony));
+  color: #000;
+  white-space: nowrap;
+}
+
+/* Peak markers */
+.chart-peak {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.chart-peak--new {
+  background: var(--signal);
+  color: #000;
+}
+.chart-peak--top {
+  background: var(--hot-dim);
+  color: var(--hot);
+  border: 1px solid var(--hot);
+}
+
+/* Stats column */
+.chart-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.chart-stat-number {
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--signal);
+  line-height: 1;
+}
+.chart-stat-label {
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  white-space: nowrap;
+}
+.chart-weeks {
+  font-size: 9px;
+  color: var(--ink-mute);
+  letter-spacing: .5px;
+  margin-top: 3px;
+}
+
+/* Source pills row — inside chart-header */
+.chart-sources-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.chart-source-pill {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 20px;
+  border: 1px solid rgba(42,66,140,.6);
+  color: var(--ebony);
+  background: var(--ebony-dim);
+}
+
+/* Spotlight Guinée */
+.chart-spotlight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  margin-top: 6px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(42,66,140,.18) 0%, rgba(42,66,140,.06) 100%);
+  border: 1px solid rgba(42,66,140,.35);
+  border-left: 3px solid var(--signal);
+}
+.chart-spotlight-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--signal);
+  white-space: nowrap;
+}
+.chart-spotlight-artist {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: .5px;
+}
+.chart-spotlight-note {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* ── CHART — responsive ─────────────────────────────────── */
 @media (max-width: 600px) {
-  .chart-item { grid-template-columns: 36px 20px 52px 1fr auto; gap: 10px; padding: 12px 14px; }
-  .chart-meta { display: none; }
+  .chart-item {
+    grid-template-columns: 46px 52px 1fr auto;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .chart-item .chart-stats { display: none; }
   .chart-cover { width: 44px; height: 44px; }
   .chart-cover img { width: 44px; height: 44px; }
   .chart-rank { font-size: 20px; }
+  .chart-spotlight { flex-wrap: wrap; gap: 6px; }
+  .chart-spotlight-note { margin-left: 0; }
+  .chart-source-pill { font-size: 8px; }
 }
+
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.22); }

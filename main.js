@@ -435,6 +435,8 @@ function renderArticleCard(a, opts = {}) {
 
 /* ═══════════════════════════════════════════════════
    ONE CHART — Le Classement du Continent
+   Sources : Apple Music CI · UK Official Afrobeats ·
+             Spotify · Billboard Hot 100
 ═══════════════════════════════════════════════════ */
 (function initChart() {
   const list  = document.getElementById('chart-list');
@@ -443,31 +445,75 @@ function renderArticleCard(a, opts = {}) {
 
   if (label) label.textContent = CHART_DATA.weekLabel;
 
-  const TREND_ICON = { up: '↑', down: '↓', stable: '—', new: 'NEW' };
+  const TREND_ICON  = { up: '↑', down: '↓', stable: '—', new: 'NEW' };
   const TREND_CLASS = { up: 'trend-up', down: 'trend-down', stable: 'trend-stable', new: 'trend-new' };
 
-  list.innerHTML = CHART_DATA.tracks.map(t => `
-    <div class="chart-item" data-query="${encodeURIComponent(t.deezerQuery)}">
-      <div class="chart-rank">${String(t.rank).padStart(2, '0')}</div>
-      <div class="chart-trend ${TREND_CLASS[t.trend]}">${TREND_ICON[t.trend]}</div>
+  // Source pills header
+  const srcEl = document.getElementById('chart-sources');
+  if (srcEl && CHART_DATA.sources) {
+    srcEl.innerHTML = CHART_DATA.sources.map(s =>
+      `<span class="chart-source-pill">${s}</span>`
+    ).join('');
+  }
+
+  list.innerHTML = CHART_DATA.tracks.map(t => {
+    const badges = (t.badges || []).map(b =>
+      `<span class="chart-badge" style="--badge-color:${b.color}">${b.label}</span>`
+    ).join('');
+    const peakMark = t.peakNew
+      ? `<span class="chart-peak chart-peak--new">▲ Nouveau</span>`
+      : (t.peak === t.rank ? `<span class="chart-peak chart-peak--top">◆ Peak</span>` : '');
+
+    return `
+    <div class="chart-item" data-query="${encodeURIComponent(t.deezerQuery)}" data-rank="${t.rank}">
+      <div class="chart-rank-block">
+        <div class="chart-rank">${String(t.rank).padStart(2, '0')}</div>
+        <div class="chart-trend ${TREND_CLASS[t.trend]}">${TREND_ICON[t.trend]}</div>
+      </div>
       <div class="chart-cover">
-        <img src="${t.cover}" alt="${t.artist}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=56&h=56&fit=crop'">
+        <img src="${t.cover}" alt="${t.artist}" loading="lazy"
+             onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=56&h=56&fit=crop&q=60'">
       </div>
       <div class="chart-info">
-        <div class="chart-artist">${t.artist}</div>
+        <div class="chart-artist-row">
+          <span class="chart-artist">${t.artist}</span>
+          <span class="chart-country-flag" title="${t.countryName||''}">${t.country}</span>
+        </div>
         <div class="chart-track">${t.title}</div>
+        <div class="chart-badges-row">${badges}${peakMark}</div>
       </div>
-      <div class="chart-meta">
-        <div class="chart-flag">${t.country}</div>
-        <div class="chart-genre">${t.genre}</div>
+      <div class="chart-stats">
+        <div class="chart-stat-number">${t.stats?.streams || ''}</div>
+        <div class="chart-stat-label">${t.stats?.label || ''}</div>
+        <div class="chart-weeks">${t.weeks} sem.</div>
       </div>
-      <button class="chart-play-btn" aria-label="Écouter ${t.title}">▶</button>
-    </div>
-  `).join('');
+      <button class="chart-play-btn" aria-label="Écouter ${t.title} de ${t.artist}">
+        <svg width="12" height="14" viewBox="0 0 12 14" fill="currentColor"><path d="M0 0l12 7-12 7z"/></svg>
+      </button>
+    </div>`;
+  }).join('');
 
-  // Click → lance une recherche Deezer dans le player existant
+  // Spotlight Guinée
+  if (CHART_DATA.spotlight) {
+    const sp = CHART_DATA.spotlight;
+    const spEl = document.createElement('div');
+    spEl.className = 'chart-spotlight';
+    spEl.innerHTML = `
+      <span class="chart-spotlight-label">${sp.label}</span>
+      <span class="chart-spotlight-artist">${sp.artist}</span>
+      <span class="chart-spotlight-note">${sp.note}</span>
+    `;
+    list.appendChild(spEl);
+  }
+
+  // Click → recherche Deezer dans le player
   list.querySelectorAll('.chart-item').forEach(item => {
     item.addEventListener('click', () => {
+      const query = decodeURIComponent(item.dataset.query);
+      window.dispatchEvent(new CustomEvent('deezer-search', { detail: { query } }));
+    });
+    item.querySelector('.chart-play-btn')?.addEventListener('click', e => {
+      e.stopPropagation();
       const query = decodeURIComponent(item.dataset.query);
       window.dispatchEvent(new CustomEvent('deezer-search', { detail: { query } }));
     });
