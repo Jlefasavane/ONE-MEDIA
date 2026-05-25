@@ -628,12 +628,101 @@
     <div id="artists-admin-list" style="margin-top:14px"></div>
   </div>
 
-  <!-- Articles list -->
-  <p class="section-title">📰 Articles IA (édition & gestion)</p>
-  <div class="action-card">
-    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Clique sur ✏️ pour éditer un article, 🗑 pour le supprimer. Les modifications sont sauvegardées immédiatement sur le serveur.</p>
+  <!-- Articles -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:28px;margin-bottom:10px">
+    <p class="section-title" style="margin:0">📰 Articles (gestion complète)</p>
+    <button class="btn btn-sm" onclick="openCreateModal()" style="background:var(--green);color:#000;white-space:nowrap">✍️ Nouvel article</button>
+  </div>
+  <div class="action-card" style="padding-top:12px">
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+      <input id="art-search" type="text" placeholder="🔍 Rechercher…"
+        oninput="filterArticles()"
+        style="flex:1;min-width:180px;background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px">
+      <select id="art-filter-cat" onchange="filterArticles()"
+        style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px">
+        <option value="">Toutes catégories</option>
+        <option value="musique">Musique</option>
+        <option value="cinema">Cinéma</option>
+        <option value="mode">Mode</option>
+        <option value="art">Art</option>
+        <option value="lifestyle">Lifestyle</option>
+        <option value="interview">Interview</option>
+      </select>
+      <button class="btn btn-sm btn-ghost" onclick="loadArticles()">🔄 Actualiser</button>
+    </div>
     <div class="articles-list" id="articles-list">
       <p style="color:var(--muted);font-size:13px">Chargement…</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL CRÉATION ARTICLE ── -->
+<div class="edit-modal-overlay" id="create-modal-overlay">
+  <div class="edit-modal">
+    <h2>✍️ Créer un article</h2>
+
+    <div class="edit-field">
+      <label>Titre *</label>
+      <input type="text" id="create-title" placeholder="Titre accrocheur…">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+      <div class="edit-field">
+        <label>Catégorie *</label>
+        <select id="create-category">
+          <option value="musique">Musique</option>
+          <option value="cinema">Cinéma</option>
+          <option value="mode">Mode</option>
+          <option value="art">Art</option>
+          <option value="lifestyle">Lifestyle</option>
+          <option value="interview">Interview</option>
+        </select>
+      </div>
+      <div class="edit-field">
+        <label>Date</label>
+        <input type="date" id="create-date">
+      </div>
+      <div class="edit-field">
+        <label>Lecture (min)</label>
+        <input type="number" id="create-readtime" min="1" max="60" value="5">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="edit-field">
+        <label>Auteur</label>
+        <input type="text" id="create-author" placeholder="Rédaction ONE" value="Rédaction ONE">
+      </div>
+      <div class="edit-field">
+        <label>Image (URL)</label>
+        <input type="url" id="create-image" placeholder="https://...jpg">
+      </div>
+    </div>
+    <div class="edit-field" id="create-img-preview-wrap" style="display:none">
+      <img id="create-img-preview" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;border:1px solid var(--border)">
+    </div>
+    <div class="edit-field">
+      <label>Chapeau (résumé affiché en liste) *</label>
+      <textarea id="create-excerpt" style="min-height:80px" placeholder="2-3 phrases d'accroche…"></textarea>
+    </div>
+    <div class="edit-field">
+      <label>Corps de l'article (HTML supporté)</label>
+      <textarea id="create-body" style="min-height:200px" placeholder="<h2>Titre section</h2>&#10;<p>Contenu…</p>&#10;<blockquote>Citation marquante</blockquote>"></textarea>
+    </div>
+    <div class="edit-field">
+      <label>Tags (séparés par virgule)</label>
+      <input type="text" id="create-tags" placeholder="guinée, musique, artiste, conakry">
+    </div>
+    <div style="display:flex;gap:24px;margin-top:10px;align-items:center;flex-wrap:wrap">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
+        <input type="checkbox" id="create-featured"> ⭐ Featured (héro)
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
+        <input type="checkbox" id="create-breaking"> 🔴 Breaking news
+      </label>
+    </div>
+    <div class="edit-modal-actions">
+      <button class="btn btn-sm" id="create-save-btn" style="background:var(--green);color:#000">✍️ Publier l'article</button>
+      <button class="btn btn-sm btn-ghost" id="create-cancel-btn">Annuler</button>
+      <span id="create-save-msg" style="font-size:13px;color:var(--green);display:none">✅ Article publié !</span>
     </div>
   </div>
 </div>
@@ -794,49 +883,148 @@
 
   let articlesCache = [];
 
+  function renderArticleItem(a) {
+    const isCustom = !a.aiGenerated;
+    const badge = isCustom
+      ? `<span style="background:#C6FF3322;color:var(--green);border:1px solid var(--green);border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700">CUSTOM</span>`
+      : `<span style="background:#ffffff11;color:#888;border:1px solid #333;border-radius:4px;padding:2px 7px;font-size:10px">IA</span>`;
+    return `
+      <div class="art-item" id="art-item-${a.id}" data-cat="${a.category}" data-title="${(a.title||'').toLowerCase()}">
+        <img class="art-img" src="${a.image || ''}" alt="" loading="lazy"
+             onerror="this.src='https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=80&q=60'">
+        <div class="art-info">
+          <div class="art-title">${a.title}</div>
+          <div class="art-meta" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:4px">
+            ${badge}
+            <span class="cat-badge" style="background:${CAT_COLORS[a.category]||'#666'}22;color:${CAT_COLORS[a.category]||'#666'}">${a.category}</span>
+            <span style="color:#888;font-size:11px">${a.date || ''}</span>
+            <span style="color:#888;font-size:11px">${a.author || ''}</span>
+            ${a.featured ? '<span style="color:var(--yellow);font-size:11px">⭐ Featured</span>' : ''}
+            ${a.breaking ? '<span style="color:#ff2d55;font-size:11px">🔴 Breaking</span>' : ''}
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
+          <button onclick="openEditModal('${a.id}')"
+            style="background:#1a1a1a;border:1px solid #333;color:var(--accent);border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer"
+            title="Modifier">✏️</button>
+          <button onclick="deleteArticle('${a.id}')"
+            style="background:#ff2d5512;border:1px solid #ff2d5540;color:#ff2d55;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer"
+            title="Supprimer">🗑</button>
+        </div>
+      </div>`;
+  }
+
   async function loadArticles() {
     try {
       const r = await fetch(`${API}/api/articles`);
       const d = await r.json();
-      articlesCache = d.articles || [];
-      const list = document.getElementById('articles-list');
+      // Custom (non-IA) en premier, IA ensuite
+      const custom = (d.articles || []).filter(a => !a.aiGenerated);
+      const ai     = (d.articles || []).filter(a => a.aiGenerated);
+      articlesCache = [...custom, ...ai];
 
+      const list = document.getElementById('articles-list');
       if (!articlesCache.length) {
-        list.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucun article généré.</p>';
+        list.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucun article. Clique sur "Nouvel article" pour commencer.</p>';
         return;
       }
-
-      list.innerHTML = articlesCache.map(a => `
-        <div class="art-item" id="art-item-${a.id}">
-          <img class="art-img" src="${a.image || ''}" alt="" loading="lazy"
-               onerror="this.src='https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=80&q=60'">
-          <div class="art-info">
-            <div class="art-title">${a.title}</div>
-            <div class="art-meta">
-              ${a.sourceName ? `<span style="color:var(--accent)">📰 ${a.sourceName}</span> · ` : ''}
-              ${a.category} · ${a.date || ''} · ${a.readTime || 5} min
-              ${a.featured ? ' · <span style="color:var(--yellow)">★ Featured</span>' : ''}
-              ${a.editedAt ? ' · <span style="color:var(--muted)">✏ Modifié</span>' : ''}
-            </div>
-          </div>
-          <div style="display:flex;gap:6px;flex-shrink:0">
-            <span class="cat-badge" style="background:${CAT_COLORS[a.category]||'#666'}22;color:${CAT_COLORS[a.category]||'#666'}">
-              ${a.category}
-            </span>
-            <button onclick="openEditModal('${a.id}')"
-              style="background:#1a1a1a;border:1px solid #333;color:var(--accent);border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer"
-              title="Modifier">✏️</button>
-            <button onclick="deleteArticle('${a.id}')"
-              style="background:#ff2d5512;border:1px solid #ff2d5540;color:#ff2d55;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer"
-              title="Supprimer">🗑</button>
-          </div>
-        </div>
-      `).join('');
+      const total = articlesCache.length;
+      list.innerHTML = `<p style="font-size:12px;color:var(--muted);margin-bottom:10px">${total} article(s) — <span style="color:var(--green)">${custom.length} custom</span> + <span style="color:#888">${ai.length} IA</span></p>`
+        + articlesCache.map(renderArticleItem).join('');
     } catch {
       document.getElementById('articles-list').innerHTML =
         '<p style="color:var(--muted);font-size:13px">Erreur de chargement.</p>';
     }
   }
+
+  function filterArticles() {
+    const q   = (document.getElementById('art-search')?.value || '').toLowerCase().trim();
+    const cat = document.getElementById('art-filter-cat')?.value || '';
+    document.querySelectorAll('.art-item').forEach(el => {
+      const matchQ   = !q   || el.dataset.title.includes(q);
+      const matchCat = !cat || el.dataset.cat === cat;
+      el.style.display = (matchQ && matchCat) ? '' : 'none';
+    });
+  }
+
+  /* ── CRÉATION ARTICLE ── */
+  window.openCreateModal = () => {
+    // Pré-remplir la date d'aujourd'hui
+    const today = new Date().toISOString().slice(0,10);
+    document.getElementById('create-date').value     = today;
+    document.getElementById('create-title').value    = '';
+    document.getElementById('create-excerpt').value  = '';
+    document.getElementById('create-body').value     = '';
+    document.getElementById('create-tags').value     = '';
+    document.getElementById('create-image').value    = '';
+    document.getElementById('create-author').value   = 'Rédaction ONE';
+    document.getElementById('create-readtime').value = '5';
+    document.getElementById('create-category').value = 'musique';
+    document.getElementById('create-featured').checked = false;
+    document.getElementById('create-breaking').checked = false;
+    document.getElementById('create-save-msg').style.display = 'none';
+    document.getElementById('create-img-preview-wrap').style.display = 'none';
+    document.getElementById('create-modal-overlay').classList.add('open');
+    setTimeout(() => document.getElementById('create-title').focus(), 100);
+  };
+
+  // Preview image à la saisie de l'URL
+  document.getElementById('create-image')?.addEventListener('input', (e) => {
+    const url = e.target.value.trim();
+    const wrap = document.getElementById('create-img-preview-wrap');
+    const img  = document.getElementById('create-img-preview');
+    if (url.startsWith('http')) { img.src = url; wrap.style.display = ''; }
+    else { wrap.style.display = 'none'; }
+  });
+
+  document.getElementById('create-cancel-btn')?.addEventListener('click', () => {
+    document.getElementById('create-modal-overlay').classList.remove('open');
+  });
+  document.getElementById('create-modal-overlay')?.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('create-modal-overlay'))
+      document.getElementById('create-modal-overlay').classList.remove('open');
+  });
+
+  document.getElementById('create-save-btn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('create-save-btn');
+    const msg = document.getElementById('create-save-msg');
+    const title = document.getElementById('create-title').value.trim();
+    if (!title) { alert('Le titre est obligatoire.'); return; }
+
+    btn.disabled = true; btn.textContent = '⏳ Publication…';
+    const payload = {
+      title,
+      category: document.getElementById('create-category').value,
+      date:     document.getElementById('create-date').value,
+      author:   document.getElementById('create-author').value.trim() || 'Rédaction ONE',
+      readTime: parseInt(document.getElementById('create-readtime').value) || 5,
+      image:    document.getElementById('create-image').value.trim(),
+      excerpt:  document.getElementById('create-excerpt').value.trim(),
+      body:     document.getElementById('create-body').value.trim(),
+      tags:     document.getElementById('create-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+      featured: document.getElementById('create-featured').checked,
+      breaking: document.getElementById('create-breaking').checked,
+    };
+
+    try {
+      const r = await fetch(`${API}/api/articles`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+        body: JSON.stringify(payload),
+      });
+      const d = await r.json();
+      if (d.success) {
+        msg.style.display = 'inline';
+        showToast('🎉 Article publié !');
+        await loadArticles();
+        await loadStatus();
+        setTimeout(() => document.getElementById('create-modal-overlay').classList.remove('open'), 1200);
+      } else {
+        showToast('❌ ' + (d.error || 'Erreur'), 'var(--red)');
+      }
+    } catch (e) { showToast('❌ ' + e.message, 'var(--red)'); }
+    btn.disabled = false; btn.textContent = '✍️ Publier l\'article';
+  });
 
   /* ── ÉDITION ARTICLES ── */
   window.openEditModal = (id) => {

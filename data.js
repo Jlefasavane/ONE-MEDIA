@@ -14,12 +14,13 @@ const API_BASE = 'https://one-media-production.up.railway.app';
     .then(r => r.ok ? r.json() : null)
     .then(data => {
       if (!data || !data.articles?.length) return;
-      // Articles curatés statiques EN PRIORITÉ — IA en complément seulement
-      // On ne touche PAS à l'ordre des articles statiques existants
       const staticIds = new Set(ARTICLES.map(a => a.id));
-      const aiSupplement = data.articles.filter(a => !staticIds.has(a.id));
-      ARTICLES.push(...aiSupplement); // IA s'ajoute APRÈS nos articles curatés
-      // Re-render — toujours dispatcher, renderHome vérifie si le DOM est prêt
+      // Articles créés manuellement via admin (non-IA) → TOUT EN HAUT
+      const railwayCustom = data.articles.filter(a => !a.aiGenerated && !staticIds.has(a.id));
+      // Articles IA Railway → en complément, après les statiques
+      const railwayAI    = data.articles.filter(a =>  a.aiGenerated && !staticIds.has(a.id));
+      if (railwayCustom.length) ARTICLES.unshift(...railwayCustom);
+      ARTICLES.push(...railwayAI);
       window.dispatchEvent(new CustomEvent('articles-updated'));
     })
     .catch(() => { /* Pas de serveur = articles statiques */ });

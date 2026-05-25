@@ -93,6 +93,45 @@ app.get('/api/articles', (req, res) => {
   } catch { res.status(500).json({ error: 'Erreur lecture articles.json' }); }
 });
 
+// POST /api/articles — créer un article custom (admin)
+app.post('/api/articles', adminAuth, (req, res) => {
+  const { title, excerpt, body, category, image, author, date, readTime, tags, featured, breaking } = req.body;
+  if (!title || !category) return res.status(400).json({ error: 'title et category requis' });
+
+  const data = readJSON(ARTICLES_FILE, { articles: [], count: 0, generatedAt: new Date().toISOString() });
+
+  const slug = (title || 'article')
+    .toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 80);
+
+  const article = {
+    id:          `custom-${Date.now()}`,
+    slug,
+    title:       title.trim(),
+    excerpt:     (excerpt || '').trim(),
+    body:        (body || '').trim(),
+    category:    category || 'musique',
+    author:      (author || 'Rédaction ONE').trim(),
+    date:        date || new Date().toISOString().slice(0, 10),
+    readTime:    parseInt(readTime) || 5,
+    image:       (image || '').trim(),
+    featured:    !!featured,
+    breaking:    !!breaking,
+    tags:        Array.isArray(tags) ? tags : (tags || '').split(',').map(t => t.trim()).filter(Boolean),
+    views:       0,
+    aiGenerated: false,
+    createdAt:   new Date().toISOString(),
+  };
+
+  // Insérer en tête de liste (priorité maximale)
+  data.articles.unshift(article);
+  data.count = data.articles.length;
+  writeJSON(ARTICLES_FILE, data);
+  console.log(`✍️  Article custom créé : "${article.title.slice(0, 50)}"`);
+  res.json({ success: true, article });
+});
+
 // GET /api/articles/:id
 app.get('/api/articles/:id', (req, res) => {
   if (!fs.existsSync(ARTICLES_FILE)) return res.status(404).json({ error: 'Not found' });
