@@ -800,6 +800,14 @@ cron.schedule('30 */6 * * *', async () => {
   finally     { isRefreshingClips = false; }
 });
 
+/* ── Gestion erreurs globales (évite les crashs Railway) ─── */
+process.on('uncaughtException', (err) => {
+  console.error('❌ UncaughtException (non-fatal):', err.message);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('❌ UnhandledRejection (non-fatal):', reason?.message || reason);
+});
+
 /* ── Lancement ───────────────────────────────────────────── */
 app.listen(PORT, () => {
   console.log('\n' + '═'.repeat(50));

@@ -14,11 +14,11 @@ const API_BASE = 'https://one-media-production.up.railway.app';
     .then(r => r.ok ? r.json() : null)
     .then(data => {
       if (!data || !data.articles?.length) return;
-      // Fusionne : articles IA en premier, statiques en complément
-      const aiIds = new Set(data.articles.map(a => a.id));
-      const staticFallback = ARTICLES.filter(a => !aiIds.has(a.id));
-      ARTICLES.length = 0;
-      ARTICLES.push(...data.articles, ...staticFallback);
+      // Articles curatés statiques EN PRIORITÉ — IA en complément seulement
+      // On ne touche PAS à l'ordre des articles statiques existants
+      const staticIds = new Set(ARTICLES.map(a => a.id));
+      const aiSupplement = data.articles.filter(a => !staticIds.has(a.id));
+      ARTICLES.push(...aiSupplement); // IA s'ajoute APRÈS nos articles curatés
       // Re-render — toujours dispatcher, renderHome vérifie si le DOM est prêt
       window.dispatchEvent(new CustomEvent('articles-updated'));
     })
