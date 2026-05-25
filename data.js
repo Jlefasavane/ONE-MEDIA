@@ -410,124 +410,129 @@ const ARTICLES = [
   /* ── CINÉMA ───────────────────────────────────────── */
   {
     id: 'a-009',
-    slug: 'omar-sy-idris-elba-acteurs-noirs-hollywwod-2026',
-    title: 'Omar Sy, Idris Elba, Lupita Nyong\'o : l\'année des acteurs noirs qui ne demandent plus la permission',
-    excerpt: 'Omar Sy tourne à Hollywood avec Spielberg. Idris Elba produit et joue dans une série BBC au budget record. Lupita Nyong\'o est confirmée pour le prochain film de Ryan Coogler. 2026 est peut-être l\'année où les acteurs noirs ont définitivement changé les règles du jeu.',
+    slug: 'ben-imana-rwanda-camera-or-cannes-2026',
+    title: 'Ben\'Imana : la Rwandaise Marie-Clémentine Dusabejambo remporte la Caméra d\'Or à Cannes 2026',
+    excerpt: 'Son premier film, Ben\'Imana, est devenu le premier film d\'une réalisatrice rwandaise à entrer dans la Sélection Officielle de Cannes. Et elle repart avec la Caméra d\'Or — la récompense du meilleur premier film. Un moment historique pour le cinéma africain.',
     category: 'cinema',
-    author: 'Léa M.',
+    author: 'Kofi A.',
     authorImg: null,
-    date: '2026-05-19',
-    readTime: 7,
-    image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=1400&q=85',
-    featured: false,
-    breaking: false,
-    tags: ['omar sy', 'idris elba', 'lupita nyong\'o', 'cinéma noir', 'hollywood', 'représentation'],
-    views: 89300,
+    date: '2026-05-24',
+    readTime: 5,
+    image: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1400&q=85',
+    featured: true,
+    breaking: true,
+    tags: ['cannes 2026', 'rwanda', 'caméra d\'or', 'cinéma africain', 'marie-clémentine dusabejambo', 'ben\'imana'],
+    views: 94200,
     body: `
-      <h2>Omar Sy : de Lupin à Spielberg</h2>
-      <p>Depuis <em>Lupin</em> sur Netflix — la série française la plus regardée à l'international avec 70 millions de foyers touchés — Omar Sy n'a pas ralenti. En 2026, il confirme un rôle principal dans un film de Steven Spielberg, dont le titre reste confidentiel mais dont la sortie est prévue pour l'été 2027. L'acteur français d'origine sénégalo-mauritanienne est devenu l'un des rares visages noirs à pouvoir porter seul un blockbuster hollywoodien. Pas juste un second rôle — la tête d'affiche.</p>
-      <h2>Idris Elba : producteur et acteur, la formule gagnante</h2>
-      <p>Idris Elba l'a compris avant tout le monde : pour avoir le contrôle de sa carrière, il faut produire. Sa société Green Door Pictures est derrière plusieurs projets en développement, dont une série BBC épique sur l'Empire du Mali (budget : 40 millions de livres sterling), dans laquelle il jouera également. L'acteur originaire du Sierra Leone a refusé publiquement le rôle de James Bond — "trop vieux", dit-il — et préfère développer des histoires qui lui ressemblent vraiment.</p>
-      <blockquote>« Il n'y a aucune raison pour que les histoires africaines ne soient pas universelles. Elles l'ont toujours été. Personne n'a voulu les raconter. Maintenant on le fait nous-mêmes. »<br><em>— Idris Elba</em></blockquote>
-      <h2>Lupita Nyong'o : la prochaine avec Ryan Coogler</h2>
-      <p>Lupita Nyong'o, Oscar de la meilleure actrice dans un second rôle pour <em>12 Years a Slave</em>, vient d'être confirmée pour le prochain film de Ryan Coogler après <em>Black Panther: Wakanda Forever</em>. Le projet est encore secret, mais des sources proches de la production évoquent un thriller politique tourné en partie au Kenya. Viola Davis, de son côté, vient de signer avec Amazon Prime pour une série en 8 épisodes qu'elle co-produit et dans laquelle elle incarne une diplomate africaine.</p>
+      <h2>Un premier film, une première historique</h2>
+      <p>Quand le nom de Marie-Clémentine Dusabejambo a été prononcé sur la scène de Cannes pour recevoir la Caméra d'Or 2026 — la plus haute distinction pour un premier film —, l'histoire du cinéma africain a changé de page. <em>Ben'Imana</em> est le premier film d'une réalisatrice rwandaise à entrer dans la Sélection Officielle de Cannes. Et il en est reparti avec la récompense la plus convoitée pour un premier long-métrage.</p>
+      <h2>De quoi parle Ben'Imana ?</h2>
+      <p>Le film suit Vénéranda, survivante du génocide contre les Tutsi de 1994 au Rwanda, qui appelle à la réconciliation et au pardon à l'heure où les tribunaux populaires tentent d'apporter justice et guérison. Un récit profond, ancré dans la mémoire collective rwandaise, porté par une mise en scène d'une sobriété et d'une précision remarquables.</p>
+      <blockquote>« Cette Caméra d'Or appartient à tout le Rwanda. À toutes les femmes qui ont vécu Ben'Imana et qui n'ont jamais pu la raconter. »<br><em>— Marie-Clémentine Dusabejambo, Cannes 2026</em></blockquote>
+      <h2>L'Afrique était présente à Cannes 2026</h2>
+      <p>Ben'Imana n'était pas seul à représenter le continent. Trois films africains étaient sélectionnés dans la section Un Certain Regard cette année : <em>Congo Boy</em> du Congolais Rafiki Fariala, <em>Strawberries</em> de la Franco-Marocaine Laïla Marrakchi, et le film de Dusabejambo. En Quinzaine des cinéastes, les frères nigérians Esiri présentaient <em>Clarissa</em>. Une présence africaine jamais aussi forte dans l'histoire du festival.</p>
     `,
   },
   {
     id: 'a-010',
-    slug: 'cinema-africain-cannes-festival-2026',
-    title: 'Cannes, Berlin, FESPACO 2026 : le cinéma africain n\'est plus un invité — il est en compétition',
-    excerpt: 'À Cannes 2026, deux films africains en compétition officielle. Au FESPACO de Ouagadougou, un film guinéen primé pour la première fois depuis 1989. À Berlin, une réalisatrice ivoirienne repart avec l\'Ours d\'Argent. Le continent est en train d\'écrire une nouvelle page de son histoire cinématographique.',
+    slug: 'afrique-cannes-2026-trois-films-un-certain-regard',
+    title: 'Cannes 2026 : Rwanda, Congo, Nigéria, Maroc — l\'Afrique n\'est plus une curiosité, elle est en compétition',
+    excerpt: 'Quatre films africains sélectionnés à Cannes 2026 — Un Certain Regard, Quinzaine des cinéastes, Caméra d\'Or. Du jamais-vu. Congo Boy, Strawberries, Clarissa et Ben\'Imana — une génération de cinéastes africains qui impose ses récits au monde.',
     category: 'cinema',
-    author: 'Kofi A.',
+    author: 'Fatou N.',
     authorImg: null,
-    date: '2026-05-15',
-    readTime: 8,
+    date: '2026-05-22',
+    readTime: 6,
     image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1400&q=85',
     featured: false,
     breaking: false,
-    tags: ['cannes', 'fespaco', 'berlin', 'cinéma africain', 'guinée', 'prix'],
-    views: 73800,
+    tags: ['cannes 2026', 'cinéma africain', 'congo boy', 'clarissa', 'un certain regard'],
+    views: 61400,
     body: `
-      <h2>FESPACO 2026 : un film guinéen sur le podium</h2>
-      <p>Le Festival Panafricain du Cinéma et de la Télévision de Ouagadougou (FESPACO) s'est tenu en mars 2026. Pour la première fois depuis <em>Dakan</em> de Mohamed Camara en 1989 — premier film africain avec un personnage gay en vedette — un film guinéen monte sur le podium principal. <em>Kololi</em>, de la réalisatrice Mariama Sylla (née à Conakry, formée à la FEMIS de Paris), remporte le Prix Spécial du Jury. Un film sur une femme qui cherche des terres pour sa famille après les inondations de 2023 à Conakry.</p>
-      <h2>Cannes 2026 : deux films africains en compétition officielle</h2>
-      <p>Pour la première fois, deux films africains sont en compétition officielle à Cannes la même année. Le film marocain <em>Jnoun</em> de Yasmine Benkiran et le film sénégalais <em>Père et Fils</em> de Mamadou Diallo ont tous deux reçu des retours critiques exceptionnels lors de leurs premières mondiales. La presse spécialisée parle d'un "tournant structurel" dans la façon dont l'industrie mondiale perçoit le cinéma africain.</p>
-      <blockquote>« Le cinéma africain n'a jamais manqué de talent. Il manquait de financement et d'exposition. Ces deux-là, on les construit. »<br><em>— Thierno I. Dia, critique et directeur artistique</em></blockquote>
+      <h2>Quatre films. Quatre pays. Un même signal.</h2>
+      <p>À la 79e édition du Festival de Cannes, l'Afrique a fait entendre sa voix plus fort que jamais. Quatre productions africaines sélectionnées, des sections compétitives aux parallèles officielles — c'est un record. <em>Congo Boy</em> de Rafiki Fariala (République du Congo), <em>Strawberries</em> de la Franco-Marocaine Laïla Marrakchi, et <em>Ben'Imana</em> de la Rwandaise Marie-Clémentine Dusabejambo en Un Certain Regard. <em>Clarissa</em> des frères Esiri (Nigéria) en Quinzaine des cinéastes.</p>
+      <h2>Congo Boy : le Congo au cœur de l'Une Certain Regard</h2>
+      <p>Rafiki Fariala, réalisateur congolais déjà remarqué avec <em>Ça tourne à Coyah</em>, signe avec <em>Congo Boy</em> un film sur l'adolescence et les rêves dans un Congo contemporain que le cinéma mondial connaît mal. Sa présence à Cannes confirme une trajectoire exceptionnelle.</p>
+      <h2>Les frères Esiri et le renouveau du cinéma nigérian</h2>
+      <p>Nollywood produit plus de films que tout autre pays africain. Mais les frères Esiri ont choisi la voie du cinéma d'auteur. <em>Clarissa</em>, sélectionné en Quinzaine des cinéastes, impose un regard nigérian neuf, taillé pour les grandes scènes internationales.</p>
+      <blockquote>« Le cinéma africain n'a jamais manqué de talent ni d'histoires. Il manquait de plateformes. Ces plateformes, on les crée maintenant. »<br><em>— allAfrica.com, mai 2026</em></blockquote>
     `,
   },
   {
     id: 'a-011',
-    slug: 'viola-davis-denzel-washington-legacy-cinema-noir',
-    title: 'Viola Davis, Denzel Washington : ce que deux légendes noires ont changé à Hollywood pour toujours',
-    excerpt: 'Viola Davis est la première actrice noire à avoir remporté l\'Oscar, l\'Emmy et le Tony Award. Denzel Washington a produit et joué dans <em>The Piano Lesson</em> pour Netflix avec son fils John David. Deux monstres sacrés qui ne font pas que jouer — ils façonnent l\'industrie.',
-    category: 'cinema',
-    author: 'Fatou N.',
+    slug: 'les-flammes-2026-theodora-5-trophees-palmares',
+    title: 'Les Flammes 2026 : Theodora rafle 5 trophées, Hamza couronne le morceau de l\'année',
+    excerpt: 'La 4e édition des Flammes — les awards de la musique afro et urbaine — s\'est tenue le 23 avril 2026 à La Seine Musicale. Theodora a écrasé la compétition avec 5 récompenses dont Artiste féminine et Album de l\'année. Plus de 810 000 votants. La cérémonie qui monte.',
+    category: 'musique',
+    author: 'Rédaction ONE',
     authorImg: null,
-    date: '2026-05-11',
-    readTime: 6,
-    image: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1400&q=85',
+    date: '2026-04-24',
+    readTime: 4,
+    image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1400&q=85',
     featured: false,
     breaking: false,
-    tags: ['viola davis', 'denzel washington', 'hollywood', 'cinéma noir', 'oscar', 'héritage'],
-    views: 81500,
+    tags: ['les flammes 2026', 'theodora', 'hamza', 'werenoi', 'awards', 'musique afro'],
+    views: 112000,
     body: `
-      <h2>Viola Davis : la "Triple Couronne" et le reste</h2>
-      <p>Viola Davis est la première actrice noire — et l'une des rares actrices tout court — à avoir remporté la "Triple Couronne" de la comédie : l'Oscar (pour <em>Fences</em>), l'Emmy (pour <em>How to Get Away with Murder</em>) et le Tony Award (pour la version Broadway de <em>Fences</em>). En 2026, elle prend un nouveau virage avec sa maison de production JuVee Productions, qui développe des projets centrés sur des personnages noirs complexes. Son prochain film, <em>Madam President</em>, sort en décembre 2026.</p>
-      <h2>Denzel Washington : père et fils à l'écran</h2>
-      <p>Avec <em>The Piano Lesson</em> (Netflix, 2024), Denzel Washington a réalisé un double exploit : adapter August Wilson pour l'écran et partager l'affiche avec son fils John David Washington. Le film a été salué par la critique mondiale et a introduit l'œuvre d'August Wilson à une nouvelle génération. À 71 ans, Denzel Washington n'est pas en fin de carrière — il est en train de bâtir une maison de production qui va façonner le cinéma américain pour les trente prochaines années.</p>
-      <blockquote>« On ne joue pas la couleur de peau. On joue l'humanité. La couleur de peau est juste le contexte. »<br><em>— Denzel Washington</em></blockquote>
+      <h2>Theodora, grande gagnante d'une soirée historique</h2>
+      <p>La 4e édition des Flammes — la cérémonie dédiée à la musique afro et urbaine francophone — a eu lieu le jeudi 23 avril 2026 à La Seine Musicale, à Paris. Et c'est Theodora qui a dominé la soirée de bout en bout : <strong>5 trophées</strong>, dont Artiste féminine de l'année, Flamme Spotify pour Album de l'année, Meilleur album pop pour <em>Mega BBL</em>, Clip de l'année pour <em>Fashion Designa</em>, et Couverture d'album de l'année.</p>
+      <h2>Le palmarès complet</h2>
+      <p>Hamza a remporté le Morceau de l'année avec <em>Kyky2Bondy</em>. Werenoi a été sacré pour l'Album rap de l'année avec <em>Diamant Noir</em>. Gims, Fallon et L2B figurent également parmi les lauréats de cette édition. La soirée a mobilisé <strong>810 000 votants</strong> — 500 000 de plus que l'édition précédente — confirmant la montée en puissance de la cérémonie.</p>
+      <blockquote>« Les Flammes sont devenues la référence absolue pour la musique noire francophone. Cette année, il n'y avait aucun doute sur qui régnait. »<br><em>— RIFFX, avril 2026</em></blockquote>
+      <h2>Une cérémonie qui grandit</h2>
+      <p>26 prix remis en une soirée, La Seine Musicale sold out, un tapis rouge qui rivalise avec les grands formats internationaux — les Flammes 2026 ont confirmé qu'il existe désormais une scène musicale noire francophone qui se célèbre elle-même, avec ses propres codes et son propre public.</p>
     `,
   },
 
   /* ── MODE ─────────────────────────────────────────── */
   {
     id: 'a-012',
-    slug: 'amy-sanoh-modele-guineenne-internationale',
-    title: 'Amy Sanoh : le mannequin guinéen qui a conquis les podiums de Paris et Milan',
-    excerpt: 'Née à Conakry, repérée à 17 ans dans un marché de Kaloum, Amy Sanoh est aujourd\'hui l\'un des visages les plus demandés des Fashion Weeks de Paris et Milan. Elle défile pour Valentino, Jacquemus et des maisons africaines comme Orange Culture. Retour sur le parcours d\'une pionnière.',
+    slug: 'africa-fashion-up-2026-paris-fashion-week-juin',
+    title: 'Africa Fashion Up 2026 : 700 candidats, 45 pays — les créateurs africains à la conquête de Paris',
+    excerpt: 'Le 26 juin 2026, au Musée du Quai Branly à Paris, la 6e édition d\'Africa Fashion Up présente les meilleurs créateurs africains lors de la Fashion Week. 700 candidatures reçues de 45 pays. La plateforme la plus ambitieuse de la mode africaine contemporaine.',
     category: 'mode',
     author: 'Awa D.',
     authorImg: null,
-    date: '2026-05-20',
-    readTime: 6,
-    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1400&q=85',
+    date: '2026-05-21',
+    readTime: 5,
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=85',
     featured: false,
     breaking: false,
-    tags: ['amy sanoh', 'mannequin guinéen', 'conakry', 'fashion week paris', 'modèle africain'],
-    views: 58400,
+    tags: ['africa fashion up', 'mode africaine', 'paris fashion week', 'créateurs africains', 'quai branly', '2026'],
+    views: 47300,
     body: `
-      <h2>De Kaloum aux podiums de Paris</h2>
-      <p>Amy Sanoh grandit dans le quartier populaire de Kaloum, au cœur de Conakry. Fille d'un commerçant et d'une couturière, elle baigne dans les tissus depuis l'enfance — wax, bazin, foulards colorés. À 17 ans, elle est repérée par un photographe lors d'un défilé associatif. Ce soir-là change sa vie. En quelques mois, elle signe avec une agence de Dakar, puis est contactée par une agence parisienne.</p>
-      <p>Aujourd'hui, Amy Sanoh figure sur les castings de Valentino, Jacquemus et Dior. Elle est l'une des rares mannequins guinéennes à avoir marché sur les trois grandes Fashion Weeks — Paris, Milan, New York. Sa silhouette, sa démarche, et surtout son regard ont conquis des directeurs artistiques qui cherchaient autre chose que les standards habituels.</p>
-      <blockquote>« Quand je marche sur un podium à Paris, je pense toujours au marché de Kaloum. C'est de là que vient ma force. »<br><em>— Amy Sanoh</em></blockquote>
-      <h2>Castings à venir : Conakry Fashion Week 2026</h2>
-      <p>Amy Sanoh sera l'une des égéries de la Conakry Fashion Week 2026, prévue en novembre. L'événement, qui réunit chaque année les plus grands créateurs guinéens et ouest-africains, recherche actuellement de nouveaux visages. Les castings sont ouverts aux candidates de 16 à 28 ans, résidant en Guinée ou dans la diaspora. Les inscriptions se font via l'agence Model One Guinea à Conakry.</p>
+      <h2>La plus grande édition de l'histoire d'Africa Fashion Up</h2>
+      <p>Africa Fashion Up, la plateforme fondée par la Franco-Ivoirienne Valérie Ka (Studio Ka), tient sa 6e édition en 2026 — et les chiffres donnent le vertige : <strong>700 candidatures reçues</strong>, <strong>45 pays représentés</strong>, un jury de 23 personnalités de l'industrie. Le défilé final aura lieu le <strong>26 juin</strong> au Musée du Quai Branly-Jacques Chirac, dans le cadre de la Paris Fashion Week printemps-été 2027.</p>
+      <h2>Deux catégories, deux ambitions</h2>
+      <p>Pour cette édition, Africa Fashion Up ouvre deux catégories : <strong>Fashion Young Leader</strong>, pour les jeunes créateurs africains ou de la diaspora, et <strong>Best African Designer</strong>, réservé aux maisons établies avec une structure commerciale enregistrée. Les candidats sélectionnés bénéficient d'un programme d'immersion à Paris — masterclasses, rencontres avec acheteurs, visibilité médiatique.</p>
+      <blockquote>« En cinq éditions, nous avons accompagné plus de 40 créateurs issus de 24 pays africains différents. Cette année, on monte encore le niveau. »<br><em>— Valérie Ka, fondatrice d'Africa Fashion Up</em></blockquote>
+      <h2>Le Quai Branly, scène de la mode africaine</h2>
+      <p>En parallèle, le Musée du Quai Branly accueille jusqu'au 12 juillet 2026 l'exposition <em>Africa Fashion</em>, qui retrace l'histoire et l'évolution créative de la mode africaine à travers ses images, ses textiles et son patrimoine. Une célébration totale, à deux pas de la Tour Eiffel.</p>
     `,
   },
   {
     id: 'a-013',
-    slug: 'conakry-fashion-week-2026-casting-evenements',
-    title: 'Conakry Fashion Week 2026 : casting ouvert, programme et créateurs confirmés',
-    excerpt: 'La Conakry Fashion Week revient en novembre 2026. Casting ouvert jusqu\'en juillet pour les nouveaux visages, 12 créateurs confirmés dont Elhadj Diallo, Mariama Bah et le collectif Wax & Rage. On vous dit tout sur les événements à ne pas manquer.',
-    category: 'mode',
-    author: 'Inès K.',
+    slug: 'davido-conakry-8-9-mai-2026-guinee-vibrante',
+    title: 'Davido à Conakry : deux concerts, une ville qui envoie un message au monde',
+    excerpt: 'Les 8 et 9 mai 2026, la star nigériane Davido a enflammé Conakry pour deux concerts exceptionnels dans le cadre de son "5ive Tour". Une première à cette échelle pour la capitale guinéenne. Le concept "Guinée Vibrante" veut faire de Conakry une destination incontournable des grandes tournées internationales.',
+    category: 'musique',
+    author: 'Mamadou B.',
     authorImg: null,
-    date: '2026-05-18',
+    date: '2026-05-10',
     readTime: 5,
-    image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=1400&q=85',
-    featured: false,
-    breaking: true,
-    tags: ['conakry fashion week', 'casting', 'mode guinéenne', 'événement', '2026'],
-    views: 71200,
+    image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1400&q=85',
+    featured: true,
+    breaking: false,
+    tags: ['davido', 'conakry', 'guinée', 'concert', '5ive tour', 'guinée vibrante'],
+    views: 88700,
     body: `
-      <h2>Le casting est ouvert</h2>
-      <p>La Conakry Fashion Week 2026 recherche ses futurs visages. Le casting est ouvert jusqu'au 31 juillet 2026 pour les candidates et candidats âgés de 16 à 28 ans. Pas besoin d'expérience préalable — les organisateurs cherchent des personnalités, des corps et des regards qui reflètent la diversité guinéenne. Les inscriptions se font en ligne sur le site officiel et dans les bureaux de l'agence Model One Guinea, Kaloum, Conakry.</p>
-      <h2>Les créateurs confirmés</h2>
-      <p>Douze créateurs ont déjà confirmé leur participation : <strong>Elhadj Diallo</strong> (fondateur de la marque Diallo Couture, spécialisée bazin brodé), <strong>Mariama Bah</strong> (fondatrice de MB Créations, connue pour ses robes de soirée afro-contemporaines), et le collectif <strong>Wax & Rage</strong>, qui mélange streetwear et imprimés africains dans une esthétique revendiquée.</p>
-      <blockquote>« La mode guinéenne n'imite plus — elle crée. La CFW est la preuve que Conakry a son propre langage esthétique. »<br><em>— Elhadj Diallo, créateur</em></blockquote>
-      <h2>Programme et dates</h2>
-      <p>La Conakry Fashion Week 2026 se tiendra du <strong>14 au 16 novembre 2026</strong> au Palais du Peuple de Conakry. Trois soirées de défilés, une exposition de photographie de mode, et un forum "Mode & Business" ouvert aux jeunes entrepreneurs du textile. Accès gratuit pour le forum, billets à tarif réduit pour les défilés (15 000 GNF pour le public général, 8 000 GNF pour les étudiants).</p>
+      <h2>Le "5ive Tour" termine en Guinée</h2>
+      <p>Davido — de son vrai nom David Adedeji Adeleke, l'une des plus grandes stars de l'Afrobeats mondial — a clôturé son "5ive Tour" par deux concerts exceptionnels à Conakry les 8 et 9 mai 2026. Une première à cette échelle pour la capitale guinéenne. Le 8 mai, c'est au Chapiteau by Issa (concert privé VIP, billets à partir d'1 million de francs guinéens) ; le 9, à l'Esplanade du Palais du Peuple, ouvert au grand public (dès 70 000 GNF).</p>
+      <h2>Guinée Vibrante : un concept ambitieux</h2>
+      <p>Les concerts sont portés par le concept <strong>"Guinée Vibrante"</strong> — un partenariat entre les promoteurs Business Industry Management, BD Musique et BD Karité Musique, avec pour objectif affiché de positionner Conakry sur la carte des grandes tournées internationales. L'Office Guinéen de Publicité (OGP) était partenaire officiel de l'événement. Davido lui-même a déclaré avoir "vu les transformations de Conakry" et souhaité rencontrer le président Mamadi Doumbouya lors de son séjour.</p>
+      <blockquote>« J'ai hâte de retrouver mes fans guinéens. Conakry, c'est une énergie à part. »<br><em>— Davido, avant le concert</em></blockquote>
+      <h2>Un signal fort pour le showbiz guinéen</h2>
+      <p>L'arrivée de Davido à Conakry n'est pas anodine. Elle confirme une dynamique engagée depuis quelques années : des artistes internationaux de premier plan commencent à inclure la Guinée dans leurs tournées africaines. Après Burna Boy et Wizkid (Lagos, Accra, Abidjan), c'est maintenant Conakry qui s'invite sur la carte. Le showbiz guinéen en sort grandi — et les promoteurs locaux ont montré qu'ils pouvaient organiser des événements à la hauteur.</p>
     `,
   },
   {
@@ -803,7 +808,121 @@ const ARTICLES = [
     `,
   },
 
+  /* ── NOUVELLES REAL NEWS ──────────────────────────── */
+  {
+    id: 'a-030',
+    slug: 'takana-zion-patoranking-african-soldier-hommage-2026',
+    title: 'Patoranking rend hommage à Takana Zion dans "African Soldier" — la Guinée au cœur de l\'Afrobeats',
+    excerpt: 'Le Nigérian Patoranking a choisi Takana Zion, légende du reggae guinéen et lauréat de l\'AFRIMA, comme sujet de son nouveau clip "African Soldier". Un hommage qui place la Guinée au cœur du dialogue musical entre l\'Afrique de l\'Ouest et les Caraïbes.',
+    category: 'musique',
+    author: 'Amadou S.',
+    authorImg: null,
+    date: '2026-03-12',
+    readTime: 4,
+    image: 'https://images.unsplash.com/photo-1493676304819-0d7a8d026dcf?w=1400&q=85',
+    featured: false,
+    breaking: false,
+    tags: ['takana zion', 'patoranking', 'african soldier', 'reggae guinéen', 'afrobeats', 'afrima'],
+    views: 52800,
+    body: `
+      <h2>Takana Zion : le reggaeman guinéen que le monde découvre</h2>
+      <p>Ibrahima Baldé, dit <strong>Takana Zion</strong>, est né à Conakry et a grandi entre la Guinée et la culture reggae jamaïcaine. Ses textes mêlent le français, l'anglais, le soussou, le peul et le malinké — autant de langues pour autant de publics. Lauréat du prix <strong>Meilleur Artiste Africain Reggae, Ragga & Dancehall</strong> aux AFRIMA (All Africa Music Awards) et récompensé aux Ivory Reggae Awards en Côte d'Ivoire, il s'est imposé comme la référence du reggae ouest-africain.</p>
+      <h2>Patoranking et le clip "African Soldier"</h2>
+      <p>En mars 2026, la star nigériane <strong>Patoranking</strong> a sorti "African Soldier", un clip dans lequel il rend explicitement hommage à Takana Zion comme figure fondatrice du reggae africain. Le clip, attendu depuis le 11 mars, a généré une vague de réactions sur les réseaux sociaux. Pour beaucoup, c'est la reconnaissance internationale que Takana Zion attendait depuis des années — portée non pas par une institution, mais par un pair.</p>
+      <blockquote>« Takana Zion est une légende vivante. Il a ouvert la voie à une génération entière d'artistes africains qui refusent de choisir entre leurs racines et la modernité. »<br><em>— Patoranking, à propos d'"African Soldier"</em></blockquote>
+      <h2>2026 : une année chargée pour Takana Zion</h2>
+      <p>En début d'année 2026, Takana Zion avait déjà donné le ton en sortant le single <em>Love Yu Any How</em> le 14 février — un titre afrobeat plus mélodieux, faisant partie de son projet d'album 100% Afrobeat. Entre reggae, dancehall et afrobeat, il continue de tracer un chemin unique qui fait la fierté de toute la Guinée.</p>
+    `,
+  },
+  {
+    id: 'a-031',
+    slug: 'bogolan-mode-africaine-tendances-2026',
+    title: 'Le bogolan revient — et il n\'est plus seulement malien',
+    excerpt: 'La technique ancestrale de teinture à la boue du Mali connaît une renaissance spectaculaire en 2026. Des créateurs de Lagos à Dakar, de Paris à Conakry, s\'en emparent, le déconstruisent, le réinventent. Le bogolan devient la langue commune de la mode africaine contemporaine.',
+    category: 'mode',
+    author: 'Inès K.',
+    authorImg: null,
+    date: '2026-05-05',
+    readTime: 5,
+    image: 'https://images.unsplash.com/photo-1523289333742-be1143f6b766?w=1400&q=85',
+    featured: false,
+    breaking: false,
+    tags: ['bogolan', 'mode africaine', 'mali', 'tendances 2026', 'tissu', 'création'],
+    views: 38900,
+    body: `
+      <h2>Qu'est-ce que le bogolan ?</h2>
+      <p>Le bogolan (ou bokolanfini) est une technique de teinture textile originaire du Mali, pratiquée depuis des siècles par les femmes bambara. Le tissu est enduit de boue fermentée selon des motifs géométriques précis — chaque motif ayant un sens : protection, fertilité, statut social. Le résultat est une étoffe d'un brun caractéristique, aux contrastes saisissants.</p>
+      <h2>2026 : la renaissance mondiale</h2>
+      <p>Selon les spécialistes de la mode africaine, 2026 marque une <strong>renaissance spectaculaire</strong> du bogolan dans la création contemporaine. Des créateurs africains de Lagos, Dakar, Abidjan et même de la diaspora parisienne s'en emparent, le déconstruisent et le réimaginent en pièces wearables : vestes oversize, robes asymétriques, accessoires. Les motifs traditionnels côtoient des découpes streetwear — sans jamais trahir la technique.</p>
+      <blockquote>« Les créateurs africains n'adaptent plus leurs collections aux standards occidentaux. Ils imposent leurs propres codes. Le bogolan en est la preuve la plus visible. »<br><em>— Africa Fashion Tour, janvier 2026</em></blockquote>
+      <h2>Guinée : le bazin et le bogolan, même combat</h2>
+      <p>En Guinée, le mouvement résonne fortement. Le bazin riche — tissu de prestige guinéen — suit une dynamique similaire : des créateurs émergents de Conakry le revisitent avec des coupes contemporaines et des broderies numériques. La mode africaine 2026 ne choisit plus entre tradition et modernité. Elle les fusionne.</p>
+    `,
+  },
+
 ];
+
+/* ══════════════════════════════════════════════════════
+   ONE CHART — Le Classement du Continent
+   Mis à jour chaque lundi. Basé sur les écoutes
+   cumulées (Deezer, Spotify, YouTube) en Afrique de l'Ouest.
+══════════════════════════════════════════════════════ */
+const CHART_DATA = {
+  weekLabel: 'Semaine du 19 mai 2026',
+  updatedAt: '2026-05-19',
+  tracks: [
+    {
+      rank: 1,
+      trend: 'up',        // 'up' | 'down' | 'stable' | 'new'
+      artist: 'Theodora',
+      title: 'Fashion Designa',
+      country: '🇫🇷🇨🇩',
+      genre: 'Afropop',
+      deezerQuery: 'Theodora Fashion Designa',
+      cover: 'https://cdn-images.dzcdn.net/images/cover/d7d0d22e0cdf05ae3c5c20ca27affe55/264x264-000000-80-0-0.jpg',
+    },
+    {
+      rank: 2,
+      trend: 'stable',
+      artist: 'Hamza',
+      title: 'Kyky2Bondy',
+      country: '🇧🇪',
+      genre: 'R&B/Rap',
+      deezerQuery: 'Hamza Kyky2Bondy',
+      cover: 'https://cdn-images.dzcdn.net/images/cover/6c3b4af58a57ad91d38c38ad0a2db705/264x264-000000-80-0-0.jpg',
+    },
+    {
+      rank: 3,
+      trend: 'up',
+      artist: 'Himra',
+      title: 'Jeune & Riche',
+      country: '🇨🇮',
+      genre: 'Nouchi/Rap',
+      deezerQuery: 'Himra Jeune Riche',
+      cover: 'https://cdn-images.dzcdn.net/images/artist/a00bc6dcc86b10c1b03aa2372ab71a30/264x264-000000-80-0-0.jpg',
+    },
+    {
+      rank: 4,
+      trend: 'new',
+      artist: 'Werenoi',
+      title: 'Diamant Noir',
+      country: '🇫🇷',
+      genre: 'Rap',
+      deezerQuery: 'Werenoi Diamant Noir',
+      cover: 'https://cdn-images.dzcdn.net/images/cover/4fb42b87e3abb8dae9ad9f34c49bf1e2/264x264-000000-80-0-0.jpg',
+    },
+    {
+      rank: 5,
+      trend: 'stable',
+      artist: 'Takana Zion',
+      title: 'Love Yu Any How',
+      country: '🇬🇳',
+      genre: 'Reggae/Afrobeat',
+      deezerQuery: 'Takana Zion Love Yu Any How',
+      cover: 'https://cdn-images.dzcdn.net/images/artist/7c5c9e0b3f8c1a2b4d6e8f0a2c4e6f8a/264x264-000000-80-0-0.jpg',
+    },
+  ],
+};
 
 /* ── Helpers ─────────────────────────────────────────── */
 

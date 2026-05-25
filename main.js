@@ -434,6 +434,47 @@ function renderArticleCard(a, opts = {}) {
 })();
 
 /* ═══════════════════════════════════════════════════
+   ONE CHART — Le Classement du Continent
+═══════════════════════════════════════════════════ */
+(function initChart() {
+  const list  = document.getElementById('chart-list');
+  const label = document.getElementById('chart-week-label');
+  if (!list || typeof CHART_DATA === 'undefined') return;
+
+  if (label) label.textContent = CHART_DATA.weekLabel;
+
+  const TREND_ICON = { up: '↑', down: '↓', stable: '—', new: 'NEW' };
+  const TREND_CLASS = { up: 'trend-up', down: 'trend-down', stable: 'trend-stable', new: 'trend-new' };
+
+  list.innerHTML = CHART_DATA.tracks.map(t => `
+    <div class="chart-item" data-query="${encodeURIComponent(t.deezerQuery)}">
+      <div class="chart-rank">${String(t.rank).padStart(2, '0')}</div>
+      <div class="chart-trend ${TREND_CLASS[t.trend]}">${TREND_ICON[t.trend]}</div>
+      <div class="chart-cover">
+        <img src="${t.cover}" alt="${t.artist}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=56&h=56&fit=crop'">
+      </div>
+      <div class="chart-info">
+        <div class="chart-artist">${t.artist}</div>
+        <div class="chart-track">${t.title}</div>
+      </div>
+      <div class="chart-meta">
+        <div class="chart-flag">${t.country}</div>
+        <div class="chart-genre">${t.genre}</div>
+      </div>
+      <button class="chart-play-btn" aria-label="Écouter ${t.title}">▶</button>
+    </div>
+  `).join('');
+
+  // Click → lance une recherche Deezer dans le player existant
+  list.querySelectorAll('.chart-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const query = decodeURIComponent(item.dataset.query);
+      window.dispatchEvent(new CustomEvent('deezer-search', { detail: { query } }));
+    });
+  });
+})();
+
+/* ═══════════════════════════════════════════════════
    CLIPS YOUTUBE
 ═══════════════════════════════════════════════════ */
 (function initClips() {

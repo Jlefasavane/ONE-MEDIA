@@ -1,11 +1,11 @@
-{
+﻿{
   "version": "0.0.1",
   "configurations": [
     {
       "name": "one-media",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "-p", "3002", "C:\\Users\\jeune\\OneMedia"],
-      "port": 3002
+      "runtimeArgs": ["serve", "-l", "3333", "."],
+      "port": 3333
     }
   ]
 }

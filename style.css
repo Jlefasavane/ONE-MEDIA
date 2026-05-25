@@ -2294,4 +2294,222 @@ img[loading="lazy"][data-loaded] {
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.12); border-radius: 3px; }
+
+/* ══════════════════════════════════════════════════════
+   EBONY CLAY — Surfaces featured, gradients de sections
+══════════════════════════════════════════════════════ */
+
+/* Hero side items : fond Ebony Clay profond */
+.hero-side-item {
+  background: linear-gradient(160deg, var(--ebony) 0%, #0d1a3a 100%);
+}
+.hero-side-item::before {
+  background: linear-gradient(to top, rgba(13,26,58,.9) 0%, transparent 60%);
+}
+
+/* Section headers : trait Ebony Clay gauche */
+.section-header {
+  border-left: 3px solid var(--ebony);
+  padding-left: 14px;
+}
+
+/* Cards featured : badge fond Ebony Clay */
+.article-card.is-featured .article-cat {
+  background: var(--ebony);
+  color: var(--signal);
+}
+
+/* Interview cards : fond Ebony Clay */
+.interview-card {
+  background: linear-gradient(160deg, var(--ebony) 0%, #0b1530 100%);
+  border: 1px solid rgba(42,66,140,.35);
+}
+.interview-card:hover {
+  border-color: var(--ebony);
+  box-shadow: 0 0 40px rgba(42,66,140,.4);
+}
+
+/* Most-read section : numéros Ebony Clay */
+.most-read-num {
+  color: var(--ebony);
+  -webkit-text-stroke: 1px var(--ebony);
+}
+
+/* ══════════════════════════════════════════════════════
+   ONE CHART — Le Classement du Continent
+══════════════════════════════════════════════════════ */
+.chart-section {
+  padding: 72px 0;
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.chart-section::before {
+  content: 'ONE CHART';
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  font-family: var(--font-display);
+  font-size: 120px;
+  letter-spacing: 12px;
+  color: rgba(42,66,140,.06);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.chart-header {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--gutter) 40px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.chart-title-block { display: flex; flex-direction: column; gap: 6px; }
+.chart-title-block h2 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 36px);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.chart-title-block h2 span { color: var(--signal); }
+.chart-week {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.chart-list {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.chart-item {
+  display: grid;
+  grid-template-columns: 52px 28px 72px 1fr auto auto;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 20px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  transition: background .2s, border-color .2s, transform .2s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.chart-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--ebony);
+  transition: width .3s;
+}
+.chart-item:hover {
+  background: rgba(42,66,140,.08);
+  border-color: var(--ebony);
+  transform: translateX(4px);
+}
+.chart-item:hover::before { width: 5px; background: var(--signal); }
+.chart-item:first-child::before { background: var(--signal); width: 4px; }
+
+.chart-rank {
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: 1px;
+  color: var(--ebony);
+  text-align: center;
+  line-height: 1;
+}
+.chart-item:first-child .chart-rank { color: var(--signal); }
+
+.chart-trend {
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+.trend-up    { color: var(--green); }
+.trend-down  { color: var(--hot); }
+.trend-stable{ color: var(--ink-mute); }
+.trend-new   { color: var(--signal); font-size: 9px; letter-spacing: 1px; }
+
+.chart-cover {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--card);
+}
+.chart-cover img { width: 56px; height: 56px; object-fit: cover; }
+
+.chart-info { min-width: 0; }
+.chart-artist {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+.chart-track {
+  font-size: 14px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chart-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.chart-flag { font-size: 18px; line-height: 1; }
+.chart-genre {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  white-space: nowrap;
+}
+
+.chart-play-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--ebony);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ebony);
+  font-size: 14px;
+  transition: background .2s, color .2s, border-color .2s;
+  flex-shrink: 0;
+}
+.chart-play-btn:hover,
+.chart-item:first-child .chart-play-btn {
+  background: var(--signal);
+  color: #000;
+  border-color: var(--signal);
+}
+
+@media (max-width: 600px) {
+  .chart-item { grid-template-columns: 36px 20px 52px 1fr auto; gap: 10px; padding: 12px 14px; }
+  .chart-meta { display: none; }
+  .chart-cover { width: 44px; height: 44px; }
+  .chart-cover img { width: 44px; height: 44px; }
+  .chart-rank { font-size: 20px; }
+}
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.22); }
