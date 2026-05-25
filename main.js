@@ -316,13 +316,19 @@ function renderArticleCard(a, opts = {}) {
   if (!heroGrid) return;
 
   function renderHome() {
-  /* HERO — sélection aléatoire à chaque visite */
-  const allForHero = (ARTICLES || []).filter(a => a.title && a.image && a.excerpt);
-  // Mélange Fisher-Yates (déterministe par session via seed basé sur la minute)
-  const seed = Math.floor(Date.now() / 60000); // change chaque minute
-  const rng  = (i) => ((seed * 1103515245 + i * 12345 + 7) >>> 0) / 0xFFFFFFFF;
-  const shuffled = [...allForHero].sort((a, b) => rng(allForHero.indexOf(a)) - rng(allForHero.indexOf(b)));
-  const featured = shuffled.slice(0, 3);
+  /* HERO — articles curatés EN PRIORITÉ, IA en dernier recours */
+  const hasMedia = a => a.title && a.image && a.excerpt;
+  // Tier 1 : articles curatés marqués featured (non générés par IA)
+  const curatedFt = (ARTICLES || []).filter(a => hasMedia(a) && a.featured && !a.aiGenerated);
+  // Tier 2 : articles curatés breaking (sans featured)
+  const curatedBr = (ARTICLES || []).filter(a => hasMedia(a) && a.breaking && !a.featured && !a.aiGenerated);
+  // Tier 3 : autres curatés avec image
+  const curatedRest = (ARTICLES || []).filter(a => hasMedia(a) && !a.featured && !a.breaking && !a.aiGenerated);
+  // Tier 4 : articles IA en dernier recours seulement
+  const aiPool = (ARTICLES || []).filter(a => hasMedia(a) && a.aiGenerated);
+  // Pool priorisé — curatés toujours devant
+  const pool = [...curatedFt, ...curatedBr, ...curatedRest, ...aiPool];
+  const featured = pool.slice(0, 3);
   const [main, ...sides] = featured;
   if (!main) return;
 
