@@ -3,785 +3,696 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="google" content="notranslate" />
-  <meta http-equiv="Content-Language" content="fr" />
   <title>ONE MEDIA — Admin</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #000000;
-      --card: #0d0d14;
-      --border: #222;
+      --bg: #060608;
+      --sidebar: #0a0a10;
+      --card: #0e0e16;
+      --card2: #131320;
+      --border: #1e1e2e;
       --accent: #FFEF4D;
       --red: #ff2d55;
       --green: #C6FF33;
-      --yellow: #ffe500;
-      --text: #ffffff;
-      --muted: #666;
+      --blue: #4facfe;
+      --purple: #7D39EB;
+      --text: #f0f0f8;
+      --muted: #555;
+      --muted2: #888;
+      --input-bg: #13131f;
     }
+    body { background:var(--bg); color:var(--text); font-family:'Helvetica Neue',Arial,sans-serif; min-height:100vh; }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    /* ── LOGIN ── */
+    /* ══ LOGIN ══════════════════════════════════════════════ */
     #login-screen {
-      width: 100%;
-      max-width: 380px;
-      text-align: center;
+      display:flex; align-items:center; justify-content:center;
+      min-height:100vh; padding:20px;
     }
+    .login-box { width:100%; max-width:360px; text-align:center; }
+    .login-logo { font-size:30px; font-weight:900; letter-spacing:-1px; margin-bottom:4px; }
+    .login-logo em { color:var(--red); font-style:normal; }
+    .login-sub { font-size:11px; color:var(--muted2); letter-spacing:3px; text-transform:uppercase; margin-bottom:32px; }
+    .login-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:32px; }
+    .login-card label { display:block; font-size:11px; color:var(--muted2); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; text-align:left; }
+    .login-card input { width:100%; background:var(--input-bg); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:15px; padding:13px 14px; outline:none; margin-bottom:16px; transition:border-color .2s; }
+    .login-card input:focus { border-color:var(--accent); }
+    .login-btn { width:100%; background:var(--accent); color:#000; font-weight:800; font-size:13px; letter-spacing:1.5px; text-transform:uppercase; border:none; border-radius:8px; padding:14px; cursor:pointer; transition:opacity .2s; }
+    .login-btn:hover { opacity:.85; }
+    .err { color:var(--red); font-size:13px; margin-top:12px; display:none; }
 
-    .logo {
-      font-size: 28px;
-      font-weight: 900;
-      letter-spacing: -1px;
-      margin-bottom: 6px;
-    }
-    .logo span { color: var(--red); }
+    /* ══ LAYOUT ═════════════════════════════════════════════ */
+    #app { display:none; min-height:100vh; flex-direction:row; }
 
-    .subtitle {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 32px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+    /* ── Sidebar ── */
+    .sidebar {
+      width:220px; min-height:100vh; background:var(--sidebar);
+      border-right:1px solid var(--border); display:flex; flex-direction:column;
+      position:sticky; top:0; height:100vh; overflow-y:auto; flex-shrink:0;
     }
+    .sb-logo { padding:24px 20px 18px; border-bottom:1px solid var(--border); }
+    .sb-logo-txt { font-size:18px; font-weight:900; }
+    .sb-logo-txt em { color:var(--red); font-style:normal; }
+    .sb-logo-sub { font-size:10px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-top:2px; }
+    .sb-nav { flex:1; padding:12px 0; }
+    .sb-section { font-size:9px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; padding:14px 20px 6px; }
+    .sb-item {
+      display:flex; align-items:center; gap:10px;
+      padding:10px 20px; font-size:13px; font-weight:500;
+      cursor:pointer; transition:background .15s, color .15s;
+      color:var(--muted2); border-left:3px solid transparent;
+      user-select:none;
+    }
+    .sb-item:hover { background:#ffffff08; color:var(--text); }
+    .sb-item.active { background:#ffffff0d; color:var(--text); border-left-color:var(--accent); }
+    .sb-item .icon { font-size:15px; width:18px; text-align:center; }
+    .sb-badge {
+      margin-left:auto; background:var(--red); color:#fff;
+      font-size:10px; font-weight:700; border-radius:10px;
+      padding:1px 6px; min-width:18px; text-align:center;
+    }
+    .sb-footer { padding:16px 20px; border-top:1px solid var(--border); }
+    .sb-user { font-size:12px; color:var(--muted2); margin-bottom:8px; }
+    .sb-logout { background:none; border:1px solid var(--border); color:var(--muted2); font-size:11px; padding:6px 12px; border-radius:6px; cursor:pointer; width:100%; transition:all .2s; }
+    .sb-logout:hover { border-color:var(--text); color:var(--text); }
 
-    .login-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 32px;
-    }
+    /* ── Main content ── */
+    .main { flex:1; min-width:0; overflow-y:auto; }
+    .panel { display:none; padding:32px; }
+    .panel.active { display:block; }
+    .panel-title { font-size:22px; font-weight:800; margin-bottom:6px; }
+    .panel-sub { font-size:13px; color:var(--muted2); margin-bottom:28px; }
 
-    .login-card label {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-      text-align: left;
-    }
+    /* ══ COMPONENTS ═════════════════════════════════════════ */
+    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:22px; margin-bottom:16px; }
+    .card-sm { padding:16px; }
+    .card h3 { font-size:15px; font-weight:700; margin-bottom:6px; }
+    .card p { font-size:13px; color:var(--muted2); line-height:1.55; }
 
-    .login-card input {
-      width: 100%;
-      background: #1a1a1a;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-size: 15px;
-      padding: 12px 14px;
-      outline: none;
-      transition: border-color 0.2s;
-      margin-bottom: 16px;
-    }
-    .login-card input:focus { border-color: var(--accent); }
+    .section-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; margin-top:24px; }
+    .section-label:first-child { margin-top:0; }
 
-    .btn {
-      width: 100%;
-      background: var(--accent);
-      color: #000;
-      font-weight: 700;
-      font-size: 14px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      border: none;
-      border-radius: 8px;
-      padding: 13px;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    .btn:hover { opacity: 0.85; }
-    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    /* Stats grid */
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:24px; }
+    .stat-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; }
+    .stat-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
+    .stat-value { font-size:28px; font-weight:900; color:var(--accent); }
+    .stat-sub { font-size:11px; color:var(--muted2); margin-top:4px; }
+    .dot-live { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--green); margin-right:5px; animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-    .btn-danger {
-      background: var(--red);
-      color: #fff;
-    }
-    .btn-sm {
-      width: auto;
-      padding: 8px 16px;
-      font-size: 12px;
-    }
+    /* Buttons */
+    .btn { display:inline-flex; align-items:center; gap:6px; background:var(--accent); color:#000; font-weight:700; font-size:12px; letter-spacing:.8px; text-transform:uppercase; border:none; border-radius:8px; padding:10px 18px; cursor:pointer; transition:opacity .2s, transform .1s; white-space:nowrap; }
+    .btn:hover { opacity:.85; }
+    .btn:active { transform:scale(.97); }
+    .btn:disabled { opacity:.35; cursor:not-allowed; }
+    .btn-green { background:var(--green); color:#000; }
+    .btn-red { background:var(--red); color:#fff; }
+    .btn-blue { background:var(--blue); color:#000; }
+    .btn-ghost { background:none; border:1px solid var(--border); color:var(--muted2); }
+    .btn-ghost:hover { border-color:var(--text); color:var(--text); }
+    .btn-icon { padding:8px 10px; }
+    .btn-sm { padding:7px 14px; font-size:11px; }
 
-    .error-msg {
-      color: var(--red);
-      font-size: 13px;
-      margin-top: 12px;
-      display: none;
+    /* Form inputs */
+    .field { margin-bottom:14px; }
+    .field label { display:block; font-size:10px; color:var(--muted2); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+    .field input, .field select, .field textarea {
+      width:100%; background:var(--input-bg); border:1px solid var(--border);
+      border-radius:8px; color:var(--text); font-size:13px;
+      padding:10px 12px; outline:none; transition:border-color .2s;
+      font-family:inherit;
     }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color:var(--accent); }
+    .field textarea { resize:vertical; line-height:1.5; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+    .col-span-2 { grid-column:1/-1; }
 
-    /* ── DASHBOARD ── */
-    #dashboard {
-      display: none;
-      width: 100%;
-      max-width: 800px;
+    /* Image preview */
+    .img-preview {
+      width:100%; max-height:180px; object-fit:cover;
+      border-radius:8px; border:1px solid var(--border);
+      margin-top:8px; display:none; background:var(--input-bg);
     }
+    .img-preview.show { display:block; }
 
-    .dash-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 32px;
-      flex-wrap: wrap;
-      gap: 12px;
+    /* Article list */
+    .art-list { display:flex; flex-direction:column; gap:0; }
+    .art-row {
+      display:flex; align-items:center; gap:14px;
+      padding:13px 0; border-bottom:1px solid var(--border);
     }
+    .art-row:last-child { border-bottom:none; }
+    .art-thumb {
+      width:64px; height:48px; border-radius:6px; object-fit:cover;
+      flex-shrink:0; background:var(--border); cursor:pointer;
+      transition:opacity .2s; border:2px solid transparent;
+    }
+    .art-thumb:hover { opacity:.8; border-color:var(--accent); }
+    .art-info { flex:1; min-width:0; }
+    .art-title { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .art-meta { display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin-top:5px; }
+    .tag { font-size:10px; padding:2px 7px; border-radius:10px; font-weight:700; text-transform:uppercase; }
+    .tag-custom { background:#C6FF3320; color:var(--green); border:1px solid #C6FF3340; }
+    .tag-ai { background:#ffffff10; color:#666; border:1px solid #333; }
+    .tag-featured { background:#FFEF4D20; color:var(--accent); border:1px solid #FFEF4D40; }
+    .tag-breaking { background:#ff2d5520; color:var(--red); border:1px solid #ff2d5540; }
+    .tag-cat { font-size:10px; padding:2px 7px; border-radius:10px; font-weight:700; text-transform:uppercase; }
+    .art-actions { display:flex; gap:6px; flex-shrink:0; }
 
-    .dash-logo { font-size: 22px; font-weight: 900; }
-    .dash-logo span { color: var(--red); }
+    /* Clip / Event rows */
+    .item-row { display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--border); }
+    .item-row:last-child { border-bottom:none; }
+    .item-thumb { width:80px; height:45px; border-radius:5px; object-fit:cover; background:var(--border); flex-shrink:0; }
+    .item-info { flex:1; min-width:0; }
+    .item-title { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .item-sub { font-size:11px; color:var(--muted2); margin-top:3px; }
 
-    .dash-logout {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 12px;
-      padding: 7px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: color 0.2s, border-color 0.2s;
+    /* Search / filter bar */
+    .filter-bar { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; align-items:center; }
+    .filter-bar input, .filter-bar select {
+      background:var(--input-bg); border:1px solid var(--border);
+      border-radius:7px; color:var(--text); font-size:13px;
+      padding:8px 12px; outline:none; transition:border-color .2s;
     }
-    .dash-logout:hover { color: var(--text); border-color: var(--text); }
+    .filter-bar input:focus, .filter-bar select:focus { border-color:var(--accent); }
+    .filter-bar input { flex:1; min-width:180px; }
+    .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:8px; }
+    .section-header .section-label { margin:0; }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
+    /* Modal */
+    .modal-overlay {
+      display:none; position:fixed; inset:0;
+      background:rgba(0,0,0,.88); z-index:1000;
+      overflow-y:auto; padding:24px 16px;
     }
+    .modal-overlay.open { display:flex; align-items:flex-start; justify-content:center; }
+    .modal {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:16px; padding:28px; width:100%; max-width:760px;
+      margin:auto;
+    }
+    .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
+    .modal-header h2 { font-size:18px; font-weight:800; }
+    .modal-close { background:none; border:none; color:var(--muted2); font-size:22px; cursor:pointer; line-height:1; padding:0 4px; }
+    .modal-close:hover { color:var(--text); }
+    .modal-footer { display:flex; gap:10px; margin-top:22px; flex-wrap:wrap; align-items:center; }
+    .modal-msg { font-size:13px; color:var(--green); }
 
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-    }
+    /* Spinner */
+    .spinner { width:14px; height:14px; border:2px solid currentColor; border-top-color:transparent; border-radius:50%; animation:spin .7s linear infinite; display:inline-block; vertical-align:middle; }
+    @keyframes spin { to { transform:rotate(360deg); } }
 
-    .card-label {
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: 8px;
-    }
+    /* Toast */
+    .toast { position:fixed; bottom:24px; right:24px; background:var(--green); color:#000; font-weight:700; font-size:13px; padding:12px 20px; border-radius:8px; transform:translateY(80px); transition:transform .3s; z-index:9999; pointer-events:none; }
+    .toast.show { transform:translateY(0); }
 
-    .card-value {
-      font-size: 32px;
-      font-weight: 900;
-      color: var(--accent);
-    }
+    /* Scrollbar */
+    ::-webkit-scrollbar { width:5px; height:5px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:#333; border-radius:3px; }
 
-    .card-sub {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 4px;
+    /* Mobile sidebar toggle */
+    .mob-toggle { display:none; }
+    @media(max-width:700px) {
+      .sidebar { position:fixed; left:-220px; z-index:200; transition:left .25s; }
+      .sidebar.open { left:0; }
+      .mob-toggle { display:flex; position:fixed; top:14px; left:14px; z-index:300; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:8px 10px; cursor:pointer; font-size:18px; }
+      .panel { padding:20px 16px; padding-top:56px; }
     }
-
-    .status-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      margin-right: 6px;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    .section-title {
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 12px;
-    }
-
-    .action-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 16px;
-    }
-
-    .action-card h3 {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .action-card p {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 16px;
-      line-height: 1.5;
-    }
-
-    .action-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .generating-msg {
-      font-size: 13px;
-      color: var(--yellow);
-      display: none;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .spinner {
-      width: 14px;
-      height: 14px;
-      border: 2px solid var(--yellow);
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .articles-list {
-      max-height: 500px;
-      overflow-y: auto;
-    }
-
-    .art-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .art-item:last-child { border-bottom: none; }
-
-    .art-img {
-      width: 48px;
-      height: 48px;
-      border-radius: 6px;
-      object-fit: cover;
-      flex-shrink: 0;
-      background: var(--border);
-    }
-
-    .art-info { flex: 1; min-width: 0; }
-    .art-title {
-      font-size: 13px;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .art-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
-
-    .cat-badge {
-      font-size: 10px;
-      padding: 3px 8px;
-      border-radius: 20px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      flex-shrink: 0;
-    }
-
-    /* ── EDIT MODAL ── */
-    .edit-modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.85);
-      z-index: 1000;
-      overflow-y: auto;
-      padding: 20px;
-    }
-    .edit-modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
-    .edit-modal {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px;
-      width: 100%;
-      max-width: 720px;
-      margin: auto;
-    }
-    .edit-modal h2 { font-size: 18px; margin-bottom: 20px; }
-    .edit-field { margin-bottom: 14px; }
-    .edit-field label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-    .edit-field input,
-    .edit-field select,
-    .edit-field textarea {
-      width: 100%;
-      background: #1a1a1a;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-size: 14px;
-      padding: 10px 12px;
-      outline: none;
-      transition: border-color .2s;
-      font-family: inherit;
-    }
-    .edit-field input:focus,
-    .edit-field select:focus,
-    .edit-field textarea:focus { border-color: var(--accent); }
-    .edit-field textarea { min-height: 200px; resize: vertical; line-height: 1.5; font-size: 13px; }
-    .edit-modal-actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
-    .btn-ghost { background: none; border: 1px solid var(--border); color: var(--muted); }
-    .btn-ghost:hover { border-color: var(--text); color: var(--text); }
-
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: var(--green);
-      color: #000;
-      font-weight: 700;
-      font-size: 13px;
-      padding: 12px 20px;
-      border-radius: 8px;
-      transform: translateY(80px);
-      transition: transform 0.3s;
-      z-index: 9999;
-    }
-    .toast.show { transform: translateY(0); }
   </style>
 </head>
 <body>
 
-<!-- ── LOGIN ── -->
+<!-- ══ LOGIN ══════════════════════════════════════════════════ -->
 <div id="login-screen">
-  <div class="logo">ONE<span>.</span>MEDIA</div>
-  <div class="subtitle">Panneau d'administration</div>
-
-  <div class="login-card">
-    <label for="pwd-input">Mot de passe</label>
-    <input type="password" id="pwd-input" placeholder="••••••••••" autocomplete="current-password">
-    <button class="btn" id="login-btn">Accéder</button>
-    <div class="error-msg" id="error-msg">❌ Mot de passe incorrect</div>
+  <div class="login-box">
+    <div class="login-logo">ONE<em>.</em>MEDIA</div>
+    <div class="login-sub">Panneau d'administration</div>
+    <div class="login-card">
+      <label for="pwd-input">Mot de passe</label>
+      <input type="password" id="pwd-input" placeholder="••••••••" autocomplete="current-password">
+      <button class="login-btn" id="login-btn">Accéder</button>
+      <div class="err" id="error-msg">❌ Mot de passe incorrect</div>
+    </div>
   </div>
 </div>
 
-<!-- ── DASHBOARD ── -->
-<div id="dashboard">
-  <div class="dash-header">
-    <div class="dash-logo">ONE<span>.</span>MEDIA <span style="font-size:13px;color:var(--muted);font-weight:400">Admin</span></div>
-    <button class="dash-logout" id="logout-btn">Déconnexion</button>
-  </div>
+<!-- ══ APP ═════════════════════════════════════════════════════ -->
+<div id="app">
 
-  <!-- Stats -->
-  <div class="cards">
+  <button class="mob-toggle" id="mob-toggle">☰</button>
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-txt">ONE<em>.</em>MEDIA</div>
+      <div class="sb-logo-sub">Admin</div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-section">Contenu</div>
+      <div class="sb-item active" data-panel="dashboard"><span class="icon">📊</span>Tableau de bord</div>
+      <div class="sb-item" data-panel="articles"><span class="icon">📰</span>Articles <span class="sb-badge" id="sb-art-count" style="display:none">0</span></div>
+      <div class="sb-item" data-panel="clips"><span class="icon">🎬</span>Clips</div>
+      <div class="sb-item" data-panel="events"><span class="icon">📅</span>Événements</div>
+      <div class="sb-item" data-panel="artists"><span class="icon">🎤</span>Artistes</div>
+      <div class="sb-section">Communication</div>
+      <div class="sb-item" data-panel="newsletter"><span class="icon">📧</span>Newsletter</div>
+      <div class="sb-item" data-panel="messages"><span class="icon">📬</span>Messages <span class="sb-badge" id="sb-msg-count" style="display:none">0</span></div>
+      <div class="sb-section">Système</div>
+      <div class="sb-item" data-panel="settings"><span class="icon">⚙️</span>Paramètres</div>
+    </div>
+    <div class="sb-footer">
+      <div class="sb-user" id="sb-status-txt">⬤ En ligne</div>
+      <button class="sb-logout" id="logout-btn">Déconnexion</button>
+    </div>
+  </nav>
+
+  <!-- ── DASHBOARD ───────────────────────────────────────────── -->
+  <main class="main">
+  <div class="panel active" id="panel-dashboard">
+    <div class="panel-title">Tableau de bord</div>
+    <div class="panel-sub">Vue d'ensemble du site ONE MEDIA</div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Statut serveur</div>
+        <div class="stat-value" style="font-size:16px;padding-top:8px"><span class="dot-live"></span><span id="status-text">—</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Articles Railway</div>
+        <div class="stat-value" id="art-count">—</div>
+        <div class="stat-sub" id="art-date">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Refresh auto</div>
+        <div class="stat-value" style="font-size:16px;padding-top:8px">⏰</div>
+        <div class="stat-sub">Toutes les 6 heures</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Lien public</div>
+        <div class="stat-value" style="font-size:13px;padding-top:8px">
+          <a href="https://one-media-delta.vercel.app" target="_blank" style="color:var(--blue)">one-media-delta.vercel.app ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Actions rapides</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px">
+      <button class="btn btn-green" onclick="switchPanel('articles');openCreateModal()">✍️ Nouvel article</button>
+      <button class="btn" onclick="switchPanel('articles')">📰 Gérer articles</button>
+      <button class="btn btn-ghost" onclick="switchPanel('clips')">🎬 Clips</button>
+      <button class="btn btn-ghost" onclick="switchPanel('events')">📅 Événements</button>
+    </div>
+
+    <div class="section-label">Génération IA</div>
     <div class="card">
-      <div class="card-label">Statut</div>
-      <div class="card-value" style="font-size:18px;padding-top:6px">
-        <span class="status-dot"></span><span id="status-text">—</span>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-label">Articles générés</div>
-      <div class="card-value" id="art-count">—</div>
-      <div class="card-sub" id="art-date">—</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Refresh auto</div>
-      <div class="card-value" style="font-size:18px;padding-top:6px">⏰</div>
-      <div class="card-sub">Toutes les 6 heures</div>
-    </div>
-  </div>
-
-  <!-- Action Refresh -->
-  <p class="section-title">Actions</p>
-  <div class="action-card">
-    <h3>🔄 Générer de nouveaux articles</h3>
-    <p>Lance la recherche RSS (RFI, BBC Afrique, Jeune Afrique…) → Groq réécriture → articles.json. Dure 2-3 min. Le site se met à jour automatiquement.</p>
-    <div class="action-row">
-      <button class="btn btn-sm" id="refresh-btn" style="width:auto">Générer maintenant</button>
-      <div class="generating-msg" id="gen-msg">
-        <div class="spinner"></div>
-        Génération en cours…
+      <h3>🔄 Générer de nouveaux articles IA</h3>
+      <p style="margin:8px 0 16px">Lance la recherche RSS → réécriture Groq → articles.json. Dure 2-3 min.</p>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <button class="btn" id="refresh-btn">Générer maintenant</button>
+        <div id="gen-msg" style="display:none;align-items:center;gap:8px;font-size:13px;color:#FFE500">
+          <span class="spinner"></span> Génération en cours…
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Clips management -->
-  <p class="section-title">🎬 Gestion des clips YouTube</p>
-  <div class="action-card">
-    <h3>Ajouter un clip</h3>
-    <p>Colle l'ID YouTube (ex: <code style="color:var(--accent)">dQw4w9WgXcQ</code> depuis youtube.com/watch?v=<b>ID</b>)</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px" id="clip-add-form">
-      <input id="clip-videoId" placeholder="ID YouTube" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
-      <input id="clip-artist" placeholder="Artiste" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
-      <input id="clip-title" placeholder="Titre du clip" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
-      <select id="clip-country" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
-        <option value="guinee">🇬🇳 Guinée</option>
-        <option value="cote_ivoire">🇨🇮 Côte d'Ivoire</option>
-        <option value="senegal">🇸🇳 Sénégal</option>
-        <option value="nigeria">🇳🇬 Nigeria</option>
-        <option value="mali">🇲🇱 Mali</option>
-        <option value="cameroun">🇨🇲 Cameroun</option>
-        <option value="afrique">🌍 Afrique (autre)</option>
-      </select>
-    </div>
-    <div style="margin-top:12px;display:flex;align-items:center;gap:12px">
-      <button class="btn btn-sm" id="clip-add-btn">Ajouter le clip</button>
-      <span id="clip-add-msg" style="font-size:13px;color:var(--green);display:none">✅ Clip ajouté !</span>
-    </div>
-    <div style="margin-top:20px" id="clips-list-admin">
-      <p style="color:var(--muted);font-size:13px">Chargement…</p>
-    </div>
-    <!-- Soumissions en attente -->
-    <div style="margin-top:20px" id="pending-section"></div>
-  </div>
+  <!-- ── ARTICLES ────────────────────────────────────────────── -->
+  <div class="panel" id="panel-articles">
+    <div class="panel-title">Articles</div>
+    <div class="panel-sub">Créez, modifiez et gérez tout le contenu éditorial</div>
 
-  <!-- Événements -->
-  <p class="section-title">📅 Gestion des événements</p>
-  <div class="action-card" id="events-panel">
-    <h3>Ajouter un événement</h3>
-    <p>Concerts, festivals, défilés, expos. L'admin choisit quel événement passe EN LIVE.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
-      <input id="evt-title" placeholder="Titre de l'événement *" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none;grid-column:1/-1">
-      <input id="evt-artist" placeholder="Artiste / Intervenant" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
-      <input id="evt-date" type="date" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
-      <input id="evt-time" type="time" placeholder="20:00" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
-      <input id="evt-venue" placeholder="Salle / Lieu" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
-      <input id="evt-city" placeholder="Ville, Pays" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
-      <select id="evt-category" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
-        <option value="concert">🎤 Concert</option>
-        <option value="festival">🎪 Festival</option>
-        <option value="mode">👗 Défilé / Fashion</option>
-        <option value="expo">🎨 Exposition</option>
-        <option value="conference">🎙 Conférence</option>
-        <option value="sport">⚽ Sport</option>
-      </select>
-      <select id="evt-country" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none">
-        <option value="guinee">🇬🇳 Guinée</option>
-        <option value="cote_ivoire">🇨🇮 Côte d'Ivoire</option>
-        <option value="senegal">🇸🇳 Sénégal</option>
-        <option value="france">🇫🇷 France</option>
-        <option value="nigeria">🇳🇬 Nigeria</option>
-        <option value="afrique">🌍 Afrique (autre)</option>
-      </select>
-      <input id="evt-image" placeholder="URL image (optionnel)" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none;grid-column:1/-1">
-      <input id="evt-ticket" placeholder="Lien billetterie (optionnel)" style="background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#eee;padding:10px 12px;font-size:13px;outline:none;grid-column:1/-1">
-    </div>
-    <div style="margin-top:12px;display:flex;align-items:center;gap:12px">
-      <button class="btn btn-sm" id="evt-add-btn">Ajouter l'événement</button>
-      <span id="evt-add-msg" style="font-size:13px;color:var(--green);display:none">✅ Événement ajouté !</span>
-    </div>
-
-    <!-- Liste des événements -->
-    <div style="margin-top:24px" id="events-list-admin">
-      <p style="color:var(--muted);font-size:13px">Chargement…</p>
-    </div>
-  </div>
-
-  <!-- Auto-refresh clips YouTube -->
-  <p class="section-title">🎬 Clips automatiques (YouTube 48h)</p>
-  <div class="action-card">
-    <h3>🔍 Nouveaux clips des 48 dernières heures</h3>
-    <p>Scan <strong>100% gratuit</strong> — utilise les flux RSS publics des chaînes YouTube des artistes africains suivis. Zéro API, zéro carte bancaire. Tourne automatiquement toutes les 6 heures.</p>
-    <div class="action-row">
-      <button class="btn btn-sm" id="clips-auto-btn" style="background:var(--red)">🎬 Scanner YouTube 48h maintenant</button>
-      <span id="clips-auto-msg" style="font-size:13px;color:var(--yellow);display:none">⏳ Scan en cours (1-2 min)…</span>
-    </div>
-    <p style="margin-top:10px;font-size:12px;color:var(--muted)">Les clips trouvés apparaissent en attente de validation. Publie-les via le bouton ✅ ci-dessous.</p>
-  </div>
-
-  <!-- Abonnés newsletter -->
-  <p class="section-title">📧 Newsletter & Abonnés</p>
-  <div class="action-card">
-    <div id="subscribers-info">
-      <p style="color:var(--muted);font-size:13px">Chargement…</p>
-    </div>
-    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
-      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Envoyer une newsletter à tous les abonnés via Resend.com.</p>
-      <div style="display:grid;gap:10px">
-        <input type="text" id="nl-subject" placeholder="Sujet de la newsletter" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:13px;width:100%;box-sizing:border-box">
-        <input type="text" id="nl-preview" placeholder="Texte de prévisualisation (optionnel)" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:13px;width:100%;box-sizing:border-box">
-        <textarea id="nl-html" rows="5" placeholder="HTML de la newsletter (ex: <h1>Titre</h1><p>Contenu…</p>)" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:13px;width:100%;box-sizing:border-box;resize:vertical;font-family:monospace"></textarea>
-      </div>
-      <button class="btn" onclick="sendNewsletter()" style="margin-top:12px;background:#7c3aed">📨 Envoyer la newsletter</button>
-      <div id="nl-result" style="margin-top:10px;font-size:13px"></div>
-    </div>
-  </div>
-
-  <!-- Contacts & Soumissions -->
-  <p class="section-title">📬 Messages de contact</p>
-  <div class="action-card">
-    <button class="btn" onclick="loadContacts()">🔄 Charger les messages</button>
-    <div id="contacts-list" style="margin-top:14px"></div>
-  </div>
-
-  <p class="section-title">🎤 Soumissions artistes</p>
-  <div class="action-card">
-    <button class="btn" onclick="loadSubmissions()">🔄 Charger les soumissions</button>
-    <div id="submissions-list" style="margin-top:14px"></div>
-  </div>
-
-  <!-- Gestion des artistes -->
-  <p class="section-title">🎤 Gestion des artistes</p>
-  <div class="action-card">
-    <!-- Auto-fill -->
-    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Entre le handle YouTube de l'artiste pour auto-remplir les champs.</p>
-    <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
-      <input type="text" id="af-handle" placeholder="@NomArtiste" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;flex:1;min-width:180px">
-      <button class="btn" onclick="autoFillArtist()" style="white-space:nowrap">⚡ Auto-remplir</button>
-      <span id="af-status" style="font-size:12px;color:var(--muted)"></span>
-    </div>
-    <!-- Recent videos preview -->
-    <div id="af-videos" style="display:none;margin-bottom:16px;padding:12px;background:#0f0f0f;border-radius:6px;border:1px solid var(--border)">
-      <p style="font-size:11px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Derniers clips détectés</p>
-      <div id="af-videos-list" style="display:flex;gap:10px;flex-wrap:wrap"></div>
-    </div>
-    <!-- Form artiste -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="artist-form-grid">
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">NOM DE SCÈNE *</label>
-        <input type="text" id="af-name" placeholder="Azaya" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
-      </div>
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">NOM COMPLET</label>
-        <input type="text" id="af-realname" placeholder="Prénom Nom" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
-      </div>
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">PAYS</label>
-        <select id="af-country" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
-          <option value="guinee">🇬🇳 Guinée</option>
-          <option value="senegal">🇸🇳 Sénégal</option>
-          <option value="nigeria">🇳🇬 Nigeria</option>
-          <option value="cote_ivoire">🇨🇮 Côte d'Ivoire</option>
-          <option value="cameroun">🇨🇲 Cameroun</option>
-          <option value="mali">🇲🇱 Mali</option>
-          <option value="congo">🇨🇩 Congo DRC</option>
-          <option value="afrique">🌍 Autre Afrique</option>
+    <div class="section-header">
+      <div class="filter-bar" style="margin:0;flex:1">
+        <input id="art-search" type="text" placeholder="🔍 Rechercher un article…" oninput="filterArticles()">
+        <select id="art-filter-cat" onchange="filterArticles()">
+          <option value="">Toutes catégories</option>
+          <option value="musique">Musique</option>
+          <option value="cinema">Cinéma</option>
+          <option value="mode">Mode</option>
+          <option value="art">Art</option>
+          <option value="lifestyle">Lifestyle</option>
+          <option value="interview">Interview</option>
+        </select>
+        <select id="art-filter-type" onchange="filterArticles()">
+          <option value="">Tous types</option>
+          <option value="custom">Custom seulement</option>
+          <option value="ai">IA seulement</option>
         </select>
       </div>
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">DRAPEAU EMOJI</label>
-        <input type="text" id="af-flag" placeholder="🇬🇳" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
-      </div>
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">GENRE MUSICAL</label>
-        <input type="text" id="af-genre" placeholder="Afropop · Rap · Soul" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
-      </div>
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">ÉCOUTES/MOIS</label>
-        <input type="text" id="af-streams" placeholder="500K écoutes/mois" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
-      </div>
-      <div style="grid-column:1/-1">
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">BIO (50-300 mots)</label>
-        <textarea id="af-bio" rows="4" placeholder="Présentation de l'artiste..." style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box;resize:vertical;font-family:inherit"></textarea>
-      </div>
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">PRIX / RÉCOMPENSE</label>
-        <input type="text" id="af-award" placeholder="🏆 PRIMUD 2025" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
-      </div>
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">COULEUR ACCENT</label>
-        <input type="text" id="af-color" placeholder="#FF6B35" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
-      </div>
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">PHOTO (URL)</label>
-        <input type="url" id="af-image" placeholder="https://..." style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
-      </div>
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">SPOTIFY</label>
-        <input type="url" id="af-spotify" placeholder="https://open.spotify.com/artist/..." style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
-      </div>
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">DEEZER</label>
-        <input type="url" id="af-deezer" placeholder="https://www.deezer.com/artist/..." style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
-      </div>
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">YOUTUBE (URL chaîne)</label>
-        <input type="text" id="af-youtube" placeholder="https://youtube.com/@Artiste" style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
-      </div>
-      <div>
-        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">INSTAGRAM</label>
-        <input type="url" id="af-instagram" placeholder="https://instagram.com/..." style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:14px;width:100%;box-sizing:border-box">
-      </div>
+      <button class="btn btn-green" onclick="openCreateModal()">✍️ Nouvel article</button>
     </div>
-    <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-      <button class="btn" onclick="saveArtist()" style="background:var(--green);color:#000">✓ Enregistrer l'artiste</button>
-      <button class="btn btn-ghost" onclick="clearArtistForm()">Effacer</button>
-      <span id="artist-save-status" style="font-size:13px"></span>
+
+    <div class="card" style="padding:0">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <span id="art-list-info" style="font-size:13px;color:var(--muted2)">Chargement…</span>
+        <button class="btn btn-ghost btn-sm" onclick="loadArticles()">🔄 Actualiser</button>
+      </div>
+      <div style="padding:0 20px" class="art-list" id="articles-list"></div>
     </div>
-    <input type="hidden" id="af-editing-id">
   </div>
 
-  <!-- Liste des artistes custom -->
-  <div class="action-card" style="margin-top:0">
-    <button class="btn" onclick="loadArtistsList()">🔄 Voir les artistes ajoutés</button>
-    <div id="artists-admin-list" style="margin-top:14px"></div>
+  <!-- ── CLIPS ──────────────────────────────────────────────── -->
+  <div class="panel" id="panel-clips">
+    <div class="panel-title">Clips YouTube</div>
+    <div class="panel-sub">Ajoutez, validez et gérez les clips musicaux</div>
+
+    <div class="section-label">Ajouter un clip</div>
+    <div class="card">
+      <div class="grid-2">
+        <div class="field"><label>ID YouTube *</label><input id="clip-videoId" placeholder="dQw4w9WgXcQ (depuis youtube.com/watch?v=ID)"></div>
+        <div class="field"><label>Artiste *</label><input id="clip-artist" placeholder="Azaya"></div>
+        <div class="field"><label>Titre du clip *</label><input id="clip-title" placeholder="Mon titre"></div>
+        <div class="field"><label>Pays</label>
+          <select id="clip-country">
+            <option value="guinee">🇬🇳 Guinée</option>
+            <option value="cote_ivoire">🇨🇮 Côte d'Ivoire</option>
+            <option value="senegal">🇸🇳 Sénégal</option>
+            <option value="nigeria">🇳🇬 Nigeria</option>
+            <option value="mali">🇲🇱 Mali</option>
+            <option value="cameroun">🇨🇲 Cameroun</option>
+            <option value="afrique">🌍 Afrique (autre)</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap">
+        <button class="btn btn-sm" id="clip-add-btn">➕ Ajouter le clip</button>
+        <span id="clip-add-msg" style="font-size:13px;color:var(--green);display:none">✅ Clip ajouté !</span>
+      </div>
+    </div>
+
+    <div class="section-label">Scan automatique 48h</div>
+    <div class="card">
+      <h3>🔍 Clips des 48 dernières heures</h3>
+      <p style="margin:6px 0 14px">Scan RSS gratuit des chaînes YouTube des artistes africains suivis. Tourne auto toutes les 6h.</p>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <button class="btn btn-red btn-sm" id="clips-auto-btn">🎬 Scanner maintenant</button>
+        <span id="clips-auto-msg" style="font-size:13px;color:#FFE500;display:none">⏳ Scan en cours…</span>
+      </div>
+    </div>
+
+    <div class="section-label">Clips en attente & publiés</div>
+    <div class="card" style="padding:0">
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border)">
+        <span style="font-size:13px;color:var(--muted2)">Validez les clips avant publication</span>
+      </div>
+      <div style="padding:0 20px" id="clips-list-admin"><p style="padding:14px 0;color:var(--muted2);font-size:13px">Chargement…</p></div>
+      <div id="pending-section" style="padding:0 20px"></div>
+    </div>
   </div>
 
-  <!-- Articles -->
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:28px;margin-bottom:10px">
-    <p class="section-title" style="margin:0">📰 Articles (gestion complète)</p>
-    <button class="btn btn-sm" onclick="openCreateModal()" style="background:var(--green);color:#000;white-space:nowrap">✍️ Nouvel article</button>
-  </div>
-  <div class="action-card" style="padding-top:12px">
-    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
-      <input id="art-search" type="text" placeholder="🔍 Rechercher…"
-        oninput="filterArticles()"
-        style="flex:1;min-width:180px;background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px">
-      <select id="art-filter-cat" onchange="filterArticles()"
-        style="background:#1a1a1a;border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px">
-        <option value="">Toutes catégories</option>
-        <option value="musique">Musique</option>
-        <option value="cinema">Cinéma</option>
-        <option value="mode">Mode</option>
-        <option value="art">Art</option>
-        <option value="lifestyle">Lifestyle</option>
-        <option value="interview">Interview</option>
-      </select>
-      <button class="btn btn-sm btn-ghost" onclick="loadArticles()">🔄 Actualiser</button>
+  <!-- ── ÉVÉNEMENTS ─────────────────────────────────────────── -->
+  <div class="panel" id="panel-events">
+    <div class="panel-title">Événements</div>
+    <div class="panel-sub">Concerts, festivals, défilés, expos — gérez l'agenda et le live</div>
+
+    <div class="section-label">Ajouter un événement</div>
+    <div class="card">
+      <div class="grid-2">
+        <div class="field col-span-2"><label>Titre *</label><input id="evt-title" placeholder="Finale Le Mannequin — Conakry"></div>
+        <div class="field"><label>Artiste / Intervenant</label><input id="evt-artist" placeholder="Diaka Camara"></div>
+        <div class="field"><label>Date *</label><input id="evt-date" type="date"></div>
+        <div class="field"><label>Heure</label><input id="evt-time" type="time" value="20:00"></div>
+        <div class="field"><label>Lieu / Salle</label><input id="evt-venue" placeholder="Palais du Peuple"></div>
+        <div class="field"><label>Ville, Pays</label><input id="evt-city" placeholder="Conakry, Guinée"></div>
+        <div class="field"><label>Type</label>
+          <select id="evt-category">
+            <option value="concert">🎤 Concert</option>
+            <option value="festival">🎪 Festival</option>
+            <option value="mode">👗 Défilé / Fashion</option>
+            <option value="expo">🎨 Exposition</option>
+            <option value="conference">🎙 Conférence</option>
+            <option value="sport">⚽ Sport</option>
+          </select>
+        </div>
+        <div class="field"><label>Pays</label>
+          <select id="evt-country">
+            <option value="guinee">🇬🇳 Guinée</option>
+            <option value="cote_ivoire">🇨🇮 Côte d'Ivoire</option>
+            <option value="senegal">🇸🇳 Sénégal</option>
+            <option value="france">🇫🇷 France</option>
+            <option value="nigeria">🇳🇬 Nigeria</option>
+            <option value="afrique">🌍 Afrique (autre)</option>
+          </select>
+        </div>
+        <div class="field col-span-2"><label>Image URL (optionnel)</label>
+          <input id="evt-image" placeholder="https://…" oninput="previewImg(this,'evt-img-prev')">
+          <img id="evt-img-prev" class="img-preview">
+        </div>
+        <div class="field col-span-2"><label>Lien billetterie (optionnel)</label><input id="evt-ticket" placeholder="https://…"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:6px;flex-wrap:wrap">
+        <button class="btn btn-sm" id="evt-add-btn">📅 Ajouter l'événement</button>
+        <span id="evt-add-msg" style="font-size:13px;color:var(--green);display:none">✅ Ajouté !</span>
+      </div>
     </div>
-    <div class="articles-list" id="articles-list">
-      <p style="color:var(--muted);font-size:13px">Chargement…</p>
+
+    <div class="section-label">Agenda</div>
+    <div class="card" style="padding:0">
+      <div style="padding:0 20px" id="events-list-admin"><p style="padding:14px 0;color:var(--muted2);font-size:13px">Chargement…</p></div>
     </div>
   </div>
+
+  <!-- ── ARTISTES ────────────────────────────────────────────── -->
+  <div class="panel" id="panel-artists">
+    <div class="panel-title">Artistes</div>
+    <div class="panel-sub">Gérez les profils artistes affichés sur le site</div>
+
+    <div class="section-label">Auto-remplissage YouTube</div>
+    <div class="card">
+      <p style="margin-bottom:12px">Entre le handle YouTube pour auto-remplir les champs de l'artiste.</p>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <input type="text" id="af-handle" placeholder="@NomArtiste"
+          style="flex:1;min-width:180px;background:var(--input-bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:10px 12px;outline:none">
+        <button class="btn btn-sm" onclick="autoFillArtist()">⚡ Auto-remplir</button>
+        <span id="af-status" style="font-size:12px;color:var(--muted2)"></span>
+      </div>
+      <div id="af-videos" style="display:none;margin-top:14px;padding:12px;background:#0f0f1a;border-radius:8px;border:1px solid var(--border)">
+        <p style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Derniers clips détectés</p>
+        <div id="af-videos-list" style="display:flex;gap:10px;flex-wrap:wrap"></div>
+      </div>
+    </div>
+
+    <div class="section-label">Fiche artiste</div>
+    <div class="card">
+      <div class="grid-2">
+        <div class="field"><label>Nom de scène *</label><input type="text" id="af-name" placeholder="Azaya"></div>
+        <div class="field"><label>Nom complet</label><input type="text" id="af-realname" placeholder="Prénom Nom"></div>
+        <div class="field"><label>Pays</label>
+          <select id="af-country">
+            <option value="guinee">🇬🇳 Guinée</option>
+            <option value="senegal">🇸🇳 Sénégal</option>
+            <option value="nigeria">🇳🇬 Nigeria</option>
+            <option value="cote_ivoire">🇨🇮 Côte d'Ivoire</option>
+            <option value="cameroun">🇨🇲 Cameroun</option>
+            <option value="mali">🇲🇱 Mali</option>
+            <option value="congo">🇨🇩 Congo DRC</option>
+            <option value="afrique">🌍 Autre</option>
+          </select>
+        </div>
+        <div class="field"><label>Drapeau emoji</label><input type="text" id="af-flag" placeholder="🇬🇳"></div>
+        <div class="field"><label>Genre musical</label><input type="text" id="af-genre" placeholder="Afropop · Rap"></div>
+        <div class="field"><label>Écoutes / mois</label><input type="text" id="af-streams" placeholder="500K écoutes/mois"></div>
+        <div class="field"><label>Prix / Récompense</label><input type="text" id="af-award" placeholder="🏆 PRIMUD 2025"></div>
+        <div class="field"><label>Couleur accent</label><input type="text" id="af-color" placeholder="#FF6B35"></div>
+        <div class="field col-span-2"><label>Photo URL</label>
+          <input type="url" id="af-image" placeholder="https://..." oninput="previewImg(this,'af-img-prev')">
+          <img id="af-img-prev" class="img-preview">
+        </div>
+        <div class="field col-span-2"><label>Bio</label><textarea id="af-bio" rows="3" placeholder="Présentation de l'artiste…"></textarea></div>
+        <div class="field"><label>Spotify</label><input type="url" id="af-spotify" placeholder="https://open.spotify.com/artist/…"></div>
+        <div class="field"><label>Deezer</label><input type="url" id="af-deezer" placeholder="https://www.deezer.com/artist/…"></div>
+        <div class="field"><label>YouTube (chaîne)</label><input type="text" id="af-youtube" placeholder="https://youtube.com/@Artiste"></div>
+        <div class="field"><label>Instagram</label><input type="url" id="af-instagram" placeholder="https://instagram.com/…"></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px">
+        <button class="btn btn-green btn-sm" onclick="saveArtist()">✓ Enregistrer</button>
+        <button class="btn btn-ghost btn-sm" onclick="clearArtistForm()">Effacer</button>
+        <span id="artist-save-status" style="font-size:13px"></span>
+      </div>
+      <input type="hidden" id="af-editing-id">
+    </div>
+
+    <div class="section-label">Artistes ajoutés</div>
+    <div class="card" style="padding:0">
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;color:var(--muted2)">Artistes custom</span>
+        <button class="btn btn-ghost btn-sm" onclick="loadArtistsList()">🔄 Charger</button>
+      </div>
+      <div style="padding:0 20px" id="artists-admin-list"><p style="padding:14px 0;color:var(--muted2);font-size:13px">Cliquez sur Charger pour voir les artistes.</p></div>
+    </div>
+  </div>
+
+  <!-- ── NEWSLETTER ─────────────────────────────────────────── -->
+  <div class="panel" id="panel-newsletter">
+    <div class="panel-title">Newsletter</div>
+    <div class="panel-sub">Gérez vos abonnés et envoyez des newsletters via Resend</div>
+
+    <div class="section-label">Abonnés</div>
+    <div class="card" id="subscribers-info">
+      <p style="color:var(--muted2);font-size:13px">Chargement…</p>
+    </div>
+
+    <div class="section-label">Envoyer une newsletter</div>
+    <div class="card">
+      <div class="field"><label>Sujet *</label><input type="text" id="nl-subject" placeholder="ONE MEDIA — Actualités de la semaine"></div>
+      <div class="field"><label>Texte de prévisualisation</label><input type="text" id="nl-preview" placeholder="Les dernières news musicales de Guinée et d'Afrique…"></div>
+      <div class="field"><label>Contenu HTML</label><textarea id="nl-html" rows="8" placeholder="&lt;h1&gt;Titre&lt;/h1&gt;&lt;p&gt;Contenu de la newsletter…&lt;/p&gt;" style="font-family:monospace;font-size:12px"></textarea></div>
+      <button class="btn" onclick="sendNewsletter()" style="background:#7c3aed;margin-top:6px">📨 Envoyer à tous les abonnés</button>
+      <div id="nl-result" style="margin-top:12px;font-size:13px"></div>
+    </div>
+  </div>
+
+  <!-- ── MESSAGES ───────────────────────────────────────────── -->
+  <div class="panel" id="panel-messages">
+    <div class="panel-title">Messages</div>
+    <div class="panel-sub">Messages de contact et soumissions artistes</div>
+
+    <div class="section-label">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span>Messages de contact</span>
+        <button class="btn btn-ghost btn-sm" onclick="loadContacts()">🔄 Charger</button>
+      </div>
+    </div>
+    <div class="card" style="padding:0">
+      <div style="padding:0 20px" id="contacts-list"><p style="padding:14px 0;color:var(--muted2);font-size:13px">Cliquez sur Charger pour voir les messages.</p></div>
+    </div>
+
+    <div class="section-label" style="margin-top:24px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span>Soumissions artistes</span>
+        <button class="btn btn-ghost btn-sm" onclick="loadSubmissions()">🔄 Charger</button>
+      </div>
+    </div>
+    <div class="card" style="padding:0">
+      <div style="padding:0 20px" id="submissions-list"><p style="padding:14px 0;color:var(--muted2);font-size:13px">Cliquez sur Charger pour voir les soumissions.</p></div>
+    </div>
+  </div>
+
+  <!-- ── PARAMÈTRES ─────────────────────────────────────────── -->
+  <div class="panel" id="panel-settings">
+    <div class="panel-title">Paramètres</div>
+    <div class="panel-sub">Diagnostic, debug et gestion du serveur Railway</div>
+
+    <div class="section-label">Informations serveur</div>
+    <div class="card">
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn btn-sm" onclick="loadDebug()">🔍 Debug APIs</button>
+        <a href="https://one-media-production.up.railway.app/api/status" target="_blank" class="btn btn-ghost btn-sm">📡 Status Railway ↗</a>
+        <a href="https://one-media-delta.vercel.app" target="_blank" class="btn btn-ghost btn-sm">🌐 Site public ↗</a>
+      </div>
+      <div id="debug-result" style="margin-top:16px;font-size:12px;color:var(--muted2);font-family:monospace;white-space:pre-wrap;max-height:300px;overflow-y:auto"></div>
+    </div>
+
+    <div class="section-label">Variables Railway</div>
+    <div class="card">
+      <h3>Variables d'environnement requises</h3>
+      <p style="margin:8px 0">Ces variables doivent être définies dans Railway → ton projet → Variables :</p>
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
+        <div style="background:var(--input-bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:monospace;font-size:12px">
+          <span style="color:var(--accent)">GROQ_API_KEY</span> = gsk_… <span style="color:var(--muted2)">(génération d'articles)</span>
+        </div>
+        <div style="background:var(--input-bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:monospace;font-size:12px">
+          <span style="color:var(--accent)">ADMIN_PASSWORD</span> = ton_mot_de_passe <span style="color:var(--muted2)">(par défaut: onemedia2026!)</span>
+        </div>
+        <div style="background:var(--input-bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:monospace;font-size:12px">
+          <span style="color:var(--accent)">RESEND_API_KEY</span> = re_… <span style="color:var(--muted2)">(newsletter)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </main>
 </div>
 
-<!-- ── MODAL CRÉATION ARTICLE ── -->
-<div class="edit-modal-overlay" id="create-modal-overlay">
-  <div class="edit-modal">
-    <h2>✍️ Créer un article</h2>
+<!-- ══ MODAL ARTICLE (CRÉATION + ÉDITION) ═══════════════════════ -->
+<div class="modal-overlay" id="article-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="article-modal-title">✍️ Nouvel article</h2>
+      <button class="modal-close" onclick="closeArticleModal()">×</button>
+    </div>
+    <input type="hidden" id="am-mode" value="create">
+    <input type="hidden" id="am-id">
 
-    <div class="edit-field">
+    <!-- Image en premier — c'est la chose la plus visuelle -->
+    <div class="field">
+      <label>Image principale</label>
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <div style="flex:1">
+          <input type="url" id="am-image" placeholder="https://images.unsplash.com/… ou autre URL image" oninput="previewImg(this,'am-img-prev')">
+          <p style="font-size:11px;color:var(--muted2);margin-top:5px">Colle l'URL d'une image depuis Unsplash, une source officielle, etc.</p>
+        </div>
+        <img id="am-img-prev" class="img-preview" style="width:140px;height:90px;flex-shrink:0;margin:0">
+      </div>
+    </div>
+
+    <div class="field">
       <label>Titre *</label>
-      <input type="text" id="create-title" placeholder="Titre accrocheur…">
+      <input type="text" id="am-title" placeholder="Titre accrocheur et informatif…">
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-      <div class="edit-field">
+
+    <div class="grid-3">
+      <div class="field">
         <label>Catégorie *</label>
-        <select id="create-category">
-          <option value="musique">Musique</option>
-          <option value="cinema">Cinéma</option>
-          <option value="mode">Mode</option>
-          <option value="art">Art</option>
-          <option value="lifestyle">Lifestyle</option>
-          <option value="interview">Interview</option>
+        <select id="am-category">
+          <option value="musique">🎵 Musique</option>
+          <option value="cinema">🎬 Cinéma</option>
+          <option value="mode">👗 Mode</option>
+          <option value="art">🎨 Art</option>
+          <option value="lifestyle">✨ Lifestyle</option>
+          <option value="interview">🎙 Interview</option>
         </select>
       </div>
-      <div class="edit-field">
+      <div class="field">
         <label>Date</label>
-        <input type="date" id="create-date">
+        <input type="date" id="am-date">
       </div>
-      <div class="edit-field">
+      <div class="field">
         <label>Lecture (min)</label>
-        <input type="number" id="create-readtime" min="1" max="60" value="5">
+        <input type="number" id="am-readtime" min="1" max="60" value="5">
       </div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div class="edit-field">
-        <label>Auteur</label>
-        <input type="text" id="create-author" placeholder="Rédaction ONE" value="Rédaction ONE">
-      </div>
-      <div class="edit-field">
-        <label>Image (URL)</label>
-        <input type="url" id="create-image" placeholder="https://...jpg">
-      </div>
+
+    <div class="field">
+      <label>Auteur</label>
+      <input type="text" id="am-author" value="Rédaction ONE" placeholder="Rédaction ONE">
     </div>
-    <div class="edit-field" id="create-img-preview-wrap" style="display:none">
-      <img id="create-img-preview" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;border:1px solid var(--border)">
+
+    <div class="field">
+      <label>Chapeau — résumé (affiché sur les cartes) *</label>
+      <textarea id="am-excerpt" style="min-height:80px" placeholder="2-3 phrases d'accroche qui donnent envie de lire…"></textarea>
     </div>
-    <div class="edit-field">
-      <label>Chapeau (résumé affiché en liste) *</label>
-      <textarea id="create-excerpt" style="min-height:80px" placeholder="2-3 phrases d'accroche…"></textarea>
-    </div>
-    <div class="edit-field">
+
+    <div class="field">
       <label>Corps de l'article (HTML supporté)</label>
-      <textarea id="create-body" style="min-height:200px" placeholder="<h2>Titre section</h2>&#10;<p>Contenu…</p>&#10;<blockquote>Citation marquante</blockquote>"></textarea>
+      <textarea id="am-body" style="min-height:220px;font-size:12px;font-family:monospace" placeholder="&lt;h2&gt;Titre section&lt;/h2&gt;&#10;&lt;p&gt;Contenu du paragraphe…&lt;/p&gt;&#10;&lt;blockquote&gt;Citation importante&lt;/blockquote&gt;&#10;&lt;p&gt;Suite du texte…&lt;/p&gt;"></textarea>
     </div>
-    <div class="edit-field">
-      <label>Tags (séparés par virgule)</label>
-      <input type="text" id="create-tags" placeholder="guinée, musique, artiste, conakry">
-    </div>
-    <div style="display:flex;gap:24px;margin-top:10px;align-items:center;flex-wrap:wrap">
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
-        <input type="checkbox" id="create-featured"> ⭐ Featured (héro)
-      </label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
-        <input type="checkbox" id="create-breaking"> 🔴 Breaking news
-      </label>
-    </div>
-    <div class="edit-modal-actions">
-      <button class="btn btn-sm" id="create-save-btn" style="background:var(--green);color:#000">✍️ Publier l'article</button>
-      <button class="btn btn-sm btn-ghost" id="create-cancel-btn">Annuler</button>
-      <span id="create-save-msg" style="font-size:13px;color:var(--green);display:none">✅ Article publié !</span>
-    </div>
-  </div>
-</div>
 
-<!-- ── MODAL ÉDITION ARTICLE ── -->
-<div class="edit-modal-overlay" id="edit-modal-overlay">
-  <div class="edit-modal">
-    <h2>✏️ Modifier l'article</h2>
-    <input type="hidden" id="edit-article-id">
-
-    <div class="edit-field">
-      <label>Titre</label>
-      <input type="text" id="edit-title" placeholder="Titre de l'article">
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div class="edit-field">
-        <label>Catégorie</label>
-        <select id="edit-category">
-          <option value="musique">Musique</option>
-          <option value="cinema">Cinéma</option>
-          <option value="mode">Mode</option>
-          <option value="art">Art</option>
-          <option value="lifestyle">Lifestyle</option>
-          <option value="interview">Interview</option>
-        </select>
+    <div class="grid-2">
+      <div class="field">
+        <label>Tags (séparés par virgule)</label>
+        <input type="text" id="am-tags" placeholder="guinée, musique, artiste, conakry">
       </div>
-      <div class="edit-field">
-        <label>Temps de lecture (min)</label>
-        <input type="number" id="edit-readtime" min="1" max="60" value="5">
+      <div class="field">
+        <label>Options d'affichage</label>
+        <div style="display:flex;gap:20px;padding-top:10px">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;font-weight:normal">
+            <input type="checkbox" id="am-featured"> ⭐ Featured (hero)
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;font-weight:normal">
+            <input type="checkbox" id="am-breaking"> 🔴 Breaking
+          </label>
+        </div>
       </div>
     </div>
-    <div class="edit-field">
-      <label>Image (URL)</label>
-      <input type="url" id="edit-image" placeholder="https://...">
-    </div>
-    <div class="edit-field">
-      <label>Chapeau (excerpt)</label>
-      <textarea id="edit-excerpt" style="min-height:80px" placeholder="Introduction de l'article…"></textarea>
-    </div>
-    <div class="edit-field">
-      <label>Corps de l'article (HTML)</label>
-      <textarea id="edit-body" placeholder="<h2>Titre section</h2><p>Contenu…</p>"></textarea>
-    </div>
-    <div class="edit-field">
-      <label>Tags (séparés par virgule)</label>
-      <input type="text" id="edit-tags" placeholder="musique, guinée, afrobeats">
-    </div>
-    <div style="display:flex;gap:20px;margin-top:10px;align-items:center">
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
-        <input type="checkbox" id="edit-featured"> Article featured (héro)
-      </label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
-        <input type="checkbox" id="edit-breaking"> Breaking news
-      </label>
-    </div>
-    <div class="edit-modal-actions">
-      <button class="btn btn-sm" id="edit-save-btn">💾 Sauvegarder</button>
-      <button class="btn btn-sm btn-ghost" id="edit-cancel-btn">Annuler</button>
-      <span id="edit-save-msg" style="font-size:13px;color:var(--green);display:none">✅ Sauvegardé !</span>
+
+    <div class="modal-footer">
+      <button class="btn btn-green" id="am-save-btn">✍️ Publier</button>
+      <button class="btn btn-ghost" onclick="closeArticleModal()">Annuler</button>
+      <span id="am-msg" class="modal-msg" style="display:none">✅ Publié !</span>
     </div>
   </div>
 </div>
@@ -789,860 +700,744 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const API = 'https://one-media-production.up.railway.app';
-  const CAT_COLORS = {
-    musique:   '#00F5FF',
-    cinema:    '#FF2D55',
-    mode:      '#FFE500',
-    art:       '#BF5AF2',
-    lifestyle: '#30D158',
-    interview: '#FF9500',
-  };
+/* ══════════════════════════════════════════════════════════════
+   ONE MEDIA — Admin JS
+══════════════════════════════════════════════════════════════ */
+const API = 'https://one-media-production.up.railway.app';
+const CAT_COLORS = { musique:'#00F5FF', cinema:'#FF2D55', mode:'#FFE500', art:'#BF5AF2', lifestyle:'#30D158', interview:'#FF9500' };
+let token = localStorage.getItem('om_admin_token');
 
-  let token = localStorage.getItem('om_admin_token');
+/* ── Utilitaires ─────────────────────────────────────────── */
+function showToast(msg, color) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = color || 'var(--green)';
+  t.style.color = color ? '#fff' : '#000';
+  t.classList.add('show');
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.classList.remove('show'), 3000);
+}
 
-  /* ── UTILS ── */
-  function showToast(msg, color = 'var(--green)') {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.style.background = color;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
+function previewImg(input, imgId) {
+  const url = typeof input === 'string' ? input : input.value.trim();
+  const img = document.getElementById(imgId);
+  if (!img) return;
+  if (url.startsWith('http')) {
+    img.src = url;
+    img.classList.add('show');
+    img.onerror = () => { img.classList.remove('show'); };
+  } else {
+    img.classList.remove('show');
   }
+}
 
-  /* ── AUTH ── */
-  async function login() {
-    const pwd = document.getElementById('pwd-input').value;
-    const btn = document.getElementById('login-btn');
-    btn.disabled = true;
-    btn.textContent = '…';
+function fmtDate(d) {
+  if (!d) return '—';
+  try { return new Date(d).toLocaleDateString('fr', { day:'numeric', month:'short', year:'numeric' }); }
+  catch { return d; }
+}
 
-    try {
-      const r = await fetch(`${API}/api/admin/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pwd }),
-      });
-      const d = await r.json();
-      if (d.success) {
-        token = d.token;
-        localStorage.setItem('om_admin_token', token);
-        showDashboard();
-      } else {
-        document.getElementById('error-msg').style.display = 'block';
-      }
-    } catch {
+/* ── Navigation ──────────────────────────────────────────── */
+function switchPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  document.getElementById('panel-' + name)?.classList.add('active');
+  document.querySelector(`.sb-item[data-panel="${name}"]`)?.classList.add('active');
+  document.getElementById('sidebar')?.classList.remove('open');
+  if (name === 'articles') loadArticles();
+  if (name === 'newsletter') loadSubscribers();
+}
+
+document.querySelectorAll('.sb-item').forEach(item => {
+  item.addEventListener('click', () => switchPanel(item.dataset.panel));
+});
+
+document.getElementById('mob-toggle')?.addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+/* ── Auth ────────────────────────────────────────────────── */
+const loginBtn = document.getElementById('login-btn');
+const pwdInput = document.getElementById('pwd-input');
+
+async function tryLogin() {
+  const pwd = pwdInput.value.trim();
+  if (!pwd) return;
+  loginBtn.disabled = true; loginBtn.textContent = '…';
+  try {
+    const r = await fetch(`${API}/api/admin/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pwd })
+    });
+    const d = await r.json();
+    if (d.success) {
+      token = d.token;
+      localStorage.setItem('om_admin_token', token);
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'flex';
+      initDashboard();
+    } else {
       document.getElementById('error-msg').style.display = 'block';
     }
-    btn.disabled = false;
-    btn.textContent = 'Accéder';
+  } catch {
+    document.getElementById('error-msg').style.display = 'block';
+    document.getElementById('error-msg').textContent = '❌ Impossible de contacter le serveur';
   }
+  loginBtn.disabled = false; loginBtn.textContent = 'Accéder';
+}
 
-  document.getElementById('login-btn').addEventListener('click', login);
-  document.getElementById('pwd-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') login();
+loginBtn.addEventListener('click', tryLogin);
+pwdInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+
+document.getElementById('logout-btn').addEventListener('click', () => {
+  localStorage.removeItem('om_admin_token');
+  location.reload();
+});
+
+// Auto-login si token déjà présent
+if (token) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  initDashboard();
+}
+
+/* ── Dashboard ───────────────────────────────────────────── */
+async function initDashboard() {
+  await loadStatus();
+  loadArticles();
+  loadClips();
+  loadEvents();
+}
+
+async function loadStatus() {
+  try {
+    const d = await fetch(`${API}/api/status`).then(r => r.json());
+    document.getElementById('status-text').textContent = d.status === 'ok' ? 'En ligne' : d.status;
+    document.getElementById('art-count').textContent = d.count || '0';
+    document.getElementById('art-date').textContent = d.generatedAt ? 'Généré le ' + fmtDate(d.generatedAt) : '—';
+    const badgeEl = document.getElementById('sb-art-count');
+    if (d.count) { badgeEl.textContent = d.count; badgeEl.style.display = 'inline'; }
+  } catch { document.getElementById('status-text').textContent = 'Hors ligne'; }
+}
+
+/* ── Refresh IA ──────────────────────────────────────────── */
+document.getElementById('refresh-btn').addEventListener('click', async () => {
+  const btn = document.getElementById('refresh-btn');
+  const msg = document.getElementById('gen-msg');
+  btn.disabled = true;
+  msg.style.display = 'flex';
+  try {
+    await fetch(`${API}/api/refresh`, { method:'POST', headers:{ 'x-admin-token': token } });
+    const poll = setInterval(async () => {
+      try {
+        const s = await fetch(`${API}/api/refresh/status`).then(r => r.json());
+        if (!s.generating) {
+          clearInterval(poll);
+          btn.disabled = false;
+          msg.style.display = 'none';
+          showToast('🎉 Articles générés !');
+          await loadStatus();
+          await loadArticles();
+        }
+      } catch { clearInterval(poll); btn.disabled = false; msg.style.display = 'none'; }
+    }, 5000);
+  } catch { btn.disabled = false; msg.style.display = 'none'; showToast('❌ Erreur', 'var(--red)'); }
+});
+
+/* ══ ARTICLES ════════════════════════════════════════════════ */
+let articlesCache = [];
+
+async function loadArticles() {
+  const list = document.getElementById('articles-list');
+  const info = document.getElementById('art-list-info');
+  try {
+    const d = await fetch(`${API}/api/articles`).then(r => r.json());
+    const custom = (d.articles || []).filter(a => !a.aiGenerated);
+    const ai     = (d.articles || []).filter(a =>  a.aiGenerated);
+    articlesCache = [...custom, ...ai];
+
+    const total = articlesCache.length;
+    info.textContent = `${total} article(s) — ${custom.length} custom · ${ai.length} IA`;
+
+    const badge = document.getElementById('sb-art-count');
+    badge.textContent = total; badge.style.display = total ? 'inline' : 'none';
+
+    if (!total) { list.innerHTML = '<p style="padding:20px 0;color:var(--muted2);font-size:13px">Aucun article. Créez-en un !</p>'; return; }
+    list.innerHTML = articlesCache.map(renderArtRow).join('');
+  } catch {
+    list.innerHTML = '<p style="padding:20px 0;color:var(--muted2);font-size:13px">Erreur de chargement.</p>';
+  }
+}
+
+function renderArtRow(a) {
+  const c = CAT_COLORS[a.category] || '#888';
+  const isCustom = !a.aiGenerated;
+  return `<div class="art-row" id="art-row-${a.id}" data-cat="${a.category}" data-title="${(a.title||'').toLowerCase()}" data-type="${isCustom?'custom':'ai'}">
+    <img class="art-thumb" src="${a.image||''}" alt=""
+      onerror="this.src='https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=80&q=60'"
+      onclick="openArticleModal('edit','${a.id}')" title="Cliquer pour changer l'image">
+    <div class="art-info">
+      <div class="art-title">${a.title || '—'}</div>
+      <div class="art-meta">
+        ${isCustom ? '<span class="tag tag-custom">CUSTOM</span>' : '<span class="tag tag-ai">IA</span>'}
+        <span class="tag tag-cat" style="background:${c}20;color:${c};border:1px solid ${c}40">${a.category}</span>
+        ${a.featured ? '<span class="tag tag-featured">⭐ Featured</span>' : ''}
+        ${a.breaking ? '<span class="tag tag-breaking">🔴 Breaking</span>' : ''}
+        <span style="font-size:11px;color:var(--muted2)">${fmtDate(a.date)}</span>
+        <span style="font-size:11px;color:var(--muted2)">${a.author||''}</span>
+      </div>
+    </div>
+    <div class="art-actions">
+      <button class="btn btn-ghost btn-icon btn-sm" onclick="openArticleModal('edit','${a.id}')" title="Modifier">✏️</button>
+      <button class="btn btn-ghost btn-icon btn-sm" style="color:var(--red);border-color:#ff2d5540" onclick="deleteArticle('${a.id}')" title="Supprimer">🗑</button>
+    </div>
+  </div>`;
+}
+
+function filterArticles() {
+  const q    = (document.getElementById('art-search')?.value || '').toLowerCase().trim();
+  const cat  = document.getElementById('art-filter-cat')?.value || '';
+  const type = document.getElementById('art-filter-type')?.value || '';
+  document.querySelectorAll('.art-row').forEach(el => {
+    const mQ = !q    || el.dataset.title.includes(q);
+    const mC = !cat  || el.dataset.cat === cat;
+    const mT = !type || el.dataset.type === type;
+    el.style.display = (mQ && mC && mT) ? '' : 'none';
   });
+}
 
-  document.getElementById('logout-btn').addEventListener('click', () => {
-    localStorage.removeItem('om_admin_token');
-    token = null;
-    document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('login-screen').style.display = 'block';
-  });
+/* ── Modal article (create + edit unifié) ────────────────── */
+function openCreateModal() {
+  document.getElementById('article-modal-title').textContent = '✍️ Nouvel article';
+  document.getElementById('am-mode').value = 'create';
+  document.getElementById('am-id').value = '';
+  document.getElementById('am-title').value = '';
+  document.getElementById('am-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('am-author').value = 'Rédaction ONE';
+  document.getElementById('am-readtime').value = '5';
+  document.getElementById('am-category').value = 'musique';
+  document.getElementById('am-image').value = '';
+  document.getElementById('am-excerpt').value = '';
+  document.getElementById('am-body').value = '';
+  document.getElementById('am-tags').value = '';
+  document.getElementById('am-featured').checked = false;
+  document.getElementById('am-breaking').checked = false;
+  document.getElementById('am-img-prev').classList.remove('show');
+  document.getElementById('am-msg').style.display = 'none';
+  document.getElementById('am-save-btn').textContent = '✍️ Publier';
+  document.getElementById('article-modal').classList.add('open');
+  setTimeout(() => document.getElementById('am-title').focus(), 100);
+}
 
-  /* ── DASHBOARD ── */
-  async function showDashboard() {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-    // Chargements prioritaires
-    await Promise.all([loadStatus(), loadSubscribers()]);
-    // Chargements secondaires en parallèle
-    loadEvents();
-    loadClips();
-    loadArticles();
-    loadContacts();
-    loadSubmissions();
-    loadArtistsList();
-  }
+window.openArticleModal = function(mode, id) {
+  if (mode === 'create') { openCreateModal(); return; }
+  const a = articlesCache.find(x => x.id === id);
+  if (!a) return;
 
-  async function loadStatus() {
-    try {
-      const r = await fetch(`${API}/api/status`);
-      const d = await r.json();
-      document.getElementById('status-text').textContent = d.status === 'ok' ? 'En ligne' : 'Aucun article';
-      document.getElementById('art-count').textContent = d.count || '0';
-      if (d.generatedAt) {
-        const date = new Date(d.generatedAt);
-        document.getElementById('art-date').textContent =
-          `Dernière génération : ${date.toLocaleString('fr-FR')}`;
-      }
-    } catch {
-      document.getElementById('status-text').textContent = 'Erreur';
-    }
-  }
+  document.getElementById('article-modal-title').textContent = '✏️ Modifier l\'article';
+  document.getElementById('am-mode').value = 'edit';
+  document.getElementById('am-id').value   = a.id;
+  document.getElementById('am-title').value    = a.title || '';
+  document.getElementById('am-date').value     = a.date || '';
+  document.getElementById('am-author').value   = a.author || 'Rédaction ONE';
+  document.getElementById('am-readtime').value = a.readTime || 5;
+  document.getElementById('am-category').value = a.category || 'musique';
+  document.getElementById('am-image').value    = a.image || '';
+  document.getElementById('am-excerpt').value  = a.excerpt || '';
+  document.getElementById('am-body').value     = a.body || '';
+  document.getElementById('am-tags').value     = (a.tags || []).join(', ');
+  document.getElementById('am-featured').checked = !!a.featured;
+  document.getElementById('am-breaking').checked  = !!a.breaking;
+  document.getElementById('am-msg').style.display = 'none';
+  document.getElementById('am-save-btn').textContent = '💾 Sauvegarder';
+  previewImg(a.image || '', 'am-img-prev');
+  document.getElementById('article-modal').classList.add('open');
+};
 
-  let articlesCache = [];
+function closeArticleModal() {
+  document.getElementById('article-modal').classList.remove('open');
+}
+document.getElementById('article-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('article-modal')) closeArticleModal();
+});
 
-  function renderArticleItem(a) {
-    const isCustom = !a.aiGenerated;
-    const badge = isCustom
-      ? `<span style="background:#C6FF3322;color:var(--green);border:1px solid var(--green);border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700">CUSTOM</span>`
-      : `<span style="background:#ffffff11;color:#888;border:1px solid #333;border-radius:4px;padding:2px 7px;font-size:10px">IA</span>`;
-    return `
-      <div class="art-item" id="art-item-${a.id}" data-cat="${a.category}" data-title="${(a.title||'').toLowerCase()}">
-        <img class="art-img" src="${a.image || ''}" alt="" loading="lazy"
-             onerror="this.src='https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=80&q=60'">
-        <div class="art-info">
-          <div class="art-title">${a.title}</div>
-          <div class="art-meta" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:4px">
-            ${badge}
-            <span class="cat-badge" style="background:${CAT_COLORS[a.category]||'#666'}22;color:${CAT_COLORS[a.category]||'#666'}">${a.category}</span>
-            <span style="color:#888;font-size:11px">${a.date || ''}</span>
-            <span style="color:#888;font-size:11px">${a.author || ''}</span>
-            ${a.featured ? '<span style="color:var(--yellow);font-size:11px">⭐ Featured</span>' : ''}
-            ${a.breaking ? '<span style="color:#ff2d55;font-size:11px">🔴 Breaking</span>' : ''}
-          </div>
-        </div>
-        <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
-          <button onclick="openEditModal('${a.id}')"
-            style="background:#1a1a1a;border:1px solid #333;color:var(--accent);border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer"
-            title="Modifier">✏️</button>
-          <button onclick="deleteArticle('${a.id}')"
-            style="background:#ff2d5512;border:1px solid #ff2d5540;color:#ff2d55;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer"
-            title="Supprimer">🗑</button>
-        </div>
-      </div>`;
-  }
+document.getElementById('am-save-btn').addEventListener('click', async () => {
+  const mode = document.getElementById('am-mode').value;
+  const id   = document.getElementById('am-id').value;
+  const btn  = document.getElementById('am-save-btn');
+  const msg  = document.getElementById('am-msg');
 
-  async function loadArticles() {
-    try {
-      const r = await fetch(`${API}/api/articles`);
-      const d = await r.json();
-      // Custom (non-IA) en premier, IA ensuite
-      const custom = (d.articles || []).filter(a => !a.aiGenerated);
-      const ai     = (d.articles || []).filter(a => a.aiGenerated);
-      articlesCache = [...custom, ...ai];
+  const title = document.getElementById('am-title').value.trim();
+  if (!title) { showToast('❌ Titre obligatoire', 'var(--red)'); return; }
 
-      const list = document.getElementById('articles-list');
-      if (!articlesCache.length) {
-        list.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucun article. Clique sur "Nouvel article" pour commencer.</p>';
-        return;
-      }
-      const total = articlesCache.length;
-      list.innerHTML = `<p style="font-size:12px;color:var(--muted);margin-bottom:10px">${total} article(s) — <span style="color:var(--green)">${custom.length} custom</span> + <span style="color:#888">${ai.length} IA</span></p>`
-        + articlesCache.map(renderArticleItem).join('');
-    } catch {
-      document.getElementById('articles-list').innerHTML =
-        '<p style="color:var(--muted);font-size:13px">Erreur de chargement.</p>';
-    }
-  }
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> En cours…';
 
-  function filterArticles() {
-    const q   = (document.getElementById('art-search')?.value || '').toLowerCase().trim();
-    const cat = document.getElementById('art-filter-cat')?.value || '';
-    document.querySelectorAll('.art-item').forEach(el => {
-      const matchQ   = !q   || el.dataset.title.includes(q);
-      const matchCat = !cat || el.dataset.cat === cat;
-      el.style.display = (matchQ && matchCat) ? '' : 'none';
+  const payload = {
+    title,
+    category: document.getElementById('am-category').value,
+    date:     document.getElementById('am-date').value,
+    author:   document.getElementById('am-author').value.trim() || 'Rédaction ONE',
+    readTime: parseInt(document.getElementById('am-readtime').value) || 5,
+    image:    document.getElementById('am-image').value.trim(),
+    excerpt:  document.getElementById('am-excerpt').value.trim(),
+    body:     document.getElementById('am-body').value.trim(),
+    tags:     document.getElementById('am-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    featured: document.getElementById('am-featured').checked,
+    breaking: document.getElementById('am-breaking').checked,
+  };
+
+  try {
+    const url    = mode === 'create' ? `${API}/api/articles` : `${API}/api/articles/${id}`;
+    const method = mode === 'create' ? 'POST' : 'PUT';
+    const r = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+      body: JSON.stringify(payload),
     });
-  }
-
-  /* ── CRÉATION ARTICLE ── */
-  window.openCreateModal = () => {
-    // Pré-remplir la date d'aujourd'hui
-    const today = new Date().toISOString().slice(0,10);
-    document.getElementById('create-date').value     = today;
-    document.getElementById('create-title').value    = '';
-    document.getElementById('create-excerpt').value  = '';
-    document.getElementById('create-body').value     = '';
-    document.getElementById('create-tags').value     = '';
-    document.getElementById('create-image').value    = '';
-    document.getElementById('create-author').value   = 'Rédaction ONE';
-    document.getElementById('create-readtime').value = '5';
-    document.getElementById('create-category').value = 'musique';
-    document.getElementById('create-featured').checked = false;
-    document.getElementById('create-breaking').checked = false;
-    document.getElementById('create-save-msg').style.display = 'none';
-    document.getElementById('create-img-preview-wrap').style.display = 'none';
-    document.getElementById('create-modal-overlay').classList.add('open');
-    setTimeout(() => document.getElementById('create-title').focus(), 100);
-  };
-
-  // Preview image à la saisie de l'URL
-  document.getElementById('create-image')?.addEventListener('input', (e) => {
-    const url = e.target.value.trim();
-    const wrap = document.getElementById('create-img-preview-wrap');
-    const img  = document.getElementById('create-img-preview');
-    if (url.startsWith('http')) { img.src = url; wrap.style.display = ''; }
-    else { wrap.style.display = 'none'; }
-  });
-
-  document.getElementById('create-cancel-btn')?.addEventListener('click', () => {
-    document.getElementById('create-modal-overlay').classList.remove('open');
-  });
-  document.getElementById('create-modal-overlay')?.addEventListener('click', (e) => {
-    if (e.target === document.getElementById('create-modal-overlay'))
-      document.getElementById('create-modal-overlay').classList.remove('open');
-  });
-
-  document.getElementById('create-save-btn')?.addEventListener('click', async () => {
-    const btn = document.getElementById('create-save-btn');
-    const msg = document.getElementById('create-save-msg');
-    const title = document.getElementById('create-title').value.trim();
-    if (!title) { alert('Le titre est obligatoire.'); return; }
-
-    btn.disabled = true; btn.textContent = '⏳ Publication…';
-    const payload = {
-      title,
-      category: document.getElementById('create-category').value,
-      date:     document.getElementById('create-date').value,
-      author:   document.getElementById('create-author').value.trim() || 'Rédaction ONE',
-      readTime: parseInt(document.getElementById('create-readtime').value) || 5,
-      image:    document.getElementById('create-image').value.trim(),
-      excerpt:  document.getElementById('create-excerpt').value.trim(),
-      body:     document.getElementById('create-body').value.trim(),
-      tags:     document.getElementById('create-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
-      featured: document.getElementById('create-featured').checked,
-      breaking: document.getElementById('create-breaking').checked,
-    };
-
-    try {
-      const r = await fetch(`${API}/api/articles`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
-        body: JSON.stringify(payload),
-      });
-      const d = await r.json();
-      if (d.success) {
-        msg.style.display = 'inline';
-        showToast('🎉 Article publié !');
-        await loadArticles();
-        await loadStatus();
-        setTimeout(() => document.getElementById('create-modal-overlay').classList.remove('open'), 1200);
-      } else {
-        showToast('❌ ' + (d.error || 'Erreur'), 'var(--red)');
-      }
-    } catch (e) { showToast('❌ ' + e.message, 'var(--red)'); }
-    btn.disabled = false; btn.textContent = '✍️ Publier l\'article';
-  });
-
-  /* ── ÉDITION ARTICLES ── */
-  window.openEditModal = (id) => {
-    const a = articlesCache.find(x => x.id === id);
-    if (!a) return;
-
-    document.getElementById('edit-article-id').value  = a.id;
-    document.getElementById('edit-title').value       = a.title || '';
-    document.getElementById('edit-category').value    = a.category || 'musique';
-    document.getElementById('edit-readtime').value    = a.readTime || 5;
-    document.getElementById('edit-image').value       = a.image || '';
-    document.getElementById('edit-excerpt').value     = a.excerpt || '';
-    document.getElementById('edit-body').value        = a.body || '';
-    document.getElementById('edit-tags').value        = (a.tags || []).join(', ');
-    document.getElementById('edit-featured').checked  = !!a.featured;
-    document.getElementById('edit-breaking').checked  = !!a.breaking;
-
-    document.getElementById('edit-modal-overlay').classList.add('open');
-    document.getElementById('edit-save-msg').style.display = 'none';
-  };
-
-  document.getElementById('edit-cancel-btn').addEventListener('click', () => {
-    document.getElementById('edit-modal-overlay').classList.remove('open');
-  });
-  document.getElementById('edit-modal-overlay').addEventListener('click', (e) => {
-    if (e.target === document.getElementById('edit-modal-overlay')) {
-      document.getElementById('edit-modal-overlay').classList.remove('open');
-    }
-  });
-
-  document.getElementById('edit-save-btn').addEventListener('click', async () => {
-    const id  = document.getElementById('edit-article-id').value;
-    const btn = document.getElementById('edit-save-btn');
-    const msg = document.getElementById('edit-save-msg');
-    btn.disabled = true;
-    btn.textContent = '⏳ Sauvegarde…';
-
-    const body = {
-      title:    document.getElementById('edit-title').value.trim(),
-      category: document.getElementById('edit-category').value,
-      readTime: parseInt(document.getElementById('edit-readtime').value) || 5,
-      image:    document.getElementById('edit-image').value.trim(),
-      excerpt:  document.getElementById('edit-excerpt').value.trim(),
-      body:     document.getElementById('edit-body').value.trim(),
-      tags:     document.getElementById('edit-tags').value.split(',').map(t => t.trim()).filter(Boolean),
-      featured: document.getElementById('edit-featured').checked,
-      breaking: document.getElementById('edit-breaking').checked,
-    };
-
-    try {
-      const r = await fetch(`${API}/api/articles/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
-        body: JSON.stringify(body),
-      });
-      const d = await r.json();
-      if (d.success) {
-        msg.style.display = 'inline';
-        showToast('✅ Article modifié !');
-        await loadArticles();
-        setTimeout(() => {
-          document.getElementById('edit-modal-overlay').classList.remove('open');
-        }, 1000);
-      } else {
-        showToast('❌ ' + (d.error || 'Erreur'), 'var(--red)');
-      }
-    } catch (err) {
-      showToast('❌ ' + err.message, 'var(--red)');
-    }
-    btn.disabled = false;
-    btn.textContent = '💾 Sauvegarder';
-  });
-
-  window.deleteArticle = async (id) => {
-    const a = articlesCache.find(x => x.id === id);
-    if (!confirm(`Supprimer "${a?.title?.slice(0,50)||id}" ?`)) return;
-    try {
-      await fetch(`${API}/api/articles/${id}`, { method: 'DELETE', headers: { 'x-admin-token': token } });
-      showToast('🗑 Article supprimé');
+    const d = await r.json();
+    if (d.success) {
+      msg.textContent = mode === 'create' ? '✅ Article publié !' : '✅ Sauvegardé !';
+      msg.style.display = 'inline';
+      showToast(mode === 'create' ? '🎉 Article publié !' : '✅ Article modifié !');
       await loadArticles();
       await loadStatus();
-    } catch { showToast('❌ Erreur suppression', 'var(--red)'); }
-  };
-
-  /* ── REFRESH ── */
-  document.getElementById('refresh-btn').addEventListener('click', async () => {
-    const btn = document.getElementById('refresh-btn');
-    const msg = document.getElementById('gen-msg');
-    btn.disabled = true;
-    msg.style.display = 'flex';
-
-    try {
-      await fetch(`${API}/api/refresh`, {
-        method: 'POST',
-        headers: { 'x-admin-token': token },
-      });
-      showToast('✅ Génération démarrée !');
-
-      // Poll jusqu'à la fin
-      const poll = setInterval(async () => {
-        try {
-          const r = await fetch(`${API}/api/refresh/status`);
-          const d = await r.json();
-          if (!d.generating) {
-            clearInterval(poll);
-            btn.disabled = false;
-            msg.style.display = 'none';
-            showToast('🎉 Nouveaux articles générés !');
-            await loadStatus();
-            await loadArticles();
-          }
-        } catch {}
-      }, 5000);
-
-    } catch {
-      showToast('❌ Erreur', 'var(--red)');
-      btn.disabled = false;
-      msg.style.display = 'none';
-    }
-  });
-
-  /* ── CLIPS ── */
-  async function loadClips() {
-    const res  = await fetch(`${API}/api/clips`).then(r => r.json()).catch(() => ({ clips: [], pending: [] }));
-    const clips = res.clips || [];
-    const pending = res.pending || [];
-    const el = document.getElementById('clips-list-admin');
-
-    if (!clips.length) {
-      el.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucun clip pour l\'instant.</p>';
+      setTimeout(closeArticleModal, 1200);
     } else {
-      el.innerHTML = `<div style="margin-top:12px">${clips.map(c => `
-        <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #1a1a1a">
-          <img src="https://img.youtube.com/vi/${c.videoId}/default.jpg" style="width:60px;height:45px;border-radius:4px;object-fit:cover">
-          <div style="flex:1">
-            <div style="font-size:13px;font-weight:600">${c.title}</div>
-            <div style="font-size:11px;color:var(--muted)">${c.artist} · ${c.country}</div>
-          </div>
-          <button onclick="deleteClip('${c.id}')" style="background:#ff2d5520;color:#ff2d55;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer">Suppr.</button>
-        </div>`).join('')}</div>`;
+      showToast('❌ ' + (d.error || 'Erreur'), 'var(--red)');
     }
+  } catch (e) { showToast('❌ ' + e.message, 'var(--red)'); }
 
-    const pendingEl = document.getElementById('pending-section');
-    if (pending.length) {
-      pendingEl.innerHTML = `<h3 style="font-size:14px;margin-bottom:10px;color:var(--yellow)">⏳ Soumissions en attente (${pending.length})</h3>
-        ${pending.map((p, i) => `
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #1a1a1a">
-            <img src="https://img.youtube.com/vi/${p.videoId}/default.jpg" style="width:60px;height:45px;border-radius:4px;object-fit:cover">
-            <div style="flex:1">
-              <div style="font-size:13px;font-weight:600">${p.title} — ${p.artist}</div>
-              <div style="font-size:11px;color:var(--muted)">${p.email || 'sans email'}</div>
+  btn.disabled = false;
+  btn.textContent = mode === 'create' ? '✍️ Publier' : '💾 Sauvegarder';
+});
+
+window.deleteArticle = async (id) => {
+  const a = articlesCache.find(x => x.id === id);
+  if (!confirm(`Supprimer "${(a?.title||id).slice(0,60)}" ?\nCette action est irréversible.`)) return;
+  try {
+    await fetch(`${API}/api/articles/${id}`, { method:'DELETE', headers:{'x-admin-token':token} });
+    showToast('🗑 Article supprimé');
+    await loadArticles();
+    await loadStatus();
+  } catch { showToast('❌ Erreur suppression', 'var(--red)'); }
+};
+
+/* ══ CLIPS ═══════════════════════════════════════════════════ */
+async function loadClips() {
+  try {
+    const d = await fetch(`${API}/api/clips`).then(r => r.json());
+    const clips = d.clips || [];
+    const listEl = document.getElementById('clips-list-admin');
+    const pendEl = document.getElementById('pending-section');
+
+    const published = clips.filter(c => c.verified !== false).slice(0,20);
+    const pending   = clips.filter(c => c.verified === false);
+
+    listEl.innerHTML = published.length
+      ? published.map(c => `
+          <div class="item-row" id="clip-row-${c.id}">
+            <img class="item-thumb" src="https://img.youtube.com/vi/${c.videoId}/mqdefault.jpg" alt="">
+            <div class="item-info">
+              <div class="item-title">${c.title}</div>
+              <div class="item-sub">${c.artist} · ${c.country} · ${fmtDate(c.releasedAt)}</div>
             </div>
-            <button onclick="approvePending(${i})" style="background:#C6FF3320;color:#C6FF33;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;margin-right:6px">✅ Publier</button>
-          </div>`).join('')}`;
-    }
-  }
+            <div style="display:flex;gap:6px">
+              <a href="https://youtube.com/watch?v=${c.videoId}" target="_blank" class="btn btn-ghost btn-icon btn-sm">▶</a>
+              <button class="btn btn-ghost btn-icon btn-sm" style="color:var(--red);border-color:#ff2d5540" onclick="deleteClip('${c.id}')">🗑</button>
+            </div>
+          </div>`).join('')
+      : '<p style="padding:14px 0;color:var(--muted2);font-size:13px">Aucun clip publié.</p>';
 
-  document.getElementById('clip-add-btn').addEventListener('click', async () => {
-    const videoId = document.getElementById('clip-videoId').value.trim();
-    const artist  = document.getElementById('clip-artist').value.trim();
-    const title   = document.getElementById('clip-title').value.trim();
-    const country = document.getElementById('clip-country').value;
-    if (!videoId || !artist || !title) return;
-    await fetch(`${API}/api/clips/add`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
-      body: JSON.stringify({ videoId, artist, title, country }),
+    if (pending.length) {
+      pendEl.innerHTML = `<div style="padding:14px 0 6px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px">${pending.length} en attente de validation</div>`
+        + pending.map(c => `
+          <div class="item-row" id="clip-pending-${c.id}">
+            <img class="item-thumb" src="https://img.youtube.com/vi/${c.videoId}/mqdefault.jpg" alt="">
+            <div class="item-info">
+              <div class="item-title">${c.title}</div>
+              <div class="item-sub">${c.artist} · ${c.country}</div>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-green btn-sm" onclick="validateClip('${c.id}')">✅ Publier</button>
+              <button class="btn btn-ghost btn-icon btn-sm" style="color:var(--red)" onclick="deleteClip('${c.id}')">🗑</button>
+            </div>
+          </div>`).join('');
+    } else { pendEl.innerHTML = ''; }
+  } catch { document.getElementById('clips-list-admin').innerHTML = '<p style="padding:14px 0;color:var(--muted2);font-size:13px">Erreur.</p>'; }
+}
+
+document.getElementById('clip-add-btn').addEventListener('click', async () => {
+  const videoId = document.getElementById('clip-videoId').value.trim();
+  const artist  = document.getElementById('clip-artist').value.trim();
+  const title   = document.getElementById('clip-title').value.trim();
+  const country = document.getElementById('clip-country').value;
+  if (!videoId || !artist || !title) { showToast('❌ Tous les champs requis', 'var(--red)'); return; }
+  try {
+    const r = await fetch(`${API}/api/clips/add`, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'x-admin-token':token },
+      body: JSON.stringify({ videoId, artist, title, country })
     });
-    ['clip-videoId','clip-artist','clip-title'].forEach(id => document.getElementById(id).value = '');
-    const msg = document.getElementById('clip-add-msg');
-    msg.style.display = 'inline';
-    setTimeout(() => { msg.style.display = 'none'; }, 2000);
-    await loadClips();
-  });
-
-  window.deleteClip = async (id) => {
-    if (!confirm('Supprimer ce clip ?')) return;
-    await fetch(`${API}/api/clips/${id}`, { method: 'DELETE', headers: { 'x-admin-token': token } });
-    await loadClips();
-  };
-
-  window.approvePending = async (idx) => {
-    const res = await fetch(`${API}/api/clips`).then(r => r.json());
-    const p = res.pending?.[idx];
-    if (!p) return;
-    await fetch(`${API}/api/clips/add`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
-      body: JSON.stringify({ videoId: p.videoId, title: p.title, artist: p.artist, country: 'afrique' }),
-    });
-    showToast('✅ Clip publié !');
-    await loadClips();
-  };
-
-  /* ── ABONNÉS ── */
-  async function loadSubscribers() {
-    try {
-      const d = await fetch(`${API}/api/subscribers`, { headers: { 'x-admin-token': token } }).then(r => r.json());
-      const count = d.subscribers?.length || 0;
-      document.getElementById('subscribers-info').innerHTML = `
-        <div style="font-size:32px;font-weight:900;color:var(--accent)">${count}</div>
-        <div style="font-size:13px;color:var(--muted);margin-top:4px">abonné${count > 1 ? 's' : ''} à la newsletter</div>
-        ${count ? `<div style="margin-top:12px;font-size:12px;color:var(--muted)">${d.subscribers.slice(0,5).join('<br>')}</div>` : ''}`;
-    } catch {
-      document.getElementById('subscribers-info').innerHTML = '<p style="color:var(--muted);font-size:13px">Erreur de chargement</p>';
+    const d = await r.json();
+    if (d.success) {
+      showToast('🎬 Clip ajouté !');
+      document.getElementById('clip-videoId').value = '';
+      document.getElementById('clip-artist').value  = '';
+      document.getElementById('clip-title').value   = '';
+      await loadClips();
     }
-  }
+  } catch { showToast('❌ Erreur', 'var(--red)'); }
+});
 
-  /* ── ÉVÉNEMENTS ── */
-  async function loadEvents() {
-    const res = await fetch(`${API}/api/events`).then(r => r.json()).catch(() => ({ events: [] }));
-    const events = (res.events || []).sort((a,b) => new Date(a.date)-new Date(b.date));
+window.validateClip = async (id) => {
+  try {
+    const clips = await fetch(`${API}/api/clips`).then(r => r.json()).then(d => d.clips || []);
+    const clip  = clips.find(c => c.id === id);
+    if (!clip) return;
+    await fetch(`${API}/api/clips/add`, {
+      method:'POST', headers:{ 'Content-Type':'application/json', 'x-admin-token':token },
+      body: JSON.stringify({ videoId: clip.videoId, artist: clip.artist, title: clip.title, country: clip.country })
+    });
+    await fetch(`${API}/api/clips/${id}`, { method:'DELETE', headers:{'x-admin-token':token} });
+    showToast('✅ Clip publié !'); await loadClips();
+  } catch { showToast('❌ Erreur', 'var(--red)'); }
+};
+
+window.deleteClip = async (id) => {
+  if (!confirm('Supprimer ce clip ?')) return;
+  await fetch(`${API}/api/clips/${id}`, { method:'DELETE', headers:{'x-admin-token':token} });
+  showToast('🗑 Clip supprimé'); await loadClips();
+};
+
+document.getElementById('clips-auto-btn').addEventListener('click', async () => {
+  const btn = document.getElementById('clips-auto-btn');
+  const msg = document.getElementById('clips-auto-msg');
+  btn.disabled = true; msg.style.display = 'inline';
+  try {
+    await fetch(`${API}/api/clips/auto-refresh`, { method:'POST', headers:{'x-admin-token':token} });
+    setTimeout(async () => { await loadClips(); btn.disabled = false; msg.style.display = 'none'; showToast('🎬 Scan terminé !'); }, 90000);
+  } catch { btn.disabled = false; msg.style.display = 'none'; showToast('❌ Erreur', 'var(--red)'); }
+});
+
+/* ══ ÉVÉNEMENTS ══════════════════════════════════════════════ */
+async function loadEvents() {
+  try {
+    const d = await fetch(`${API}/api/events`).then(r => r.json());
+    const evts = (d.events || []).sort((a,b) => new Date(a.date) - new Date(b.date));
     const el = document.getElementById('events-list-admin');
-
-    if (!events.length) {
-      el.innerHTML = '<p style="color:var(--muted);font-size:13px;margin-top:4px">Aucun événement.</p>';
-      return;
-    }
-
-    const MONTHS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
-    el.innerHTML = `<h3 style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">${events.length} événement(s)</h3>`
-    + events.map(e => {
-      const d = new Date(e.date);
-      const dateStr = `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
-      const liveStyle = e.isLive
-        ? 'background:var(--red);color:#fff;'
-        : 'background:#1a1a1a;color:var(--muted);border:1px solid #333;';
-      return `
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid #1a1a1a">
-        <img src="${e.image || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&q=60'}"
-             style="width:60px;height:60px;border-radius:8px;object-fit:cover;flex-shrink:0"
-             onerror="this.style.display='none'">
-        <div style="flex:1;min-width:0">
-          <div style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.title}</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:3px">${e.artist} · ${dateStr} ${e.time} · ${e.city}</div>
-          <!-- Champ URL LIVE -->
-          <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <input id="liveurl-${e.id}" placeholder="URL live (YouTube / Twitch)"
-              value="${e.liveUrl || ''}"
-              style="flex:1;min-width:160px;background:#111;border:1px solid #333;border-radius:6px;color:#eee;padding:6px 10px;font-size:12px;outline:none">
-            <button onclick="toggleLive('${e.id}')"
-              style="${liveStyle}border:none;border-radius:6px;padding:6px 14px;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;white-space:nowrap;transition:opacity .2s">
-              ${e.isLive ? '🔴 EN LIVE — Couper' : '▶ Passer EN LIVE'}
-            </button>
-            <button onclick="deleteEvent('${e.id}')"
-              style="background:transparent;border:1px solid #333;color:var(--red);border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer">
-              Suppr.
-            </button>
-          </div>
+    if (!evts.length) { el.innerHTML = '<p style="padding:14px 0;color:var(--muted2);font-size:13px">Aucun événement.</p>'; return; }
+    el.innerHTML = evts.map(e => `
+      <div class="item-row">
+        <div class="item-info">
+          <div class="item-title">${e.title}</div>
+          <div class="item-sub">${fmtDate(e.date)} · ${e.time||''} · ${e.venue||''} · ${e.city||''}</div>
         </div>
-      </div>`;
-    }).join('');
-  }
+        <div style="display:flex;gap:6px;align-items:center">
+          ${e.isLive
+            ? `<span style="color:var(--red);font-size:11px;font-weight:700">🔴 LIVE</span>
+               <button class="btn btn-ghost btn-sm" onclick="toggleLive('${e.id}',false)">Stop live</button>`
+            : `<button class="btn btn-green btn-sm" onclick="toggleLive('${e.id}',true)">📡 Live</button>`}
+          <button class="btn btn-ghost btn-icon btn-sm" style="color:var(--red)" onclick="deleteEvent('${e.id}')">🗑</button>
+        </div>
+      </div>`).join('');
+  } catch { document.getElementById('events-list-admin').innerHTML = '<p style="padding:14px 0;color:var(--muted2);font-size:13px">Erreur.</p>'; }
+}
 
-  window.toggleLive = async (id) => {
-    const data = await fetch(`${API}/api/events`).then(r => r.json()).catch(() => ({ events: [] }));
-    const evt  = (data.events || []).find(e => e.id === id);
-    if (!evt) return;
-    const newLive = !evt.isLive;
-    const liveUrl = document.getElementById(`liveurl-${id}`)?.value?.trim() || evt.liveUrl || '';
-    if (newLive && !liveUrl) {
-      showToast('⚠️ Colle d\'abord l\'URL du live (YouTube ou Twitch)', 'var(--yellow)');
-      return;
+document.getElementById('evt-add-btn').addEventListener('click', async () => {
+  const title = document.getElementById('evt-title').value.trim();
+  const date  = document.getElementById('evt-date').value;
+  if (!title || !date) { showToast('❌ Titre et date requis', 'var(--red)'); return; }
+  const evt = {
+    title, date,
+    artist:   document.getElementById('evt-artist').value.trim(),
+    time:     document.getElementById('evt-time').value,
+    venue:    document.getElementById('evt-venue').value.trim(),
+    city:     document.getElementById('evt-city').value.trim(),
+    category: document.getElementById('evt-category').value,
+    country:  document.getElementById('evt-country').value,
+    image:    document.getElementById('evt-image').value.trim(),
+    ticketUrl:document.getElementById('evt-ticket').value.trim(),
+  };
+  try {
+    const r = await fetch(`${API}/api/events/add`, {
+      method:'POST', headers:{'Content-Type':'application/json','x-admin-token':token},
+      body: JSON.stringify(evt)
+    });
+    const d = await r.json();
+    if (d.success) {
+      showToast('📅 Événement ajouté !');
+      document.getElementById('evt-add-msg').style.display = 'inline';
+      setTimeout(() => document.getElementById('evt-add-msg').style.display = 'none', 2000);
+      ['evt-title','evt-artist','evt-venue','evt-city','evt-image','evt-ticket'].forEach(id => document.getElementById(id).value = '');
+      await loadEvents();
     }
+  } catch { showToast('❌ Erreur', 'var(--red)'); }
+});
+
+window.toggleLive = async (id, isLive) => {
+  const liveUrl = isLive ? (prompt('URL du live (YouTube, etc.) :') || '') : '';
+  try {
     await fetch(`${API}/api/events/${id}/live`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
-      body: JSON.stringify({ isLive: newLive, liveUrl }),
+      method:'POST', headers:{'Content-Type':'application/json','x-admin-token':token},
+      body: JSON.stringify({ isLive, liveUrl })
     });
-    showToast(newLive ? '🔴 Événement passé EN LIVE !' : '⚫ Live coupé', newLive ? 'var(--red)' : 'var(--muted)');
+    showToast(isLive ? '🔴 Live activé !' : '⚫ Live arrêté');
     await loadEvents();
-  };
+  } catch { showToast('❌ Erreur', 'var(--red)'); }
+};
 
-  window.deleteEvent = async (id) => {
-    if (!confirm('Supprimer cet événement ?')) return;
-    await fetch(`${API}/api/events/${id}`, { method: 'DELETE', headers: { 'x-admin-token': token } });
-    showToast('🗑 Événement supprimé');
-    await loadEvents();
-  };
+window.deleteEvent = async (id) => {
+  if (!confirm('Supprimer cet événement ?')) return;
+  await fetch(`${API}/api/events/${id}`, { method:'DELETE', headers:{'x-admin-token':token} });
+  showToast('🗑 Événement supprimé'); await loadEvents();
+};
 
-  document.getElementById('evt-add-btn').addEventListener('click', async () => {
-    const title   = document.getElementById('evt-title').value.trim();
-    const date    = document.getElementById('evt-date').value;
-    if (!title || !date) { showToast('⚠️ Titre et date requis', 'var(--yellow)'); return; }
-    const body = {
-      title,
-      artist:   document.getElementById('evt-artist').value.trim(),
-      date,
-      time:     document.getElementById('evt-time').value || '20:00',
-      venue:    document.getElementById('evt-venue').value.trim(),
-      city:     document.getElementById('evt-city').value.trim(),
-      category: document.getElementById('evt-category').value,
-      country:  document.getElementById('evt-country').value,
-      image:    document.getElementById('evt-image').value.trim(),
-      ticketUrl:document.getElementById('evt-ticket').value.trim(),
-    };
-    await fetch(`${API}/api/events/add`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
-      body: JSON.stringify(body),
+/* ══ ARTISTES ════════════════════════════════════════════════ */
+window.autoFillArtist = async () => {
+  const handle = document.getElementById('af-handle').value.trim();
+  if (!handle) return;
+  const status = document.getElementById('af-status');
+  status.textContent = '⏳ Résolution en cours…';
+  try {
+    const r = await fetch(`${API}/api/artists/autofill`, {
+      method:'POST', headers:{'Content-Type':'application/json','x-admin-token':token},
+      body: JSON.stringify({ handle })
     });
-    ['evt-title','evt-artist','evt-venue','evt-city','evt-image','evt-ticket'].forEach(id => {
-      document.getElementById(id).value = '';
-    });
-    const msg = document.getElementById('evt-add-msg');
-    msg.style.display = 'inline';
-    setTimeout(() => { msg.style.display = 'none'; }, 2500);
-    await loadEvents();
-  });
-
-  /* ── AUTO-CLIPS YOUTUBE ── */
-  document.getElementById('clips-auto-btn')?.addEventListener('click', async () => {
-    const btn = document.getElementById('clips-auto-btn');
-    const msg = document.getElementById('clips-auto-msg');
-    btn.disabled = true;
-    msg.style.display = 'inline';
-
-    try {
-      const r = await fetch(`${API}/api/clips/auto-refresh`, {
-        method: 'POST',
-        headers: { 'x-admin-token': token },
-      });
-      const d = await r.json();
-      if (d.error) {
-        showToast('⚠️ ' + d.error, 'var(--yellow)');
-      } else {
-        showToast('🎬 ' + (d.message || 'Scan lancé !'));
-        // Recharge les clips après 90s (scan + résolution handles)
-        setTimeout(async () => { await loadClips(); showToast('✅ Clips mis à jour !'); }, 90000);
-      }
-    } catch (err) {
-      showToast('❌ ' + err.message, 'var(--red)');
-    }
-
-    msg.style.display = 'none';
-    btn.disabled = false;
-  });
-
-  /* ── AUTO-LOGIN si token existant ── */
-  if (token) {
-    showDashboard();
-  }
-
-  /* ── ARTISTES ─────────────────────────────────────────── */
-  async function autoFillArtist() {
-    const handle = document.getElementById('af-handle').value.trim();
-    const status = document.getElementById('af-status');
-    const videosBox = document.getElementById('af-videos');
-    if (!handle) { status.textContent = '⚠ Entre un handle YouTube (ex: @Azaya)'; return; }
-    status.textContent = '⏳ Résolution en cours…';
-    status.style.color = 'var(--muted)';
-    videosBox.style.display = 'none';
-    try {
-      const res = await fetch(`${API}/api/artists/autofill`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
-        body: JSON.stringify({ handle })
-      });
-      const d = await res.json();
-      if (!d.success) {
-        status.textContent = '❌ ' + (d.error || 'Introuvable');
-        status.style.color = '#ff6b6b';
-        return;
-      }
+    const d = await r.json();
+    if (d.success) {
       const p = d.prefilled;
-      // Remplir les champs
       document.getElementById('af-name').value    = p.name || '';
       document.getElementById('af-youtube').value = p.youtube || '';
       document.getElementById('af-image').value   = p.image || '';
-      status.textContent = `✓ "${p.channelName || p.name}" trouvé — ${p.videoCount || 0} vidéo(s) sur la chaîne`;
-      status.style.color = 'var(--green)';
-      // Afficher les vidéos récentes
-      if (p.recentVideos && p.recentVideos.length) {
-        videosBox.style.display = 'block';
-        document.getElementById('af-videos-list').innerHTML = p.recentVideos.map(v => `
-          <a href="${v.url}" target="_blank" style="text-decoration:none;display:block;width:120px">
-            <img src="${v.thumb}" style="width:120px;height:68px;object-fit:cover;border-radius:4px;border:1px solid var(--border)">
-            <div style="font-size:11px;color:var(--muted);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${v.title}</div>
+      previewImg(p.image||'', 'af-img-prev');
+      if (p.recentVideos?.length) {
+        document.getElementById('af-videos').style.display = 'block';
+        document.getElementById('af-videos-list').innerHTML = p.recentVideos.map(v =>
+          `<a href="${v.url}" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none">
+            <img src="${v.thumb}" style="width:80px;height:45px;border-radius:4px;object-fit:cover">
+            <span style="font-size:10px;color:var(--muted2);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${v.title}</span>
           </a>`).join('');
       }
-    } catch (e) {
-      status.textContent = '❌ ' + e.message;
-      status.style.color = '#ff6b6b';
-    }
-  }
+      status.textContent = `✅ ${d.channelName}`;
+    } else { status.textContent = '❌ ' + (d.error || 'Introuvable'); }
+  } catch (e) { status.textContent = '❌ ' + e.message; }
+};
 
-  function clearArtistForm() {
-    ['af-handle','af-name','af-realname','af-genre','af-streams','af-bio','af-award','af-color','af-image','af-spotify','af-deezer','af-youtube','af-instagram','af-editing-id'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = '';
+window.saveArtist = async () => {
+  const name = document.getElementById('af-name').value.trim();
+  if (!name) { showToast('❌ Nom requis', 'var(--red)'); return; }
+  const editingId = document.getElementById('af-editing-id').value;
+  const status = document.getElementById('artist-save-status');
+  status.textContent = '⏳ Enregistrement…';
+
+  const body = {
+    name,
+    realName:  document.getElementById('af-realname').value.trim(),
+    country:   document.getElementById('af-country').value,
+    flag:      document.getElementById('af-flag').value.trim() || '🌍',
+    genre:     document.getElementById('af-genre').value.trim(),
+    streams:   document.getElementById('af-streams').value.trim(),
+    bio:       document.getElementById('af-bio').value.trim(),
+    award:     document.getElementById('af-award').value.trim(),
+    color:     document.getElementById('af-color').value.trim() || '#FF6B35',
+    image:     document.getElementById('af-image').value.trim(),
+    spotify:   document.getElementById('af-spotify').value.trim(),
+    deezer:    document.getElementById('af-deezer').value.trim(),
+    youtube:   document.getElementById('af-youtube').value.trim(),
+    instagram: document.getElementById('af-instagram').value.trim(),
+  };
+
+  try {
+    const url    = editingId ? `${API}/api/artists/${editingId}` : `${API}/api/artists`;
+    const method = editingId ? 'PUT' : 'POST';
+    const r = await fetch(url, {
+      method, headers:{'Content-Type':'application/json','x-admin-token':token},
+      body: JSON.stringify(body)
     });
-    document.getElementById('af-country').value = 'guinee';
-    document.getElementById('af-flag').value = '';
-    document.getElementById('af-videos').style.display = 'none';
-    document.getElementById('af-status').textContent = '';
-    document.getElementById('artist-save-status').textContent = '';
-  }
+    const d = await r.json();
+    if (d.success) {
+      showToast(editingId ? '✅ Artiste modifié !' : '🎤 Artiste ajouté !');
+      status.textContent = '✅ Enregistré !';
+      clearArtistForm();
+      await loadArtistsList();
+    } else { status.textContent = '❌ ' + (d.error||'Erreur'); }
+  } catch (e) { status.textContent = '❌ ' + e.message; }
+};
 
-  async function saveArtist() {
-    const editingId = document.getElementById('af-editing-id').value;
-    const statusEl  = document.getElementById('artist-save-status');
-    const name = document.getElementById('af-name').value.trim();
-    if (!name) { statusEl.textContent = '⚠ Le nom est requis'; statusEl.style.color='#ff6b6b'; return; }
+window.clearArtistForm = () => {
+  ['af-name','af-realname','af-flag','af-genre','af-streams','af-bio','af-award','af-color','af-image','af-spotify','af-deezer','af-youtube','af-instagram'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('af-country').value = 'guinee';
+  document.getElementById('af-color').value = '#FF6B35';
+  document.getElementById('af-editing-id').value = '';
+  document.getElementById('artist-save-status').textContent = '';
+  document.getElementById('af-videos').style.display = 'none';
+  document.getElementById('af-img-prev').classList.remove('show');
+};
 
-    const payload = {
-      name,
-      realName:      document.getElementById('af-realname').value.trim(),
-      country:       document.getElementById('af-country').value,
-      flag:          document.getElementById('af-flag').value.trim() || '🌍',
-      genre:         document.getElementById('af-genre').value.trim(),
-      streams:       document.getElementById('af-streams').value.trim(),
-      bio:           document.getElementById('af-bio').value.trim(),
-      award:         document.getElementById('af-award').value.trim(),
-      color:         document.getElementById('af-color').value.trim() || '#FF6B35',
-      image:         document.getElementById('af-image').value.trim(),
-      spotify:       document.getElementById('af-spotify').value.trim(),
-      deezer:        document.getElementById('af-deezer').value.trim(),
-      youtube:       document.getElementById('af-youtube').value.trim(),
-      instagram:     document.getElementById('af-instagram').value.trim(),
-      youtubeHandle: document.getElementById('af-handle').value.trim(),
-      genres:        ['afrobeats'],
-      verified:      true,
-    };
+window.loadArtistsList = async () => {
+  const el = document.getElementById('artists-admin-list');
+  el.innerHTML = '<p style="padding:12px 0;color:var(--muted2);font-size:13px">Chargement…</p>';
+  try {
+    const d = await fetch(`${API}/api/artists`).then(r => r.json());
+    const arts = d.artists || [];
+    if (!arts.length) { el.innerHTML = '<p style="padding:12px 0;color:var(--muted2);font-size:13px">Aucun artiste custom.</p>'; return; }
+    el.innerHTML = arts.map(a => `
+      <div class="item-row">
+        <img src="${a.image||''}" class="item-thumb" style="border-radius:50%;width:44px;height:44px" onerror="this.style.display='none'">
+        <div class="item-info">
+          <div class="item-title">${a.name} <span style="font-size:10px;color:var(--muted2)">${a.flag||''} ${a.country||''}</span></div>
+          <div class="item-sub">${a.genre||''} ${a.award ? '· '+a.award : ''}</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-sm" onclick="editArtist('${a.id}')">✏️</button>
+          <button class="btn btn-ghost btn-icon btn-sm" style="color:var(--red)" onclick="deleteArtist('${a.id}')">🗑</button>
+        </div>
+      </div>`).join('');
+  } catch { el.innerHTML = '<p style="padding:12px 0;color:var(--muted2);font-size:13px">Erreur.</p>'; }
+};
 
-    try {
-      const url    = editingId ? `${API}/api/artists/${editingId}` : `${API}/api/artists`;
-      const method = editingId ? 'PUT' : 'POST';
-      const res    = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
-        body: JSON.stringify(payload)
-      });
-      const d = await res.json();
-      if (d.success) {
-        statusEl.textContent = `✓ ${name} ${editingId ? 'mis à jour' : 'ajouté'} !`;
-        statusEl.style.color = 'var(--green)';
-        clearArtistForm();
-        loadArtistsList();
-      } else {
-        statusEl.textContent = '❌ ' + (d.error || 'Erreur');
-        statusEl.style.color = '#ff6b6b';
-      }
-    } catch (e) {
-      statusEl.textContent = '❌ ' + e.message;
-      statusEl.style.color = '#ff6b6b';
+window.editArtist = async (id) => {
+  const d = await fetch(`${API}/api/artists`).then(r => r.json());
+  const a = (d.artists||[]).find(x => x.id === id);
+  if (!a) return;
+  document.getElementById('af-name').value      = a.name||'';
+  document.getElementById('af-realname').value  = a.realName||'';
+  document.getElementById('af-country').value   = a.country||'guinee';
+  document.getElementById('af-flag').value      = a.flag||'';
+  document.getElementById('af-genre').value     = a.genre||'';
+  document.getElementById('af-streams').value   = a.streams||'';
+  document.getElementById('af-bio').value       = a.bio||'';
+  document.getElementById('af-award').value     = a.award||'';
+  document.getElementById('af-color').value     = a.color||'#FF6B35';
+  document.getElementById('af-image').value     = a.image||'';
+  document.getElementById('af-spotify').value   = a.spotify||'';
+  document.getElementById('af-deezer').value    = a.deezer||'';
+  document.getElementById('af-youtube').value   = a.youtube||'';
+  document.getElementById('af-instagram').value = a.instagram||'';
+  document.getElementById('af-editing-id').value = a.id;
+  document.getElementById('artist-save-status').textContent = '';
+  previewImg(a.image||'', 'af-img-prev');
+  document.querySelector('#panel-artists').scrollTo(0,0);
+  showToast('✏️ Mode édition — ' + a.name);
+};
+
+window.deleteArtist = async (id) => {
+  if (!confirm('Supprimer cet artiste ?')) return;
+  await fetch(`${API}/api/artists/${id}`, { method:'DELETE', headers:{'x-admin-token':token} });
+  showToast('🗑 Artiste supprimé'); await loadArtistsList();
+};
+
+/* ══ NEWSLETTER ══════════════════════════════════════════════ */
+async function loadSubscribers() {
+  const el = document.getElementById('subscribers-info');
+  try {
+    const d = await fetch(`${API}/api/subscribers`, { headers:{'x-admin-token':token} }).then(r => r.json());
+    const subs = d.subscribers || [];
+    el.innerHTML = `<div style="display:flex;align-items:center;gap:16px">
+      <div>
+        <div style="font-size:36px;font-weight:900;color:var(--accent)">${subs.length}</div>
+        <div style="font-size:12px;color:var(--muted2)">abonnés actifs</div>
+      </div>
+      ${subs.length ? `<div style="font-size:12px;color:var(--muted2)">Dernier : ${subs[subs.length-1]}</div>` : ''}
+    </div>`;
+  } catch { el.innerHTML = '<p style="color:var(--muted2);font-size:13px">Erreur chargement abonnés.</p>'; }
+}
+
+window.sendNewsletter = async () => {
+  const subject = document.getElementById('nl-subject').value.trim();
+  const html    = document.getElementById('nl-html').value.trim();
+  if (!subject || !html) { showToast('❌ Sujet et contenu requis', 'var(--red)'); return; }
+  const result = document.getElementById('nl-result');
+  result.innerHTML = '⏳ Envoi en cours…';
+  try {
+    const r = await fetch(`${API}/api/newsletter/send`, {
+      method:'POST', headers:{'Content-Type':'application/json','x-admin-token':token},
+      body: JSON.stringify({ subject, html, previewText: document.getElementById('nl-preview').value.trim() })
+    });
+    const d = await r.json();
+    if (d.success) {
+      result.innerHTML = `<span style="color:var(--green)">✅ ${d.sent} email(s) envoyé(s) avec succès !</span>`;
+      document.getElementById('nl-subject').value = '';
+      document.getElementById('nl-html').value = '';
+    } else {
+      result.innerHTML = `<span style="color:var(--red)">❌ ${d.error || 'Erreur'} — ${d.sent||0} envoyés, ${d.failed||0} échoués.</span>`;
     }
-  }
+  } catch (e) { result.innerHTML = `<span style="color:var(--red)">❌ ${e.message}</span>`; }
+};
 
-  async function loadArtistsList() {
-    const el = document.getElementById('artists-admin-list');
-    el.innerHTML = '<p style="font-size:13px;color:var(--muted)">Chargement…</p>';
-    try {
-      const res  = await fetch(`${API}/api/artists`);
-      const data = await res.json();
-      const list = data.artists || [];
-      if (!list.length) { el.innerHTML = '<p style="font-size:13px;color:var(--muted)">Aucun artiste ajouté via l\'admin. Utilise le formulaire ci-dessus.</p>'; return; }
-      el.innerHTML = `<p style="font-size:13px;color:var(--muted);margin-bottom:12px">${list.length} artiste(s) custom</p>` +
-        list.map(a => `
-          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#1a1a1a;border:1px solid var(--border);border-radius:8px;margin-bottom:8px">
-            ${a.image ? `<img src="${a.image}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0" onerror="this.style.display='none'">` : '<div style="width:48px;height:48px;border-radius:50%;background:var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px">' + (a.flag||'🎤') + '</div>'}
-            <div style="flex:1;min-width:0">
-              <div style="font-size:14px;font-weight:700">${a.flag||''} ${a.name}</div>
-              <div style="font-size:12px;color:var(--muted)">${a.genre||''} · ${a.country}</div>
-            </div>
-            <div style="display:flex;gap:6px;flex-shrink:0">
-              <button onclick="editArtist('${a.id}')" style="background:rgba(0,245,255,0.1);border:1px solid var(--accent);color:var(--accent);border-radius:4px;padding:5px 10px;font-size:12px;cursor:pointer">✏️</button>
-              <button onclick="deleteArtist('${a.id}','${a.name.replace(/'/g,'\\\'')}')" style="background:rgba(255,45,85,0.1);border:1px solid var(--red);color:var(--red);border-radius:4px;padding:5px 10px;font-size:12px;cursor:pointer">🗑</button>
-            </div>
-          </div>`).join('');
-    } catch (e) {
-      el.innerHTML = `<p style="color:#ff6b6b;font-size:13px">Erreur: ${e.message}</p>`;
-    }
-  }
+/* ══ CONTACTS & SOUMISSIONS ══════════════════════════════════ */
+window.loadContacts = async () => {
+  const el = document.getElementById('contacts-list');
+  el.innerHTML = '<p style="padding:12px 0;color:var(--muted2);font-size:13px">Chargement…</p>';
+  try {
+    const d = await fetch(`${API}/api/contacts`, { headers:{'x-admin-token':token} }).then(r => r.json());
+    const contacts = (d.contacts||[]).sort((a,b) => new Date(b.receivedAt)-new Date(a.receivedAt));
+    const badge = document.getElementById('sb-msg-count');
+    if (contacts.length) { badge.textContent = contacts.length; badge.style.display = 'inline'; }
+    if (!contacts.length) { el.innerHTML = '<p style="padding:12px 0;color:var(--muted2);font-size:13px">Aucun message.</p>'; return; }
+    el.innerHTML = contacts.map(c => `
+      <div style="padding:16px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <strong style="font-size:14px">${c.name}</strong>
+          <span style="font-size:11px;color:var(--muted2)">${fmtDate(c.receivedAt)}</span>
+        </div>
+        <div style="font-size:12px;color:var(--accent);margin-bottom:4px">[${c.type||'général'}] ${c.email}</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px">${c.subject}</div>
+        <div style="font-size:13px;color:var(--muted2);max-height:80px;overflow:hidden">${c.message}</div>
+      </div>`).join('');
+  } catch { el.innerHTML = '<p style="padding:12px 0;color:var(--muted2);font-size:13px">Erreur.</p>'; }
+};
 
-  // Cache des artistes custom pour pré-remplir l'édition
-  let artistsCache = [];
-  async function refreshArtistsCache() {
-    try {
-      const d = await fetch(`${API}/api/artists`).then(r => r.json());
-      artistsCache = d.artists || [];
-    } catch {}
-  }
+window.loadSubmissions = async () => {
+  const el = document.getElementById('submissions-list');
+  el.innerHTML = '<p style="padding:12px 0;color:var(--muted2);font-size:13px">Chargement…</p>';
+  try {
+    const d = await fetch(`${API}/api/submissions`, { headers:{'x-admin-token':token} }).then(r => r.json());
+    const subs = (d.submissions||[]).sort((a,b) => new Date(b.submittedAt)-new Date(a.submittedAt));
+    if (!subs.length) { el.innerHTML = '<p style="padding:12px 0;color:var(--muted2);font-size:13px">Aucune soumission.</p>'; return; }
+    el.innerHTML = subs.map(s => {
+      const sc = { pending:'#FFE500', accepted:'var(--green)', rejected:'var(--red)' }[s.status]||'#888';
+      return `<div style="padding:16px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <strong>🎤 ${s.artist.stageName} <span style="font-size:11px;color:var(--muted2)">${s.artist.country}</span></strong>
+          <span style="font-size:11px;color:${sc};border:1px solid ${sc};border-radius:4px;padding:2px 8px;text-transform:uppercase">${s.status}</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted2);margin-bottom:6px">Par: ${s.contact.name} · ${s.contact.email}</div>
+        <div style="font-size:13px;color:#ccc;margin-bottom:10px;max-height:60px;overflow:hidden">${s.artist.bio||''}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${s.status==='pending'?`<button class="btn btn-green btn-sm" onclick="updateSub('${s.id}','accepted')">✓ Accepter</button><button class="btn btn-sm" style="background:var(--red)" onclick="updateSub('${s.id}','rejected')">✕ Refuser</button>`:''}
+          ${s.links?.youtube?`<a href="${s.links.youtube}" target="_blank" class="btn btn-ghost btn-sm">▶ YouTube</a>`:''}
+          ${s.links?.spotify?`<a href="${s.links.spotify}" target="_blank" class="btn btn-ghost btn-sm">♪ Spotify</a>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  } catch { el.innerHTML = '<p style="padding:12px 0;color:var(--muted2);font-size:13px">Erreur.</p>'; }
+};
 
-  async function editArtist(id) {
-    await refreshArtistsCache();
-    const a = artistsCache.find(x => x.id === id);
-    if (!a) { alert('Artiste introuvable'); return; }
-    document.getElementById('af-editing-id').value  = id;
-    document.getElementById('af-handle').value      = a.youtubeHandle || '';
-    document.getElementById('af-name').value        = a.name || '';
-    document.getElementById('af-realname').value    = a.realName || '';
-    document.getElementById('af-country').value     = a.country || 'guinee';
-    document.getElementById('af-flag').value        = a.flag || '';
-    document.getElementById('af-genre').value       = a.genre || '';
-    document.getElementById('af-streams').value     = a.streams || '';
-    document.getElementById('af-bio').value         = a.bio || '';
-    document.getElementById('af-award').value       = a.award || '';
-    document.getElementById('af-color').value       = a.color || '#FF6B35';
-    document.getElementById('af-image').value       = a.image || '';
-    document.getElementById('af-spotify').value     = a.spotify || '';
-    document.getElementById('af-deezer').value      = a.deezer || '';
-    document.getElementById('af-youtube').value     = a.youtube || '';
-    document.getElementById('af-instagram').value   = a.instagram || '';
-    document.getElementById('artist-save-status').textContent = `Mode édition : ${a.name}`;
-    document.getElementById('artist-save-status').style.color = 'var(--yellow)';
-    document.getElementById('artist-form-grid').scrollIntoView({ behavior: 'smooth' });
-  }
+window.updateSub = async (id, status) => {
+  try {
+    await fetch(`${API}/api/submissions/${id}/status`, {
+      method:'PUT', headers:{'Content-Type':'application/json','x-admin-token':token},
+      body: JSON.stringify({ status })
+    });
+    showToast(status === 'accepted' ? '✅ Accepté' : '❌ Refusé');
+    loadSubmissions();
+  } catch { showToast('❌ Erreur', 'var(--red)'); }
+};
 
-  async function deleteArtist(id, name) {
-    if (!confirm(`Supprimer l'artiste "${name}" ?`)) return;
-    try {
-      const res = await fetch(`${API}/api/artists/${id}`, {
-        method: 'DELETE',
-        headers: { 'x-admin-token': token }
-      });
-      const d = await res.json();
-      if (d.success) { showToast(`✓ ${name} supprimé`, 'var(--green)'); loadArtistsList(); }
-      else showToast('❌ ' + d.error, 'var(--red)');
-    } catch (e) { showToast('❌ ' + e.message, 'var(--red)'); }
-  }
-
-  /* ── NEWSLETTER SEND ──────────────────────────────────── */
-  async function sendNewsletter() {
-    const subject = document.getElementById('nl-subject').value.trim();
-    const html    = document.getElementById('nl-html').value.trim();
-    const preview = document.getElementById('nl-preview').value.trim();
-    const result  = document.getElementById('nl-result');
-    if (!subject || !html) { result.innerHTML = '<span style="color:#ff6b6b">⚠️ Sujet et HTML requis.</span>'; return; }
-    if (!confirm(`Envoyer "${subject}" à tous les abonnés ?`)) return;
-    result.innerHTML = '<span style="color:var(--muted)">⏳ Envoi en cours…</span>';
-    try {
-      const res = await fetch(`${API}/api/newsletter/send`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
-        body: JSON.stringify({ subject, html, previewText: preview })
-      });
-      const d = await res.json();
-      if (d.success) {
-        result.innerHTML = `<span style="color:var(--green)">✓ Envoyé à ${d.sent} abonné(s).</span>`;
-        document.getElementById('nl-subject').value = '';
-        document.getElementById('nl-html').value = '';
-      } else {
-        result.innerHTML = `<span style="color:#ff6b6b">❌ ${d.error || 'Erreur'} — ${d.sent} envoyés, ${d.failed} échecs.<br>Erreurs: ${(d.errors||[]).join(', ')}</span>`;
-      }
-    } catch (e) {
-      result.innerHTML = `<span style="color:#ff6b6b">❌ ${e.message}</span>`;
-    }
-  }
-
-  /* ── CONTACTS ──────────────────────────────────────────── */
-  async function loadContacts() {
-    const el = document.getElementById('contacts-list');
-    el.innerHTML = '<p style="color:var(--muted);font-size:13px">Chargement…</p>';
-    try {
-      const d = await fetch(`${API}/api/contacts`, { headers: { 'x-admin-token': token } }).then(r => r.json());
-      const contacts = (d.contacts || []).sort((a,b) => new Date(b.receivedAt) - new Date(a.receivedAt));
-      if (!contacts.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucun message reçu.</p>'; return; }
-      el.innerHTML = `<p style="font-size:13px;color:var(--muted);margin-bottom:12px">${contacts.length} message(s)</p>` +
-        contacts.map(c => `
-          <div style="background:#1a1a1a;border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-              <strong style="font-size:14px">${c.name}</strong>
-              <span style="font-size:11px;color:var(--muted)">${new Date(c.receivedAt).toLocaleDateString('fr')}</span>
-            </div>
-            <div style="font-size:12px;color:var(--accent);margin-bottom:4px">[${c.type || 'général'}] ${c.email}</div>
-            <div style="font-size:13px;font-weight:600;margin-bottom:6px">${c.subject}</div>
-            <div style="font-size:13px;color:var(--muted);white-space:pre-wrap;max-height:80px;overflow:hidden">${c.message}</div>
-          </div>`).join('');
-    } catch (e) {
-      el.innerHTML = `<p style="color:#ff6b6b;font-size:13px">Erreur: ${e.message}</p>`;
-    }
-  }
-
-  /* ── SOUMISSIONS ARTISTES ──────────────────────────────── */
-  async function loadSubmissions() {
-    const el = document.getElementById('submissions-list');
-    el.innerHTML = '<p style="color:var(--muted);font-size:13px">Chargement…</p>';
-    try {
-      const d = await fetch(`${API}/api/submissions`, { headers: { 'x-admin-token': token } }).then(r => r.json());
-      const subs = (d.submissions || []).sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt));
-      if (!subs.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucune soumission reçue.</p>'; return; }
-      el.innerHTML = `<p style="font-size:13px;color:var(--muted);margin-bottom:12px">${subs.length} soumission(s)</p>` +
-        subs.map(s => {
-          const statusColor = { pending:'var(--yellow)', accepted:'var(--green)', rejected:'#ff6b6b' }[s.status] || 'var(--muted)';
-          return `<div style="background:#1a1a1a;border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-              <div>
-                <strong style="font-size:15px">🎤 ${s.artist.stageName}</strong>
-                <span style="margin-left:10px;font-size:12px;color:var(--muted)">${s.artist.country} · ${s.artist.genres}</span>
-              </div>
-              <span style="font-size:11px;color:${statusColor};border:1px solid ${statusColor};border-radius:3px;padding:2px 8px;text-transform:uppercase;white-space:nowrap">${s.status}</span>
-            </div>
-            <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Par: ${s.contact.name} (${s.contact.role || '—'}) — ${s.contact.email}</div>
-            <div style="font-size:13px;color:#ccc;margin-bottom:10px;max-height:60px;overflow:hidden">${s.artist.bio}</div>
-            ${s.links.youtube ? `<a href="${s.links.youtube}" target="_blank" style="font-size:12px;color:var(--accent);margin-right:12px">▶ YouTube</a>` : ''}
-            ${s.links.spotify ? `<a href="${s.links.spotify}" target="_blank" style="font-size:12px;color:#1db954;margin-right:12px">♪ Spotify</a>` : ''}
-            ${s.links.instagram ? `<a href="${s.links.instagram}" target="_blank" style="font-size:12px;color:#e1306c">IG</a>` : ''}
-            <div style="margin-top:12px;display:flex;gap:8px">
-              <button onclick="updateSubmissionStatus('${s.id}', 'accepted')" style="background:rgba(48,209,88,0.15);border:1px solid var(--green);color:var(--green);border-radius:4px;padding:5px 12px;font-size:12px;cursor:pointer">✓ Accepter</button>
-              <button onclick="updateSubmissionStatus('${s.id}', 'rejected')" style="background:rgba(255,45,85,0.15);border:1px solid var(--red);color:var(--red);border-radius:4px;padding:5px 12px;font-size:12px;cursor:pointer">✕ Refuser</button>
-            </div>
-          </div>`;
-        }).join('');
-    } catch (e) {
-      el.innerHTML = `<p style="color:#ff6b6b;font-size:13px">Erreur: ${e.message}</p>`;
-    }
-  }
-
-  async function updateSubmissionStatus(id, status) {
-    try {
-      await fetch(`${API}/api/submissions/${id}/status`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
-        body: JSON.stringify({ status })
-      });
-      loadSubmissions();
-    } catch (e) { alert('Erreur: ' + e.message); }
-  }
+/* ══ DEBUG ═══════════════════════════════════════════════════ */
+window.loadDebug = async () => {
+  const el = document.getElementById('debug-result');
+  el.textContent = '⏳ Chargement…';
+  try {
+    const d = await fetch(`${API}/api/debug`, { headers:{'x-admin-token':token} }).then(r => r.json());
+    el.textContent = JSON.stringify(d, null, 2);
+  } catch (e) { el.textContent = '❌ ' + e.message; }
+};
 
 </script>
 </body>
