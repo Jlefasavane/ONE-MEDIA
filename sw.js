@@ -2,7 +2,7 @@
    ONE MEDIA — Service Worker v3
    Stratégie : Cache-first statique, Network-first API/articles
 ═══════════════════════════════════════════════════════════ */
-const CACHE_VERSION = 'onemedia-v3';
+const CACHE_VERSION = 'onemedia-v4';
 const STATIC_ASSETS = [
   '/', '/index.html', '/style.css', '/design.css',
   '/main.js', '/data.js', '/player.js', '/manifest.json',

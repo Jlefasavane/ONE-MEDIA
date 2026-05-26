@@ -390,3 +390,206 @@ const ARTICLES = [
   },
 
 ];
+
+/* ════════════════════════════════════════════════════════
+   ONE CHART — Classement du continent
+   ════════════════════════════════════════════════════════ */
+
+const CHART_DATA = [
+  {
+    rank: 1, artist: 'Burna Boy', title: 'Last Last',
+    cover: 'https://img.youtube.com/vi/Yr1jWasHBDw/mqdefault.jpg',
+    trend: 'stable', deezerQuery: 'Burna Boy Last Last',
+    country: 'ng', countryName: 'Nigeria', weeks: 14,
+    stats: { streams: '18.2M', label: 'streams' },
+  },
+  {
+    rank: 2, artist: 'Rema', title: 'Calm Down',
+    cover: 'https://img.youtube.com/vi/WcIcVapfqXw/mqdefault.jpg',
+    trend: 'up', deezerQuery: 'Rema Calm Down',
+    country: 'ng', countryName: 'Nigeria', weeks: 22,
+    stats: { streams: '15.7M', label: 'streams' },
+  },
+  {
+    rank: 3, artist: 'AK4SEVEN x GIMS', title: 'Nuit Blanche',
+    cover: 'https://cdn-images.dzcdn.net/images/artist/604dccdd4ef71094d4a3cc8a5764b161/500x500-000000-80-0-0.jpg',
+    trend: 'new', deezerQuery: 'AK4SEVEN Nuit Blanche',
+    country: 'gn', countryName: 'Guinée', weeks: 1,
+    peakNew: true,
+    badges: [{ label: '🇬🇳 Guinée', color: '#FF2D55' }],
+    stats: { streams: '9.4M', label: 'streams' },
+    spotlight: { label: 'Coup de cœur ONE', artist: 'AK4SEVEN', note: 'Le Guinéen qui conquiert Paris', link: 'article.html?id=a-200' },
+  },
+  {
+    rank: 4, artist: 'Tyla', title: 'Water',
+    cover: 'https://img.youtube.com/vi/XoiOOiuH8iI/mqdefault.jpg',
+    trend: 'stable', deezerQuery: 'Tyla Water',
+    country: 'za', countryName: 'Afrique du Sud', weeks: 18,
+    stats: { streams: '12.1M', label: 'streams' },
+  },
+  {
+    rank: 5, artist: 'WizKid', title: 'Essence',
+    cover: 'https://img.youtube.com/vi/jipQpjUA_o8/mqdefault.jpg',
+    trend: 'down', deezerQuery: 'WizKid Essence Tems',
+    country: 'ng', countryName: 'Nigeria', weeks: 31,
+    stats: { streams: '11.8M', label: 'streams' },
+  },
+  {
+    rank: 6, artist: 'Omah Lay', title: 'Understand',
+    cover: 'https://img.youtube.com/vi/X3Ai6osw3Mk/mqdefault.jpg',
+    trend: 'up', deezerQuery: 'Omah Lay Understand',
+    country: 'ng', countryName: 'Nigeria', weeks: 7,
+    stats: { streams: '8.3M', label: 'streams' },
+  },
+  {
+    rank: 7, artist: 'Azaya', title: 'Kora Soul',
+    cover: 'https://cdn-images.dzcdn.net/images/artist/b269f39903a403507769f9aae9ecfe22/500x500-000000-80-0-0.jpg',
+    trend: 'new', deezerQuery: 'Azaya',
+    country: 'gn', countryName: 'Guinée', weeks: 2,
+    badges: [{ label: '🇬🇳 Guinée', color: '#FF2D55' }],
+    stats: { streams: '4.7M', label: 'streams' },
+  },
+  {
+    rank: 8, artist: 'Djanii Alpha', title: 'Couleurs',
+    cover: 'https://cdn-images.dzcdn.net/images/artist/7539d7952d976c3d52691a176e4476ac/500x500-000000-80-0-0.jpg',
+    trend: 'up', deezerQuery: 'Djanii Alpha',
+    country: 'gn', countryName: 'Guinée', weeks: 5,
+    badges: [{ label: '🇬🇳 Guinée', color: '#FF2D55' }],
+    stats: { streams: '3.9M', label: 'streams' },
+  },
+  {
+    rank: 9, artist: "Soul Bang's & Manamba Kanté", title: 'Triple Célébration',
+    cover: 'https://panm360.com/wp-content/uploads/2024/07/Soul-Bangs-Manamba-Kante.jpg',
+    trend: 'stable', deezerQuery: 'Soul Bangs Manamba Kante',
+    country: 'gn', countryName: 'Guinée', weeks: 9,
+    badges: [{ label: '🇬🇳 Guinée', color: '#FF2D55' }],
+    stats: { streams: '3.2M', label: 'streams' },
+  },
+  {
+    rank: 10, artist: 'Straiker', title: 'Frontières',
+    cover: 'https://cdn-images.dzcdn.net/images/artist/aa7ffbc5507204c67b602b77fd53e8cb/500x500-000000-80-0-0.jpg',
+    trend: 'up', deezerQuery: 'Straiker',
+    country: 'gn', countryName: 'Guinée', weeks: 3,
+    badges: [{ label: '🇬🇳 Guinée', color: '#FF2D55' }],
+    stats: { streams: '2.8M', label: 'streams' },
+  },
+];
+
+const CHART_DATA_GUINEE = [
+  {
+    rank: 1, artist: 'AK4SEVEN x GIMS', title: 'Nuit Blanche',
+    cover: 'https://cdn-images.dzcdn.net/images/artist/604dccdd4ef71094d4a3cc8a5764b161/500x500-000000-80-0-0.jpg',
+    trend: 'new', deezerQuery: 'AK4SEVEN Nuit Blanche',
+    country: 'gn', countryName: 'Guinée', weeks: 1,
+    peakNew: true, stats: { streams: '9.4M', label: 'streams' },
+    spotlight: { label: 'Coup de cœur ONE', artist: 'AK4SEVEN', note: 'Le fils de Kamsar au sommet', link: 'article.html?id=a-200' },
+  },
+  {
+    rank: 2, artist: 'Azaya', title: 'Kora Soul',
+    cover: 'https://cdn-images.dzcdn.net/images/artist/b269f39903a403507769f9aae9ecfe22/500x500-000000-80-0-0.jpg',
+    trend: 'up', deezerQuery: 'Azaya',
+    country: 'gn', countryName: 'Guinée', weeks: 2,
+    stats: { streams: '4.7M', label: 'streams' },
+  },
+  {
+    rank: 3, artist: 'Djanii Alpha', title: 'Couleurs',
+    cover: 'https://cdn-images.dzcdn.net/images/artist/7539d7952d976c3d52691a176e4476ac/500x500-000000-80-0-0.jpg',
+    trend: 'up', deezerQuery: 'Djanii Alpha',
+    country: 'gn', countryName: 'Guinée', weeks: 5,
+    stats: { streams: '3.9M', label: 'streams' },
+  },
+  {
+    rank: 4, artist: "Soul Bang's & Manamba Kanté", title: 'Triple Célébration',
+    cover: 'https://panm360.com/wp-content/uploads/2024/07/Soul-Bangs-Manamba-Kante.jpg',
+    trend: 'stable', deezerQuery: 'Soul Bangs Manamba',
+    country: 'gn', countryName: 'Guinée', weeks: 9,
+    stats: { streams: '3.2M', label: 'streams' },
+  },
+  {
+    rank: 5, artist: 'Straiker', title: 'Frontières',
+    cover: 'https://cdn-images.dzcdn.net/images/artist/aa7ffbc5507204c67b602b77fd53e8cb/500x500-000000-80-0-0.jpg',
+    trend: 'up', deezerQuery: 'Straiker',
+    country: 'gn', countryName: 'Guinée', weeks: 3,
+    stats: { streams: '2.8M', label: 'streams' },
+  },
+  {
+    rank: 6, artist: 'Amaza', title: 'Le Goût est Mélangé',
+    cover: 'https://cdn-images.dzcdn.net/images/artist/604dccdd4ef71094d4a3cc8a5764b161/500x500-000000-80-0-0.jpg',
+    trend: 'stable', deezerQuery: 'Amaza Gout Melange',
+    country: 'gn', countryName: 'Guinée', weeks: 12,
+    stats: { streams: '2.1M', label: 'streams' },
+  },
+  {
+    rank: 7, artist: 'Mory Kanté', title: 'Yé Ké Yé Ké',
+    cover: 'https://cdn-images.dzcdn.net/images/artist/2a6dc9e77004bb1a216c1cd9df2cb135/500x500-000000-80-0-0.jpg',
+    trend: 'up', deezerQuery: 'Mory Kante Ye Ke Ye Ke',
+    country: 'gn', countryName: 'Guinée', weeks: 4,
+    stats: { streams: '1.5M', label: 'streams' },
+  },
+  {
+    rank: 8, artist: 'Straiker x Djanii Alpha', title: 'Collab 2026',
+    cover: 'https://cdn-images.dzcdn.net/images/artist/aa7ffbc5507204c67b602b77fd53e8cb/500x500-000000-80-0-0.jpg',
+    trend: 'new', deezerQuery: 'Straiker Djanii Alpha',
+    country: 'gn', countryName: 'Guinée', weeks: 1,
+    peakNew: true, stats: { streams: '1.8M', label: 'streams' },
+  },
+];
+
+/* ════════════════════════════════════════════════════════
+   HELPERS — fonctions utilisées par main.js
+   ════════════════════════════════════════════════════════ */
+
+function getBreakingArticles() {
+  return ARTICLES.filter(a => a.breaking);
+}
+
+function getLatestArticles(limit = 6) {
+  return [...ARTICLES]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, limit);
+}
+
+function getArticlesByCategory(categoryId, limit = 10) {
+  return ARTICLES.filter(a => a.category === categoryId).slice(0, limit);
+}
+
+function searchArticles(query) {
+  const q = (query || '').toLowerCase().trim();
+  if (!q) return [...ARTICLES];
+  return ARTICLES.filter(a =>
+    a.title.toLowerCase().includes(q) ||
+    a.excerpt.toLowerCase().includes(q) ||
+    (a.tags || []).some(t => t.toLowerCase().includes(q))
+  );
+}
+
+function getCategoryMeta(categoryId) {
+  return CATEGORIES.find(c => c.id === categoryId) ||
+    { id: categoryId, label: categoryId, color: '#ffffff' };
+}
+
+function getArticleById(id) {
+  return ARTICLES.find(a => a.id === id) || null;
+}
+
+function getMostRead(limit = 5) {
+  return [...ARTICLES]
+    .sort((a, b) => (b.views || 0) - (a.views || 0))
+    .slice(0, limit);
+}
+
+function formatDate(dateString) {
+  if (!dateString) return '';
+  try {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    });
+  } catch (e) { return dateString; }
+}
+
+function formatViews(n) {
+  if (!n && n !== 0) return '0';
+  if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.0', '') + 'M';
+  if (n >= 1000)    return (n / 1000).toFixed(1).replace('.0', '') + 'k';
+  return String(n);
+}
