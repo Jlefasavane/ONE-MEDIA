@@ -11,16 +11,16 @@
 
   /* ── Tracks à charger (Guinée/Afrique en priorité) ───────── */
   const QUERIES = [
-    { q: 'azaya guinee',            color: '#00F5FF' },
-    { q: 'straiker conakry',        color: '#BF5AF2' },
-    { q: 'djanii alfa guinee',      color: '#FF9500' },
-    { q: 'ak4seven guinee',         color: '#BF5AF2' },
-    { q: 'didi b cote ivoire',      color: '#FF2D55' },
-    { q: 'burna boy last last',     color: '#30D158' },
-    { q: 'wizkid essence',          color: '#FFE500' },
-    { q: 'tyla water',              color: '#ff9f43' },
-    { q: 'rema calm down',          color: '#30D158' },
-    { q: 'aya nakamura djadja',     color: '#BF5AF2' },
+    { q: 'fatoumata diawara nterini',   color: '#FF2D55' },
+    { q: 'ckay love nwantiti',          color: '#FFEF4D' },
+    { q: 'ayra starr rush',             color: '#BF5AF2' },
+    { q: 'asake active',                color: '#FF9500' },
+    { q: 'fireboy dml peru',            color: '#30D158' },
+    { q: 'kizz daniel buga',            color: '#00F5FF' },
+    { q: 'omah lay ku lo sa',           color: '#FF6B6B' },
+    { q: 'amaarae sad girlz',           color: '#C6FF33' },
+    { q: 'joeboy alcohol',              color: '#FFE500' },
+    { q: 'youssou ndour set',           color: '#BF5AF2' },
   ];
 
   let TRACKS  = [];
