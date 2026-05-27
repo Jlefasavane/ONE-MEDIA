@@ -572,8 +572,21 @@ function getArticleById(id) {
   return ARTICLES.find(a => a.id === id) || null;
 }
 
-function getMostRead(limit = 5) {
+function getArticleBySlug(slug) {
+  if (!slug) return null;
+  return ARTICLES.find(a => a.slug === slug) || null;
+}
+
+function getRelatedArticles(article, limit = 3) {
+  if (!article) return [];
+  const sameCat = ARTICLES.filter(a => a.id !== article.id && a.category === article.category);
+  const otherCat = ARTICLES.filter(a => a.id !== article.id && a.category !== article.category);
+  return [...sameCat, ...otherCat].slice(0, limit);
+}
+
+function getMostRead(limit = 5, excludeId = null) {
   return [...ARTICLES]
+    .filter(a => !excludeId || a.id !== excludeId)
     .sort((a, b) => (b.views || 0) - (a.views || 0))
     .slice(0, limit);
 }

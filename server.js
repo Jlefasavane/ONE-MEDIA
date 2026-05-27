@@ -937,8 +937,8 @@ app.delete('/api/artists/:id', adminAuth, (req, res) => {
 });
 
 /* ── Contact form ───────────────────────────────────────── */
-const CONTACTS_FILE     = path.join(__dirname, 'contacts.json');
-const SUBMISSIONS_FILE  = path.join(__dirname, 'submissions.json');
+const CONTACTS_FILE     = path.join(DATA_DIR, 'contacts.json');
+const SUBMISSIONS_FILE  = path.join(DATA_DIR, 'submissions.json');
 
 app.post('/api/contact', (req, res) => {
   const { name, email, subject, message, type, organization, artistName, artistLink } = req.body;

@@ -10,7 +10,7 @@ const fs       = require('fs');
 const path     = require('path');
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
-const OUTPUT_FILE  = path.join(__dirname, 'articles.json');
+const OUTPUT_FILE  = path.join(process.env.DATA_DIR || __dirname, 'articles.json');
 
 /* ── Sources RSS via Google News (accessible sans restriction) */
 // Google News RSS est accessible depuis n'importe quel serveur,

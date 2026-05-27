@@ -115,7 +115,7 @@ function renderArticlePage() {
         ${a.body || LOREM_BODY.join('\n')}
       </div>
       <div class="article-tags">
-        ${a.tags.map(t => `<a href="category.html?cat=${a.category}&tag=${encodeURIComponent(t)}" class="article-tag"># ${t}</a>`).join('')}
+        ${(a.tags || []).map(t => `<a href="category.html?cat=${a.category}&tag=${encodeURIComponent(t)}" class="article-tag"># ${t}</a>`).join('')}
       </div>`;
   }
 

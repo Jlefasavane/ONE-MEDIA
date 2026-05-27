@@ -137,22 +137,6 @@
   });
 })();
 
-/* ── NEWSLETTER (signal form) ────────────────────────────── */
-(function initNewsletter() {
-  const form    = document.getElementById('signal-form');
-  const success = document.getElementById('signal-success');
-  if (!form) return;
-
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const email = document.getElementById('signal-email')?.value;
-    if (!email) return;
-    localStorage.setItem('om_newsletter', email);
-    form.style.display = 'none';
-    if (success) success.style.display = '';
-  });
-})();
-
 /* ── SAVED ARTICLES PANEL ────────────────────────────────── */
 (function initSavedPanel() {
   function getSaved() {
